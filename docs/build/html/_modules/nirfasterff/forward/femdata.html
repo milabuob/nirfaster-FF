@@ -1,0 +1,1108 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nirfasterff.forward.femdata &mdash; NIRFASTerFF 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            NIRFASTerFF
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/nirfasterff.html">nirfasterff</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">NIRFASTerFF</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">nirfasterff.forward.femdata</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for nirfasterff.forward.femdata</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">The FEM solvers. It is usually recommended to use the high-level wrappers in the mesh classes by calling the mesh.femdata* functions.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">nirfasterff</span> <span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">nirfasterff</span> <span class="kn">import</span> <span class="n">math</span>
+<span class="kn">from</span> <span class="nn">nirfasterff</span> <span class="kn">import</span> <span class="n">base</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">signal</span>
+
+<div class="viewcode-block" id="femdata_stnd_CW">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.forward.femdata.femdata_stnd_CW.html#nirfasterff.forward.femdata.femdata_stnd_CW">[docs]</a>
+<span class="k">def</span> <span class="nf">femdata_stnd_CW</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">()):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Forward modeling for CW. Please consider using mesh.femdata(0) instead.</span>
+<span class="sd">    </span>
+<span class="sd">    The function calculates the FEM MASS matrix, the source vectors, and calls the CW solver (preconditioned conjugated gradient).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mesh : nirfasterff.base.stndmesh</span>
+<span class="sd">        the mesh used to calcuate the forward data.</span>
+<span class="sd">    solver : str, optional</span>
+<span class="sd">        Choose between &#39;CPU&#39; or &#39;GPU&#39; solver (case insensitive). Automatically determined (GPU prioritized) if not specified</span>
+<span class="sd">    opt : nirfasterff.utils.SolverOptions, optional</span>
+<span class="sd">        Solver options. Uses default parameters if not specified, and they should suffice in most cases. </span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.SolverOptions` for details</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        If mesh is not a stnd mesh.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    data : nirfasterff.base.FDdata</span>
+<span class="sd">        fluence and boundary measurables given the mesh and optodes.</span>
+<span class="sd">        </span>
+<span class="sd">        If mesh.vol is defined, the returned fluence will be in volumetric space</span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.base.data.FDdata` for details.</span>
+<span class="sd">    info : nirfasterff.utils.ConvergenceInfo</span>
+<span class="sd">        convergence information of the solver.</span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.ConvergenceInfo` for details</span>
+<span class="sd">        </span>
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`~nirfasterff.math.get_field_CW()`, :func:`~nirfasterff.math.gen_mass_matrix()`, and :func:`~nirfasterff.math.gen_sources()`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="s1">&#39;stnd&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Only standard meshes supported&#39;</span><span class="p">)</span>
+    <span class="c1"># print(&quot;Calculating the MASS matrix&quot;, flush=1)</span>
+    <span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">csrV</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">gen_mass_matrix</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">GPU</span><span class="p">)</span>
+    <span class="n">qvec</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">gen_sources</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+    <span class="n">qvec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">qvec</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">FDdata</span><span class="p">()</span>
+    <span class="c1"># print(&quot;Solving the system&quot;, flush=1)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">phi</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">get_field_CW</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">csrV</span><span class="p">,</span> <span class="n">qvec</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">solver</span><span class="p">)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">complex</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">get_boundary_data</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">phi</span><span class="p">)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="p">)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">amplitude</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">complex</span><span class="p">)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">phase</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">complex</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">phase</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">complex</span><span class="p">)]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">vol</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">xgrid</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">zgrid</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">mesh2grid</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">phi</span><span class="p">),</span> <span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">ygrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">xgrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">zgrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">qvec</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">mesh2grid</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">phi</span><span class="p">),</span> <span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">ygrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">xgrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">qvec</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">phi</span> <span class="o">=</span> <span class="n">tmp</span>
+    
+    <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">info</span></div>
+
+
+<div class="viewcode-block" id="femdata_stnd_FD">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.forward.femdata.femdata_stnd_FD.html#nirfasterff.forward.femdata.femdata_stnd_FD">[docs]</a>
+<span class="k">def</span> <span class="nf">femdata_stnd_FD</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">()):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Forward modeling for FD. Please consider using mesh.femdata(freq) instead. freq in Hz</span>
+<span class="sd">    </span>
+<span class="sd">    The function calculates the MASS matrix, the source vectors, and calls the FD solver (preconditioned BiCGStab).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mesh : nirfasterff.base.stndmesh</span>
+<span class="sd">        the mesh used to calcuate the forward data.</span>
+<span class="sd">    freq : double</span>
+<span class="sd">        modulation frequency in Hz. </span>
+<span class="sd">        </span>
+<span class="sd">        When it is 0, function continues with the BiCGstab solver, but generates a warning that the CW solver should be used for better performance</span>
+<span class="sd">    solver : str, optional</span>
+<span class="sd">        Choose between &#39;CPU&#39; or &#39;GPU&#39; solver (case insensitive). Automatically determined (GPU prioritized) if not specified</span>
+<span class="sd">    opt : nirfasterff.utils.SolverOptions, optional</span>
+<span class="sd">        Solver options. Uses default parameters if not specified, and they should suffice in most cases. </span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.SolverOptions` for details</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        If mesh is not a stnd mesh.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    data : nirfasterff.base.FDdata</span>
+<span class="sd">        fluence and boundary measurables given the mesh and optodes.</span>
+<span class="sd">        </span>
+<span class="sd">        If mesh.vol is defined, the returned fluence will be in volumetric space</span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.base.data.FDdata` for details.</span>
+<span class="sd">    info : nirfasterff.utils.ConvergenceInfo</span>
+<span class="sd">        convergence information of the solver.</span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.ConvergenceInfo` for details</span>
+<span class="sd">    </span>
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`~nirfasterff.math.get_field_FD()`, :func:`~nirfasterff.math.gen_mass_matrix()`, and :func:`~nirfasterff.math.gen_sources()`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="s1">&#39;stnd&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Only standard meshes supported&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">freq</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: Use femdata_stnd_CW for better performance&#39;</span><span class="p">)</span>
+    <span class="n">freq</span> <span class="o">=</span> <span class="n">freq</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+    <span class="c1"># print(&quot;Calculating the MASS matrix&quot;, flush=1)</span>
+    <span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">csrV</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">gen_mass_matrix</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">GPU</span><span class="p">)</span>
+    <span class="n">qvec</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">gen_sources</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">FDdata</span><span class="p">()</span>
+    <span class="c1"># print(&quot;Solving the system&quot;, flush=1)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">phi</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">get_field_FD</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">csrV</span><span class="p">,</span> <span class="n">qvec</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">solver</span><span class="p">)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">complex</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">get_boundary_data</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">phi</span><span class="p">)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="p">)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">amplitude</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">complex</span><span class="p">)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">phase</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">complex</span><span class="p">)</span><span class="o">*</span><span class="mf">180.</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">vol</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">xgrid</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">zgrid</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">mesh2grid</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">phi</span><span class="p">),</span> <span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">ygrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">xgrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">zgrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">qvec</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">mesh2grid</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">phi</span><span class="p">),</span> <span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">ygrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">xgrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">qvec</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">phi</span> <span class="o">=</span> <span class="n">tmp</span>
+    
+    <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">info</span></div>
+
+
+<div class="viewcode-block" id="femdata_fl_CW">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.forward.femdata.femdata_fl_CW.html#nirfasterff.forward.femdata.femdata_fl_CW">[docs]</a>
+<span class="k">def</span> <span class="nf">femdata_fl_CW</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">(),</span> <span class="n">xflag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">mmflag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">flflag</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Forward modeling for CW in fluorescence meshes. Please consider using mesh.femdata(0) instead.</span>
+<span class="sd">    </span>
+<span class="sd">    The function calculates the MASS matrices, the source vectors, and calls the CW solver (preconditioned conjugated gradient).</span>
+<span class="sd">    </span>
+<span class="sd">    The optional flags can be used to determine which fields are calculated. By default all true.</span>
+<span class="sd">    </span>
+<span class="sd">    Note that when flflag is set to True, xflag must also be True.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mesh : nirfasterff.base.fluormesh</span>
+<span class="sd">        the mesh used to calcuate the forward data.</span>
+<span class="sd">    solver : str, optional</span>
+<span class="sd">        Choose between &#39;CPU&#39; or &#39;GPU&#39; solver (case insensitive). Automatically determined (GPU prioritized) if not specified</span>
+<span class="sd">    opt : nirfasterff.utils.SolverOptions, optional</span>
+<span class="sd">        Solver options. Uses default parameters if not specified, and they should suffice in most cases. </span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.SolverOptions` for details</span>
+<span class="sd">    xflag : bool, optional</span>
+<span class="sd">        if intrinsic excitation field is calculated. The default is True.</span>
+<span class="sd">    mmflag : bool, optional</span>
+<span class="sd">        if intrinsic emission field is calculated. The default is True.</span>
+<span class="sd">    flflag : bool, optional</span>
+<span class="sd">        if fluorescence field is calculated. If set True, xflag must also be True. The default is True.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        If mesh is not a fluor mesh.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If flflag is set True but xflag is not.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    data : nirfasterff.base.FLdata</span>
+<span class="sd">        fluence and boundary measurables given the mesh and optodes.</span>
+<span class="sd">        </span>
+<span class="sd">        If mesh.vol is defined, the returned fluences will be in volumetric space</span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.base.data.FLdata` for details.</span>
+<span class="sd">    infox : nirfasterff.utils.ConvergenceInfo</span>
+<span class="sd">        convergence information of the solver, for intrinsic excitation.</span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.ConvergenceInfo` for details</span>
+<span class="sd">    infom : nirfasterff.utils.ConvergenceInfo</span>
+<span class="sd">        convergence information of the solver, for intrinsic emission.</span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.ConvergenceInfo` for details</span>
+<span class="sd">    infofl : nirfasterff.utils.ConvergenceInfo</span>
+<span class="sd">        convergence information of the solver, for fluorescence emission.</span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.ConvergenceInfo` for details</span>
+<span class="sd">    </span>
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`~nirfasterff.math.get_field_CW()`, :func:`~nirfasterff.math.gen_mass_matrix()`, :func:`~nirfasterff.math.gen_sources()`, and :func:`~nirfasterff.math.gen_sources_fl()`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="s1">&#39;fluor&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Only fluorescence meshes supported&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">flflag</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">xflag</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Error: must first calculate excitation field before calculating fluorescence&#39;</span><span class="p">)</span>
+    
+    <span class="n">dummymesh</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">stndmesh</span><span class="p">()</span>
+    <span class="n">dummymesh</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+    <span class="n">dummymesh</span><span class="o">.</span><span class="n">elements</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">elements</span><span class="p">)</span>
+    <span class="n">dummymesh</span><span class="o">.</span><span class="n">bndvtx</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">bndvtx</span><span class="p">)</span>
+    <span class="n">dummymesh</span><span class="o">.</span><span class="n">mua</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">muax</span><span class="p">)</span>
+    <span class="n">dummymesh</span><span class="o">.</span><span class="n">kappa</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">kappax</span><span class="p">)</span>
+    <span class="n">dummymesh</span><span class="o">.</span><span class="n">ksi</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">ksi</span><span class="p">)</span>
+    <span class="n">dummymesh</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">c</span><span class="p">)</span>
+    
+    <span class="n">data</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">FLdata</span><span class="p">()</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="p">)</span>
+    <span class="c1"># data.vol = copy.deepcopy(mesh.vol)</span>
+    
+    <span class="n">infox</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">infomm</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">infofl</span> <span class="o">=</span> <span class="kc">None</span>
+    
+    <span class="k">if</span> <span class="n">xflag</span><span class="p">:</span>
+        <span class="c1"># print(&quot;Calculating intrinsic data at excitation wavelength&quot;, flush=1)</span>
+        <span class="n">csrIx</span><span class="p">,</span> <span class="n">csrJx</span><span class="p">,</span> <span class="n">csrVx</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">gen_mass_matrix</span><span class="p">(</span><span class="n">dummymesh</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">GPU</span><span class="p">)</span>
+        <span class="n">qvec</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">gen_sources</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+        <span class="n">qvec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">qvec</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">phix</span><span class="p">,</span> <span class="n">infox</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">get_field_CW</span><span class="p">(</span><span class="n">csrIx</span><span class="p">,</span> <span class="n">csrJx</span><span class="p">,</span> <span class="n">csrVx</span><span class="p">,</span> <span class="n">qvec</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">solver</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">complexx</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">get_boundary_data</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">phix</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">amplitudex</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">complexx</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">phasex</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">complexx</span><span class="p">)</span><span class="o">*</span><span class="mf">180.</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">phasex</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">complexx</span><span class="p">)]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="k">if</span> <span class="n">mmflag</span><span class="p">:</span>
+        <span class="c1"># print(&quot;Calculating intrinsic data at emission wavelength&quot;, flush=1)</span>
+        <span class="n">dummymesh</span><span class="o">.</span><span class="n">mua</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">muam</span><span class="p">)</span>
+        <span class="n">dummymesh</span><span class="o">.</span><span class="n">kappa</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">kappam</span><span class="p">)</span>
+        
+        <span class="n">csrIm</span><span class="p">,</span> <span class="n">csrJm</span><span class="p">,</span> <span class="n">csrVm</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">gen_mass_matrix</span><span class="p">(</span><span class="n">dummymesh</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">GPU</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;qvec&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">locals</span><span class="p">():</span>
+            <span class="n">qvec</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">gen_sources</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+            <span class="n">qvec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">qvec</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">phimm</span><span class="p">,</span> <span class="n">infom</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">get_field_CW</span><span class="p">(</span><span class="n">csrIm</span><span class="p">,</span> <span class="n">csrJm</span><span class="p">,</span> <span class="n">csrVm</span><span class="p">,</span> <span class="n">qvec</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">solver</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">complexmm</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">get_boundary_data</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">phimm</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">amplitudemm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">complexmm</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">phasemm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">complexmm</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">phasemm</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">complexmm</span><span class="p">)]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="k">if</span> <span class="n">flflag</span><span class="p">:</span>
+        <span class="c1"># print(&quot;Calculating fluorescence data&quot;, flush=1)</span>
+        <span class="k">if</span> <span class="s1">&#39;csrIm&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">locals</span><span class="p">():</span>
+            <span class="n">dummymesh</span><span class="o">.</span><span class="n">mua</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">muam</span><span class="p">)</span>
+            <span class="n">dummymesh</span><span class="o">.</span><span class="n">kappa</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">kappam</span><span class="p">)</span>
+            <span class="n">csrIm</span><span class="p">,</span> <span class="n">csrJm</span><span class="p">,</span> <span class="n">csrVm</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">gen_mass_matrix</span><span class="p">(</span><span class="n">dummymesh</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">GPU</span><span class="p">)</span>
+        <span class="n">qvec</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">gen_sources_fl</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">phix</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="n">solver</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">phifl</span><span class="p">,</span> <span class="n">infofl</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">get_field_CW</span><span class="p">(</span><span class="n">csrIm</span><span class="p">,</span> <span class="n">csrJm</span><span class="p">,</span> <span class="n">csrVm</span><span class="p">,</span> <span class="n">qvec</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">solver</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">complexfl</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">get_boundary_data</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">phifl</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">amplitudefl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">complexfl</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">phasefl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">complexfl</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">phasefl</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">complexfl</span><span class="p">)]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    
+    <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">isvol</span><span class="p">():</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">togrid</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">infox</span><span class="p">,</span> <span class="n">infomm</span><span class="p">,</span> <span class="n">infofl</span></div>
+
+
+<div class="viewcode-block" id="femdata_fl_FD">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.forward.femdata.femdata_fl_FD.html#nirfasterff.forward.femdata.femdata_fl_FD">[docs]</a>
+<span class="k">def</span> <span class="nf">femdata_fl_FD</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">(),</span> <span class="n">xflag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">mmflag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">flflag</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Forward modeling for FD in fluorescence meshes. Please consider using mesh.femdata(frequency) instead.</span>
+<span class="sd">    </span>
+<span class="sd">    The function calculates the MASS matrix, the source vectors, and calls the FD solver (preconditioned BiCGStab).</span>
+<span class="sd">    </span>
+<span class="sd">    The optional flags can be used to determine which fields are calculated. By default all true.</span>
+<span class="sd">    </span>
+<span class="sd">    Note that when flflag is set to True, xflag must also be True.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mesh : nirfasterff.base.stndmesh</span>
+<span class="sd">        the mesh used to calcuate the forward data.</span>
+<span class="sd">    freq : double</span>
+<span class="sd">        modulation frequency in Hz. </span>
+<span class="sd">        </span>
+<span class="sd">        When it is 0, function continues with the BiCGstab solver, but generates a warning that the CW solver should be used for better performance</span>
+<span class="sd">    solver : str, optional</span>
+<span class="sd">        Choose between &#39;CPU&#39; or &#39;GPU&#39; solver (case insensitive). Automatically determined (GPU prioritized) if not specified</span>
+<span class="sd">    opt : nirfasterff.utils.SolverOptions, optional</span>
+<span class="sd">        Solver options. Uses default parameters if not specified, and they should suffice in most cases. </span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.SolverOptions` for details</span>
+<span class="sd">    xflag : bool, optional</span>
+<span class="sd">        if intrinsic excitation field is calculated. The default is True.</span>
+<span class="sd">    mmflag : bool, optional</span>
+<span class="sd">        if intrinsic emission field is calculated. The default is True.</span>
+<span class="sd">    flflag : bool, optional</span>
+<span class="sd">        if fluorescence field is calculated. If set True, xflag must also be True. The default is True.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        If mesh is not a fluor mesh.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If flflag is set True but xflag is not.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    data : nirfasterff.base.FLdata</span>
+<span class="sd">        fluence and boundary measurables given the mesh and optodes.</span>
+<span class="sd">        </span>
+<span class="sd">        If mesh.vol is defined, the returned fluences will be in volumetric space</span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.base.data.FLdata` for details.</span>
+<span class="sd">    infox : nirfasterff.utils.ConvergenceInfo</span>
+<span class="sd">        convergence information of the solver, for intrinsic excitation.</span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.ConvergenceInfo` for details</span>
+<span class="sd">    infom : nirfasterff.utils.ConvergenceInfo</span>
+<span class="sd">        convergence information of the solver, for intrinsic emission.</span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.ConvergenceInfo` for details</span>
+<span class="sd">    infofl : nirfasterff.utils.ConvergenceInfo</span>
+<span class="sd">        convergence information of the solver, for fluorescence emission.</span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.ConvergenceInfo` for details</span>
+<span class="sd">    </span>
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`~nirfasterff.math.get_field_FD()`, :func:`~nirfasterff.math.gen_mass_matrix()`, :func:`~nirfasterff.math.gen_sources()`, and :func:`~nirfasterff.math.gen_sources_fl()`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="s1">&#39;fluor&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Only fluorescence meshes supported&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">flflag</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">xflag</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Error: must first calculate excitation field before calculating fluorescence&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">freq</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: Use femdata_stnd_CW for better performance&#39;</span><span class="p">)</span>
+        
+    <span class="n">dummymesh</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">stndmesh</span><span class="p">()</span>
+    <span class="n">dummymesh</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+    <span class="n">dummymesh</span><span class="o">.</span><span class="n">elements</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">elements</span><span class="p">)</span>
+    <span class="n">dummymesh</span><span class="o">.</span><span class="n">bndvtx</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">bndvtx</span><span class="p">)</span>
+    <span class="n">dummymesh</span><span class="o">.</span><span class="n">mua</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">muax</span><span class="p">)</span>
+    <span class="n">dummymesh</span><span class="o">.</span><span class="n">kappa</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">kappax</span><span class="p">)</span>
+    <span class="n">dummymesh</span><span class="o">.</span><span class="n">ksi</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">ksi</span><span class="p">)</span>
+    <span class="n">dummymesh</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">c</span><span class="p">)</span>
+    
+    <span class="n">data</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">FLdata</span><span class="p">()</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="p">)</span>
+    <span class="c1"># data.vol = copy.deepcopy(mesh.vol)</span>
+    
+    <span class="n">infox</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">infomm</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">infofl</span> <span class="o">=</span> <span class="kc">None</span>
+    
+    <span class="n">omega</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">freq</span>
+    <span class="k">if</span> <span class="n">xflag</span><span class="p">:</span>
+        <span class="c1"># print(&quot;Calculating intrinsic data at excitation wavelength&quot;, flush=1)</span>
+        <span class="n">csrIx</span><span class="p">,</span> <span class="n">csrJx</span><span class="p">,</span> <span class="n">csrVx</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">gen_mass_matrix</span><span class="p">(</span><span class="n">dummymesh</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">GPU</span><span class="p">)</span>
+        <span class="n">qvec</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">gen_sources</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">phix</span><span class="p">,</span> <span class="n">infox</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">get_field_FD</span><span class="p">(</span><span class="n">csrIx</span><span class="p">,</span> <span class="n">csrJx</span><span class="p">,</span> <span class="n">csrVx</span><span class="p">,</span> <span class="n">qvec</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">solver</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">complexx</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">get_boundary_data</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">phix</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">amplitudex</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">complexx</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">phasex</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">complexx</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">phasex</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">complexx</span><span class="p">)]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="k">if</span> <span class="n">mmflag</span><span class="p">:</span>
+        <span class="c1"># print(&quot;Calculating intrinsic data at emission wavelength&quot;, flush=1)</span>
+        <span class="n">dummymesh</span><span class="o">.</span><span class="n">mua</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">muam</span><span class="p">)</span>
+        <span class="n">dummymesh</span><span class="o">.</span><span class="n">kappa</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">kappam</span><span class="p">)</span>
+        
+        <span class="n">csrIm</span><span class="p">,</span> <span class="n">csrJm</span><span class="p">,</span> <span class="n">csrVm</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">gen_mass_matrix</span><span class="p">(</span><span class="n">dummymesh</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">GPU</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;qvec&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">locals</span><span class="p">():</span>
+            <span class="n">qvec</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">gen_sources</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">phimm</span><span class="p">,</span> <span class="n">infom</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">get_field_FD</span><span class="p">(</span><span class="n">csrIm</span><span class="p">,</span> <span class="n">csrJm</span><span class="p">,</span> <span class="n">csrVm</span><span class="p">,</span> <span class="n">qvec</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">solver</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">complexmm</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">get_boundary_data</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">phimm</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">amplitudemm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">complexmm</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">phasemm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">complexmm</span><span class="p">)</span><span class="o">*</span><span class="mf">180.</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">phasemm</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">complexmm</span><span class="p">)]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="k">if</span> <span class="n">flflag</span><span class="p">:</span>
+        <span class="c1"># print(&quot;Calculating fluorescence data&quot;, flush=1)</span>
+        <span class="k">if</span> <span class="s1">&#39;csrIm&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">locals</span><span class="p">():</span>
+            <span class="n">dummymesh</span><span class="o">.</span><span class="n">mua</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">muam</span><span class="p">)</span>
+            <span class="n">dummymesh</span><span class="o">.</span><span class="n">kappa</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">kappam</span><span class="p">)</span>
+            <span class="n">csrIm</span><span class="p">,</span> <span class="n">csrJm</span><span class="p">,</span> <span class="n">csrVm</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">gen_mass_matrix</span><span class="p">(</span><span class="n">dummymesh</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">GPU</span><span class="p">)</span>
+        <span class="n">qvec</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">gen_sources_fl</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">phix</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">GPU</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">phifl</span><span class="p">,</span> <span class="n">infofl</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">get_field_FD</span><span class="p">(</span><span class="n">csrIm</span><span class="p">,</span> <span class="n">csrJm</span><span class="p">,</span> <span class="n">csrVm</span><span class="p">,</span> <span class="n">qvec</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">solver</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">complexfl</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">get_boundary_data</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">phifl</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">amplitudefl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">complexfl</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">phasefl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">complexfl</span><span class="p">)</span><span class="o">*</span><span class="mf">180.</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">phasefl</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">complexfl</span><span class="p">)]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    
+    <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">isvol</span><span class="p">():</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">togrid</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">infox</span><span class="p">,</span> <span class="n">infomm</span><span class="p">,</span> <span class="n">infofl</span></div>
+
+
+<div class="viewcode-block" id="femdata_stnd_TR">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.forward.femdata.femdata_stnd_TR.html#nirfasterff.forward.femdata.femdata_stnd_TR">[docs]</a>
+<span class="k">def</span> <span class="nf">femdata_stnd_TR</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">tmax</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">savefield</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">beautify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">()):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Forward modeling calculating TPSF on a standard mesh. Please consider using mesh.femdata_tpsf(tmax, dt) instead.</span>
+<span class="sd">    </span>
+<span class="sd">    The function calculates the MASS matrices, the source vectors, and calls the standard TPSF solver (preconditioned conjugated gradient).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mesh : nirfasterff.base.stndmesh</span>
+<span class="sd">        the mesh used to calcuate the forward data.</span>
+<span class="sd">    tmax : double</span>
+<span class="sd">        maximum time simulated, in seconds.</span>
+<span class="sd">    dt : double</span>
+<span class="sd">        size of each time step, in seconds.</span>
+<span class="sd">    savefield : bool, optional</span>
+<span class="sd">        If True, the internal TPSFs are also returned. If False, only boundary TPSFs are returned and data.phi will be empty. </span>
+<span class="sd">        </span>
+<span class="sd">        The default is False.</span>
+<span class="sd">    beautify : bool, optional</span>
+<span class="sd">        If true, zeros the initial unstable parts of the boundary TPSFs. The default is True.</span>
+<span class="sd">    solver : str, optional</span>
+<span class="sd">        Choose between &#39;CPU&#39; or &#39;GPU&#39; solver (case insensitive). Automatically determined (GPU prioritized) if not specified</span>
+<span class="sd">    opt : nirfasterff.utils.SolverOptions, optional</span>
+<span class="sd">        Solver options. Uses default parameters if not specified, and they should suffice in most cases. </span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.SolverOptions` for details</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        If mesh is not a stnd mesh.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If tmax is smaller than dt</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    data : nirfasterff.base.TPSFdata</span>
+<span class="sd">        internal and boundary TPSFs given the mesh and optodes.</span>
+<span class="sd">        </span>
+<span class="sd">        If mesh.vol is defined and `savefield==True`, the returned internal TPSFs will be in volumetric space</span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.base.data.TPSFdata` for details.</span>
+<span class="sd">    info : nirfasterff.utils.ConvergenceInfo</span>
+<span class="sd">        convergence information of the solver. </span>
+<span class="sd">        </span>
+<span class="sd">        Only the convergence info of the last time step is returned.</span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.ConvergenceInfo` for details</span>
+<span class="sd">        </span>
+<span class="sd">    See Also</span>
+<span class="sd">    -------</span>
+<span class="sd">    :func:`~nirfasterff.math.gen_mass_matrix()`, :func:`~nirfasterff.math.gen_sources()`, and :func:`~nirfasterff.math.get_field_TR()`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="s1">&#39;stnd&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Only standard meshes supported&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">tmax</span><span class="o">&lt;</span><span class="n">dt</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;tmax must be greater than dt&#39;</span><span class="p">)</span>
+    <span class="c1"># print(&quot;Calculating the MASS matrix&quot;, flush=1)</span>
+    <span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">csrV</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">gen_mass_matrix</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">GPU</span><span class="p">)</span>
+    <span class="n">qvec</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">gen_sources</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+    <span class="n">qvec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">qvec</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">TPSFdata</span><span class="p">()</span>
+    <span class="c1"># print(&quot;Solving the system&quot;, flush=1)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="n">tmax</span><span class="o">*</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">dt</span><span class="o">*</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">time_steps</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
+    <span class="n">phi</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">get_field_TR</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">csrV</span><span class="p">,</span> <span class="n">qvec</span><span class="p">,</span> <span class="n">dt</span><span class="o">*</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">time_steps</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">solver</span><span class="p">)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">tpsf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">time_steps</span><span class="p">))</span>
+    <span class="n">n_src</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">num</span><span class="o">.</span><span class="n">size</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">time_steps</span><span class="p">):</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">tpsf</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">get_boundary_data</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">phi</span><span class="p">[:,</span> <span class="n">n_src</span><span class="o">*</span><span class="n">i</span><span class="p">:</span><span class="n">n_src</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)])</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="p">)</span>
+    <span class="c1"># data.vol = copy.deepcopy(mesh.vol)</span>
+    
+    <span class="c1"># Make it nice</span>
+    <span class="k">if</span> <span class="n">beautify</span><span class="p">:</span>
+        <span class="n">rsd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">coord</span><span class="p">[</span><span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">,:]</span> <span class="o">-</span> <span class="n">mesh</span><span class="o">.</span><span class="n">meas</span><span class="o">.</span><span class="n">coord</span><span class="p">[</span><span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">,:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">t_cut</span> <span class="o">=</span> <span class="n">rsd</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">c</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">ind_pair</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">tpsf</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">tpsf</span><span class="p">[</span><span class="n">ind_pair</span><span class="p">,</span><span class="mi">0</span><span class="p">]):</span>
+                <span class="c1"># set zeroes at time of flight shorter than minumum possible time of flight between source and detector </span>
+                <span class="n">data</span><span class="o">.</span><span class="n">tpsf</span><span class="p">[</span><span class="n">ind_pair</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;=</span> <span class="n">t_cut</span><span class="p">[</span><span class="n">ind_pair</span><span class="p">]]</span> <span class="o">=</span> <span class="mf">0.</span>
+                <span class="c1"># Set unstable part to zero</span>
+                <span class="n">maxl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">tpsf</span><span class="p">[</span><span class="n">ind_pair</span><span class="p">,:])</span>
+                <span class="n">ind_sample</span> <span class="o">=</span> <span class="n">maxl</span>
+                <span class="k">while</span> <span class="n">ind_sample</span><span class="o">&gt;=</span><span class="mi">0</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">tpsf</span><span class="p">[</span><span class="n">ind_pair</span><span class="p">,</span> <span class="n">ind_sample</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="k">break</span>
+                    <span class="n">ind_sample</span> <span class="o">-=</span> <span class="mi">1</span>
+                <span class="n">data</span><span class="o">.</span><span class="n">tpsf</span><span class="p">[</span><span class="n">ind_pair</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="n">ind_sample</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
+    
+    <span class="k">if</span> <span class="n">savefield</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">isvol</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">zgrid</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+                <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">mesh2grid</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">phi</span><span class="p">),</span> <span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">ygrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">xgrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">zgrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">time_steps</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">mesh2grid</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">phi</span><span class="p">),</span> <span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">ygrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">xgrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">time_steps</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">phi</span> <span class="o">=</span> <span class="n">tmp</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">time_steps</span><span class="p">),</span><span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">vol</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">info</span></div>
+
+
+<div class="viewcode-block" id="femdata_stnd_TR_moments">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.forward.femdata.femdata_stnd_TR_moments.html#nirfasterff.forward.femdata.femdata_stnd_TR_moments">[docs]</a>
+<span class="k">def</span> <span class="nf">femdata_stnd_TR_moments</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">max_moments</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">savefield</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">()):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Forward modeling calculating TR moments using Mellin transform on a standard mesh. Please consider using mesh.femdata_moments() instead.</span>
+<span class="sd">    </span>
+<span class="sd">    The function calculates the MASS matrices, the source vectors, and calls the Mellin moments solver (preconditioned conjugated gradient).</span>
+<span class="sd">    </span>
+<span class="sd">    Calculates 0th, 1st, 2nd, .., max_moments-th moments directly without calculating TPSF first.</span>
+<span class="sd">    </span>
+<span class="sd">    This is more efficient, if the actual TPSFs are not of concern.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mesh : nirfasterff.base.stndmesh</span>
+<span class="sd">        the mesh used to calcuate the forward data.</span>
+<span class="sd">    max_moments : int32, optional</span>
+<span class="sd">        max order of moments to calculate. That is, 0th, 1st, 2nd, .., max_moments-th will be calculated. The default is 3.</span>
+<span class="sd">    savefield : bool, optional</span>
+<span class="sd">        If True, the internal moments are also returned. If False, only boundary moments are returned and data.phi will be empty. </span>
+<span class="sd">        </span>
+<span class="sd">        The default is False.</span>
+<span class="sd">    solver : str, optional</span>
+<span class="sd">        Choose between &#39;CPU&#39; or &#39;GPU&#39; solver (case insensitive). Automatically determined (GPU prioritized) if not specified</span>
+<span class="sd">    opt : nirfasterff.utils.SolverOptions, optional</span>
+<span class="sd">        Solver options. Uses default parameters if not specified, and they should suffice in most cases. </span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.SolverOptions` for details</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        If mesh is not a stnd mesh.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If max_moments is negative.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    data : nirfasterff.base.TRMomentsdata</span>
+<span class="sd">        internal and boundary moments given the mesh and optodes.</span>
+<span class="sd">        </span>
+<span class="sd">        If mesh.vol is defined and `savefield==True`, the returned internal moments will be in volumetric space</span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.base.data.TRMomentsdata` for details.</span>
+<span class="sd">    info : nirfasterff.utils.ConvergenceInfo</span>
+<span class="sd">        convergence information of the solver. </span>
+<span class="sd">        </span>
+<span class="sd">        Only the convergence info of highest order moments is returned.</span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.ConvergenceInfo` for details</span>
+<span class="sd">    </span>
+<span class="sd">    See Also</span>
+<span class="sd">    -------</span>
+<span class="sd">    :func:`~nirfasterff.math.gen_mass_matrix()`, :func:`~nirfasterff.math.gen_sources()`, and :func:`~nirfasterff.math.get_field_TRmoments()`</span>
+<span class="sd">    </span>
+<span class="sd">    References</span>
+<span class="sd">    -------</span>
+<span class="sd">    Arridge and Schweiger, Applied Optics, 1995. doi:10.1364/AO.34.002683</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="s1">&#39;stnd&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Only standard meshes supported&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">max_moments</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;max_moments must be non-negative&#39;</span><span class="p">)</span>
+    <span class="c1"># print(&quot;Calculating the MASS matrix&quot;, flush=1)</span>
+    <span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">csrV</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">gen_mass_matrix</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">GPU</span><span class="p">)</span>
+    <span class="n">qvec</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">gen_sources</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+    <span class="n">qvec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">qvec</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">TRMomentsdata</span><span class="p">()</span>
+    <span class="c1"># print(&quot;Solving the system&quot;, flush=1)</span>
+    <span class="n">phi</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">get_field_TRmoments</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">csrV</span><span class="p">,</span> <span class="n">qvec</span><span class="p">,</span> <span class="n">max_moments</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">solver</span><span class="p">)</span>
+    
+    <span class="n">n_src</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">num</span><span class="o">.</span><span class="n">size</span>
+    <span class="n">m0</span> <span class="o">=</span> <span class="n">phi</span><span class="p">[:,:</span><span class="n">n_src</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">ind_order</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_moments</span><span class="p">):</span>
+        <span class="n">phi</span><span class="p">[:,</span><span class="n">n_src</span><span class="o">*</span><span class="p">(</span><span class="n">ind_order</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span><span class="n">n_src</span><span class="o">*</span><span class="p">(</span><span class="n">ind_order</span><span class="o">+</span><span class="mi">2</span><span class="p">)]</span> <span class="o">=</span> <span class="n">phi</span><span class="p">[:,</span><span class="n">n_src</span><span class="o">*</span><span class="p">(</span><span class="n">ind_order</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span><span class="n">n_src</span><span class="o">*</span><span class="p">(</span><span class="n">ind_order</span><span class="o">+</span><span class="mi">2</span><span class="p">)]</span> <span class="o">/</span> <span class="n">m0</span>
+        
+    <span class="n">data</span><span class="o">.</span><span class="n">moments</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">max_moments</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_moments</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">moments</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">get_boundary_data</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">phi</span><span class="p">[:,</span> <span class="n">n_src</span><span class="o">*</span><span class="n">i</span><span class="p">:</span><span class="n">n_src</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)])</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="p">)</span>
+    <span class="c1"># data.vol = copy.deepcopy(mesh.vol)</span>
+    
+    <span class="k">if</span> <span class="n">savefield</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">isvol</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">zgrid</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+                <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">mesh2grid</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">phi</span><span class="p">),</span> <span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">ygrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">xgrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">zgrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_moments</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">mesh2grid</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">phi</span><span class="p">),</span> <span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">ygrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">xgrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_moments</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">phi</span> <span class="o">=</span> <span class="n">tmp</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">phi</span> <span class="o">=</span> <span class="n">phi</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">vol</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">info</span></div>
+
+
+<div class="viewcode-block" id="femdata_DCS">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.forward.femdata.femdata_DCS.html#nirfasterff.forward.femdata.femdata_DCS">[docs]</a>
+<span class="k">def</span> <span class="nf">femdata_DCS</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">tvec</span><span class="p">,</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">()):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Forward modeling calculating steady-state fluences and G1/g1 curves by solving the correlation diffusion equation. Please consider using mesh.femdata(tvec) instead.</span>
+<span class="sd">    </span>
+<span class="sd">    The fluences as well as its boundary amplitudes are exactly the same as what the CW solver would give when tau=0.</span>
+<span class="sd">    </span>
+<span class="sd">    g1 curve is simple G1 curve normalized by the boundary amplitudes.</span>
+<span class="sd">    </span>
+<span class="sd">    The function calculates the MASS matrices, the source vectors, and calls the G1 solver, which internally utilizes the CW solver.</span>
+<span class="sd">    </span>
+<span class="sd">    When calculating the flow-related term, the function assumes Brownian motion and uses only mesh.aDb (that is, mesh.a and mesh.Db are ignored).</span>
+<span class="sd">    </span>
+<span class="sd">    This is to say, we assume :math:`\\langle\\Delta r^2\\rangle=6\\alpha Db\\tau`</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mesh : nirfasterff.base.dcsmesh</span>
+<span class="sd">        the mesh used to calcuate the forward data.</span>
+<span class="sd">    tvec : double NumPy array</span>
+<span class="sd">        time vector (i.e. :math:`\tau`) for the G1 curve, in seconds. It is usually a good idea to use log scale</span>
+<span class="sd">    solver : str, optional</span>
+<span class="sd">        Choose between &#39;CPU&#39; or &#39;GPU&#39; solver (case insensitive). Automatically determined (GPU prioritized) if not specified</span>
+<span class="sd">    opt : nirfasterff.utils.SolverOptions, optional</span>
+<span class="sd">        Solver options. Uses default parameters if not specified, and they should suffice in most cases. </span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.SolverOptions` for details</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        if mesh is not a dcs mesh.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    data : nirfasterff.base.DCSdata</span>
+<span class="sd">        contains fluence, G1 curve, and g1 curve calculated at each spatial location, and also the boundary data.</span>
+<span class="sd">        </span>
+<span class="sd">        If mesh.vol is set, internal G1 curves will be returned in volumetric space</span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.base.data.DCSdata` for details.</span>
+<span class="sd">    info : nirfasterff.utils.ConvergenceInfo</span>
+<span class="sd">        convergence information of the solver when calculating the fluence field.</span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.ConvergenceInfo` for details</span>
+<span class="sd">    </span>
+<span class="sd">    See Also</span>
+<span class="sd">    -------</span>
+<span class="sd">    :func:`~nirfasterff.math.gen_mass_matrix()`, :func:`~nirfasterff.math.gen_sources()`, and :func:`~nirfasterff.math.get_field_CW()`</span>
+<span class="sd">    </span>
+<span class="sd">    References</span>
+<span class="sd">    -------</span>
+<span class="sd">    Durduran et al, 2010, Rep. Prog. Phys. doi:10.1088/0034-4885/73/7/076701</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="s1">&#39;dcs&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Only DCS meshes supported&#39;</span><span class="p">)</span>
+    <span class="c1"># make a copy, so we don&#39;t accidentally make a mess</span>
+    <span class="n">mesh2</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">dcsmesh</span><span class="p">()</span>
+    <span class="n">mesh2</span><span class="o">.</span><span class="n">from_copy</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+    <span class="n">mesh2</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="s1">&#39;stnd&#39;</span> <span class="c1"># pretend to be stnd, otherwise function refused to run</span>
+    <span class="n">mesh2</span><span class="o">.</span><span class="n">vol</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">meshvol</span><span class="p">()</span>
+    <span class="c1"># steady state data</span>
+    <span class="n">data0</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">femdata_stnd_CW</span><span class="p">(</span><span class="n">mesh2</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">opt</span><span class="p">)</span>
+    <span class="n">nsteps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">tvec</span><span class="p">)</span>
+    <span class="n">k0</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">wv_DCS</span><span class="o">/</span><span class="mf">1e6</span><span class="p">)</span>    <span class="c1"># wavenumber; wavelength converted to mm</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">DCSdata</span><span class="p">()</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">phi</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">data0</span><span class="o">.</span><span class="n">phi</span><span class="p">)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">data0</span><span class="o">.</span><span class="n">link</span><span class="p">)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">amplitude</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">data0</span><span class="o">.</span><span class="n">amplitude</span><span class="p">)</span>
+    <span class="c1"># data.vol = copy.deepcopy(mesh.vol)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">tau_DCS</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">tvec</span><span class="p">)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">phi_DCS</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">mesh</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">mesh</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">num</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">nsteps</span><span class="p">))</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">G1_DCS</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">nsteps</span><span class="p">))</span>
+    
+    <span class="n">qvec</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">gen_sources</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+    <span class="n">qvec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">qvec</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nsteps</span><span class="p">):</span>
+        <span class="n">mesh2</span><span class="o">.</span><span class="n">mua</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">mua</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">mesh</span><span class="o">.</span><span class="n">mus</span><span class="o">*</span><span class="n">k0</span><span class="o">*</span><span class="n">k0</span><span class="o">*</span><span class="n">mesh</span><span class="o">.</span><span class="n">aDb</span><span class="o">*</span><span class="n">tvec</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="c1"># Directly call the low-level solvers to avoid unnecessary copying etc</span>
+        <span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">csrV</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">gen_mass_matrix</span><span class="p">(</span><span class="n">mesh2</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">GPU</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">phi_DCS</span><span class="p">[:,:,</span><span class="n">i</span><span class="p">],</span><span class="n">_</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">get_field_CW</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">csrV</span><span class="p">,</span> <span class="n">qvec</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">solver</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">G1_DCS</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">get_boundary_data</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">phi_DCS</span><span class="p">[:,:,</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">g1_DCS</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">G1_DCS</span> <span class="o">/</span> <span class="n">data</span><span class="o">.</span><span class="n">amplitude</span><span class="p">[:,</span><span class="kc">None</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">isvol</span><span class="p">():</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">togrid</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">info</span></div>
+
+
+<div class="viewcode-block" id="femdata_fl_TR">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.forward.femdata.femdata_fl_TR.html#nirfasterff.forward.femdata.femdata_fl_TR">[docs]</a>
+<span class="k">def</span> <span class="nf">femdata_fl_TR</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">tmax</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">savefield</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">beautify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">()):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Forward modeling calculating TPSF on a fluorescence mesh. Please consider using mesh.femdata_tpsf(tmax, dt) instead.</span>
+<span class="sd">    </span>
+<span class="sd">    The function calculates the MASS matrices, the source vectors, and calls two separate TPSF solvers (both preconditioned conjugated gradient):</span>
+<span class="sd">    </span>
+<span class="sd">    First time calculates the TPSF for the excitation field, the result of which is consequently convolved with the decay.</span>
+<span class="sd">    </span>
+<span class="sd">    The second solver is called with the convolved excitation field as its input to calculate the TPSF for fluorescence emission.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ---------- </span>
+<span class="sd">    mesh : nirfasterff.base.fluormesh</span>
+<span class="sd">        the mesh used to calcuate the forward data.</span>
+<span class="sd">    tmax : double</span>
+<span class="sd">        maximum time simulated, in seconds.</span>
+<span class="sd">    dt : double</span>
+<span class="sd">        size of each time step, in seconds.</span>
+<span class="sd">    savefield : bool, optional</span>
+<span class="sd">        If True, the internal TPSFs are also returned. If False, only boundary TPSFs are returned and data.phix and data.phifl will be empty. </span>
+<span class="sd">        </span>
+<span class="sd">        The default is False.</span>
+<span class="sd">    beautify : bool, optional</span>
+<span class="sd">        If true, zeros the initial unstable parts of the boundary TPSFs. The default is True.</span>
+<span class="sd">    solver : str, optional</span>
+<span class="sd">        Choose between &#39;CPU&#39; or &#39;GPU&#39; solver (case insensitive). Automatically determined (GPU prioritized) if not specified</span>
+<span class="sd">    opt : nirfasterff.utils.SolverOptions, optional</span>
+<span class="sd">        Solver options. Uses default parameters if not specified, and they should suffice in most cases. </span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.SolverOptions` for details</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        if mesh is not a fluor mesh.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    data : nirfasterff.base.flTPSFdata</span>
+<span class="sd">        internal and boundary TPSFs given the mesh and optodes, both excitation and fluorescence emission.</span>
+<span class="sd">        </span>
+<span class="sd">        If `mesh.vol` is set and `savefield` is set to `True`, internal TPSF data will be represented in volumetric space</span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.base.data.flTPSFdata` for details.</span>
+<span class="sd">    infox : nirfasterff.utils.ConvergenceInfo</span>
+<span class="sd">        convergence information of the solver, excitation. </span>
+<span class="sd">        </span>
+<span class="sd">        Only the convergence info of the last time step is returned.</span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.ConvergenceInfo` for details</span>
+<span class="sd">    infom : nirfasterff.utils.ConvergenceInfo</span>
+<span class="sd">        convergence information of the solver, fluorescence emission. </span>
+<span class="sd">        </span>
+<span class="sd">        Only the convergence info of the last time step is returned.</span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.ConvergenceInfo` for details</span>
+<span class="sd">    </span>
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`~nirfasterff.math.gen_mass_matrix()`, :func:`~nirfasterff.math.get_field_TR()`, and :func:`~nirfasterff.math.get_field_TRFL()`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="s1">&#39;fluor&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Only fluorescence meshes supported&#39;</span><span class="p">)</span>
+    <span class="c1"># create a tmp stnd mesh, so we can run the mass matrix generation</span>
+    <span class="n">dummymesh</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">stndmesh</span><span class="p">()</span>
+    <span class="n">dummymesh</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+    <span class="n">dummymesh</span><span class="o">.</span><span class="n">elements</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">elements</span><span class="p">)</span>
+    <span class="n">dummymesh</span><span class="o">.</span><span class="n">bndvtx</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">bndvtx</span><span class="p">)</span>
+    <span class="n">dummymesh</span><span class="o">.</span><span class="n">mua</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">muax</span><span class="o">+</span><span class="n">mesh</span><span class="o">.</span><span class="n">muaf</span><span class="p">)</span>
+    <span class="n">dummymesh</span><span class="o">.</span><span class="n">kappa</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="mf">3.0</span><span class="o">*</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">kappax</span><span class="o">+</span><span class="n">dummymesh</span><span class="o">.</span><span class="n">mua</span><span class="p">))</span>
+    <span class="n">dummymesh</span><span class="o">.</span><span class="n">ksi</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">ksi</span><span class="p">)</span>
+    <span class="n">dummymesh</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">c</span><span class="p">)</span>
+    <span class="c1"># MASS matrix at excitation wavelength</span>
+    <span class="n">csrIx</span><span class="p">,</span> <span class="n">csrJx</span><span class="p">,</span> <span class="n">csrVx</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">gen_mass_matrix</span><span class="p">(</span><span class="n">dummymesh</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">GPU</span><span class="p">)</span>
+    <span class="n">qvec</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">gen_sources</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+    <span class="n">qvec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">qvec</span><span class="p">)</span>
+    <span class="c1"># Genererate excitation data</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Excitation...&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="n">tmax</span><span class="o">*</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">dt</span><span class="o">*</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">time_steps</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+    <span class="n">phix</span><span class="p">,</span> <span class="n">infox</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">get_field_TR</span><span class="p">(</span><span class="n">csrIx</span><span class="p">,</span> <span class="n">csrJx</span><span class="p">,</span> <span class="n">csrVx</span><span class="p">,</span> <span class="n">qvec</span><span class="p">,</span> <span class="n">dt</span><span class="o">*</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">time_steps</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">solver</span><span class="p">)</span>
+    <span class="c1"># boundary data</span>
+    <span class="n">tpsfx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">time_steps</span><span class="p">))</span>
+    <span class="n">n_src</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">num</span><span class="o">.</span><span class="n">size</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">time_steps</span><span class="p">):</span>
+        <span class="n">tpsfx</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">get_boundary_data</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">phix</span><span class="p">[:,</span> <span class="n">n_src</span><span class="o">*</span><span class="n">i</span><span class="p">:</span><span class="n">n_src</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)])</span>
+    
+    <span class="c1"># phix = np.reshape(phix, (-1,n_src,time_steps),order=&#39;F&#39;)</span>
+    <span class="c1"># Now emission: need to calcuate for each source</span>
+    <span class="n">dummymesh</span><span class="o">.</span><span class="n">mua</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">muam</span><span class="p">)</span>
+    <span class="n">dummymesh</span><span class="o">.</span><span class="n">kappa</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">kappam</span><span class="p">)</span>
+    <span class="c1"># MASS matrix at emission wavelength</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Emission...&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">csrIm</span><span class="p">,</span> <span class="n">csrJm</span><span class="p">,</span> <span class="n">csrVm</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">gen_mass_matrix</span><span class="p">(</span><span class="n">dummymesh</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">GPU</span><span class="p">)</span>
+    <span class="c1"># Now convolve phix with the decay</span>
+    <span class="n">n_nodes</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">eta_muaf</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">eta</span> <span class="o">*</span> <span class="n">mesh</span><span class="o">.</span><span class="n">muaf</span>
+    <span class="n">phim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">phix</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">qvec_m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">phix</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">src</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_src</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_nodes</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">eta_muaf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">!=</span><span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">eta_muaf</span><span class="p">[</span><span class="n">i</span><span class="p">]):</span>
+                <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">tau</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+                    <span class="n">qvec_m</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">src</span><span class="p">::</span><span class="n">n_src</span><span class="p">]</span><span class="o">=</span> <span class="n">phix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">src</span><span class="p">::</span><span class="n">n_src</span><span class="p">]</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span> <span class="o">*</span> <span class="n">eta_muaf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">decay</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">time</span><span class="o">/</span><span class="n">mesh</span><span class="o">.</span><span class="n">tau</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                    <span class="n">qvec_m</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">src</span><span class="p">::</span><span class="n">n_src</span><span class="p">]</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">lfilter</span><span class="p">(</span><span class="n">decay</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="n">phix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">src</span><span class="p">::</span><span class="n">n_src</span><span class="p">]</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span> <span class="o">*</span> <span class="n">eta_muaf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">dt</span><span class="o">/</span><span class="n">mesh</span><span class="o">.</span><span class="n">tau</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+    <span class="c1"># Call the emission solver</span>
+    <span class="n">phim</span><span class="p">,</span> <span class="n">infom</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">get_field_TRFL</span><span class="p">(</span><span class="n">csrIm</span><span class="p">,</span> <span class="n">csrJm</span><span class="p">,</span> <span class="n">csrVm</span><span class="p">,</span> <span class="n">qvec_m</span><span class="p">,</span> <span class="n">dt</span><span class="o">*</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">time_steps</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">solver</span><span class="p">)</span>
+    <span class="c1"># boudary data, emission</span>
+    <span class="n">tpsfm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">time_steps</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">time_steps</span><span class="p">):</span>
+        <span class="n">tpsfm</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">get_boundary_data</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">phim</span><span class="p">[:,</span> <span class="n">n_src</span><span class="o">*</span><span class="n">i</span><span class="p">:</span><span class="n">n_src</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)])</span>
+    <span class="c1"># Make it nice</span>
+    <span class="k">if</span> <span class="n">beautify</span><span class="p">:</span>
+        <span class="n">rsd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">coord</span><span class="p">[</span><span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">,:]</span> <span class="o">-</span> <span class="n">mesh</span><span class="o">.</span><span class="n">meas</span><span class="o">.</span><span class="n">coord</span><span class="p">[</span><span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">,:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">t_cut</span> <span class="o">=</span> <span class="n">rsd</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">c</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">ind_pair</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">tpsfx</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">tpsfx</span><span class="p">[</span><span class="n">ind_pair</span><span class="p">,</span><span class="mi">0</span><span class="p">]):</span>
+                <span class="c1"># set zeroes at time of flight shorter than minumum possible time of flight between source and detector </span>
+                <span class="n">tpsfx</span><span class="p">[</span><span class="n">ind_pair</span><span class="p">,</span> <span class="n">time</span> <span class="o">&lt;=</span> <span class="n">t_cut</span><span class="p">[</span><span class="n">ind_pair</span><span class="p">]]</span> <span class="o">=</span> <span class="mf">0.</span>
+                <span class="c1"># Set unstable part to zero</span>
+                <span class="n">maxl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">tpsfx</span><span class="p">[</span><span class="n">ind_pair</span><span class="p">,:])</span>
+                <span class="n">ind_sample</span> <span class="o">=</span> <span class="n">maxl</span>
+                <span class="k">while</span> <span class="n">ind_sample</span><span class="o">&gt;=</span><span class="mi">0</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">tpsfx</span><span class="p">[</span><span class="n">ind_pair</span><span class="p">,</span> <span class="n">ind_sample</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="k">break</span>
+                    <span class="n">ind_sample</span> <span class="o">-=</span> <span class="mi">1</span>
+                <span class="n">tpsfx</span><span class="p">[</span><span class="n">ind_pair</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="n">ind_sample</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">=</span><span class="mf">0.</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">tpsfm</span><span class="p">[</span><span class="n">ind_pair</span><span class="p">,</span><span class="mi">0</span><span class="p">]):</span>
+                <span class="c1"># set zeroes at time of flight shorter than minumum possible time of flight between source and detector </span>
+                <span class="n">tpsfm</span><span class="p">[</span><span class="n">ind_pair</span><span class="p">,</span> <span class="n">time</span> <span class="o">&lt;=</span> <span class="n">t_cut</span><span class="p">[</span><span class="n">ind_pair</span><span class="p">]]</span> <span class="o">=</span> <span class="mf">0.</span>
+                <span class="c1"># Set unstable part to zero</span>
+                <span class="n">maxl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">tpsfm</span><span class="p">[</span><span class="n">ind_pair</span><span class="p">,:])</span>
+                <span class="n">ind_sample</span> <span class="o">=</span> <span class="n">maxl</span>
+                <span class="k">while</span> <span class="n">ind_sample</span><span class="o">&gt;=</span><span class="mi">0</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">tpsfm</span><span class="p">[</span><span class="n">ind_pair</span><span class="p">,</span> <span class="n">ind_sample</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="k">break</span>
+                    <span class="n">ind_sample</span> <span class="o">-=</span> <span class="mi">1</span>
+                <span class="n">tpsfm</span><span class="p">[</span><span class="n">ind_pair</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="n">ind_sample</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">=</span><span class="mf">0.</span>
+    <span class="c1"># Assemble the data class to return</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">flTPSFdata</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">savefield</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">isvol</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">zgrid</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+                <span class="n">tmpx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">mesh2grid</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">phix</span><span class="p">),</span> <span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">ygrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">xgrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">zgrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">time_steps</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+                <span class="n">tmpm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">mesh2grid</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">phim</span><span class="p">),</span> <span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">ygrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">xgrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">zgrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">time_steps</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">tmpx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">mesh2grid</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">phix</span><span class="p">),</span> <span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">ygrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">xgrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">time_steps</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+                <span class="n">tmpm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">mesh2grid</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">phim</span><span class="p">),</span> <span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">ygrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">xgrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">time_steps</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">phix</span> <span class="o">=</span> <span class="n">tmpx</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">phifl</span> <span class="o">=</span> <span class="n">tmpm</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">phix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">phix</span><span class="p">,</span> <span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">time_steps</span><span class="p">),</span><span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">phifl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">phim</span><span class="p">,</span> <span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">time_steps</span><span class="p">),</span><span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">tpsfx</span> <span class="o">=</span> <span class="n">tpsfx</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">tpsffl</span> <span class="o">=</span> <span class="n">tpsfm</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">vol</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="p">)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">time</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="p">)</span>
+    <span class="c1">#return</span>
+    <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">infox</span><span class="p">,</span> <span class="n">infom</span></div>
+
+
+<div class="viewcode-block" id="femdata_fl_TR_moments">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.forward.femdata.femdata_fl_TR_moments.html#nirfasterff.forward.femdata.femdata_fl_TR_moments">[docs]</a>
+<span class="k">def</span> <span class="nf">femdata_fl_TR_moments</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">max_moments</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">savefield</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">()):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Forward modeling calculating TR moments using Mellin transform on a fluorescence mesh. Please consider using mesh.femdata_moments() instead.</span>
+<span class="sd">    </span>
+<span class="sd">    The function calculates the MASS matrix, the source vectors, and calls the two Mellin moments solver (both preconditioned conjugated gradient):</span>
+<span class="sd">    </span>
+<span class="sd">    First time calculates the moments for the excitation field, the result of which is consequently used as the input of the second solver,</span>
+<span class="sd">    </span>
+<span class="sd">    which calculates the moments of fluorescence emission based on the excitation moments</span>
+<span class="sd">    </span>
+<span class="sd">    Calculates 0th, 1st, 2nd, .., max_moments-th moments directly without calculating TPSF first, and this is done for both excitation and fluorescence emission.</span>
+<span class="sd">    </span>
+<span class="sd">    This is more efficient, if the time series are not of concern.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mesh : nirfasterff.base.fluormesh</span>
+<span class="sd">        the mesh used to calculate the forward data.</span>
+<span class="sd">    max_moments : int32, optional</span>
+<span class="sd">        max order of moments to calculate. That is, 0th, 1st, 2nd, .., max_moments-th will be calculated. The default is 3.</span>
+<span class="sd">    savefield : bool, optional</span>
+<span class="sd">        If True, the internal moments are also returned. If False, only boundary moments are returned and data.phix and data.phifl will be empty. </span>
+<span class="sd">        </span>
+<span class="sd">        The default is False.</span>
+<span class="sd">    solver : str, optional</span>
+<span class="sd">        Choose between &#39;CPU&#39; or &#39;GPU&#39; solver (case insensitive). Automatically determined (GPU prioritized) if not specified</span>
+<span class="sd">    opt : nirfasterff.utils.SolverOptions, optional</span>
+<span class="sd">        Solver options. Uses default parameters if not specified, and they should suffice in most cases. </span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.SolverOptions` for details</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        if mesh is not a fluor mesh.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        if max_moments is negative.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    data : nirfasterff.base.flTRMomentsdata</span>
+<span class="sd">        internal and boundary moments given the mesh and optodes, both excitation and fluorescence emission.</span>
+<span class="sd">        </span>
+<span class="sd">        If `mesh.vol` is set and `savefield` is set to `True`, internal moments will be represented in volumetric space</span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.base.data.flTRMomentsdata` for details.</span>
+<span class="sd">    infox : nirfasterff.utils.ConvergenceInfo</span>
+<span class="sd">        convergence information of the solver, excitation. </span>
+<span class="sd">        </span>
+<span class="sd">        Only the convergence info of highest order moments is returned.</span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.ConvergenceInfo` for details</span>
+<span class="sd">    infom : nirfasterff.utils.ConvergenceInfo</span>
+<span class="sd">        convergence information of the solver, fluorescence emission. </span>
+<span class="sd">        </span>
+<span class="sd">        Only the convergence info of highest order moments is returned.</span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.ConvergenceInfo` for details</span>
+<span class="sd">    </span>
+<span class="sd">    See Also</span>
+<span class="sd">    -------</span>
+<span class="sd">    :func:`~nirfasterff.math.gen_mass_matrix()`, :func:`~nirfasterff.math.get_field_TRmoments()`, and :func:`~nirfasterff.math.get_field_TRFLmoments()`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+   
+    <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="s1">&#39;fluor&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Only standard meshes supported&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">max_moments</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;max_moments must be non-negative&#39;</span><span class="p">)</span>
+    <span class="c1"># create a tmp stnd mesh, so we can run the mass matrix generation</span>
+    <span class="n">dummymesh</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">stndmesh</span><span class="p">()</span>
+    <span class="n">dummymesh</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+    <span class="n">dummymesh</span><span class="o">.</span><span class="n">elements</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">elements</span><span class="p">)</span>
+    <span class="n">dummymesh</span><span class="o">.</span><span class="n">bndvtx</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">bndvtx</span><span class="p">)</span>
+    <span class="n">dummymesh</span><span class="o">.</span><span class="n">mua</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">muax</span><span class="o">+</span><span class="n">mesh</span><span class="o">.</span><span class="n">muaf</span><span class="p">)</span>
+    <span class="n">dummymesh</span><span class="o">.</span><span class="n">kappa</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="mf">3.0</span><span class="o">*</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">kappax</span><span class="o">+</span><span class="n">dummymesh</span><span class="o">.</span><span class="n">mua</span><span class="p">))</span>
+    <span class="n">dummymesh</span><span class="o">.</span><span class="n">ksi</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">ksi</span><span class="p">)</span>
+    <span class="n">dummymesh</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">c</span><span class="p">)</span>
+    <span class="c1"># MASS matrix at excitation wavelength</span>
+    <span class="n">csrIx</span><span class="p">,</span> <span class="n">csrJx</span><span class="p">,</span> <span class="n">csrVx</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">gen_mass_matrix</span><span class="p">(</span><span class="n">dummymesh</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">GPU</span><span class="p">)</span>
+    <span class="n">qvec</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">gen_sources</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+    <span class="n">qvec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">qvec</span><span class="p">)</span>
+    <span class="c1"># excitation moments</span>
+    <span class="n">phix</span><span class="p">,</span> <span class="n">infox</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">get_field_TRmoments</span><span class="p">(</span><span class="n">csrIx</span><span class="p">,</span> <span class="n">csrJx</span><span class="p">,</span> <span class="n">csrVx</span><span class="p">,</span> <span class="n">qvec</span><span class="p">,</span> <span class="n">max_moments</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">solver</span><span class="p">)</span>
+    <span class="c1"># Now emission: need to calcuate for each source</span>
+    <span class="n">dummymesh</span><span class="o">.</span><span class="n">mua</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">muam</span><span class="p">)</span>
+    <span class="n">dummymesh</span><span class="o">.</span><span class="n">kappa</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">kappam</span><span class="p">)</span>
+    <span class="c1"># MASS matrix at emission wavelength</span>
+    <span class="n">csrIm</span><span class="p">,</span> <span class="n">csrJm</span><span class="p">,</span> <span class="n">csrVm</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">gen_mass_matrix</span><span class="p">(</span><span class="n">dummymesh</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">GPU</span><span class="p">)</span>
+    <span class="c1"># Calculate the emission moments</span>
+    <span class="n">alpha</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">eta</span> <span class="o">*</span> <span class="n">mesh</span><span class="o">.</span><span class="n">muaf</span><span class="p">)</span>
+    <span class="n">tau</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">tau</span><span class="p">)</span>
+    <span class="n">phifl</span><span class="p">,</span> <span class="n">infofl</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">get_field_TRFLmoments</span><span class="p">(</span><span class="n">csrIm</span><span class="p">,</span> <span class="n">csrJm</span><span class="p">,</span> <span class="n">csrVm</span><span class="p">,</span> <span class="n">phix</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">max_moments</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">solver</span><span class="p">)</span>
+    
+    <span class="n">n_src</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">num</span><span class="o">.</span><span class="n">size</span>
+    <span class="n">mx0</span> <span class="o">=</span> <span class="n">phix</span><span class="p">[:,:</span><span class="n">n_src</span><span class="p">]</span>
+    <span class="n">mfl0</span> <span class="o">=</span> <span class="n">phifl</span><span class="p">[:,:</span><span class="n">n_src</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">ind_order</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_moments</span><span class="p">):</span>
+        <span class="n">phix</span><span class="p">[:,</span><span class="n">n_src</span><span class="o">*</span><span class="p">(</span><span class="n">ind_order</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span><span class="n">n_src</span><span class="o">*</span><span class="p">(</span><span class="n">ind_order</span><span class="o">+</span><span class="mi">2</span><span class="p">)]</span> <span class="o">=</span> <span class="n">phix</span><span class="p">[:,</span><span class="n">n_src</span><span class="o">*</span><span class="p">(</span><span class="n">ind_order</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span><span class="n">n_src</span><span class="o">*</span><span class="p">(</span><span class="n">ind_order</span><span class="o">+</span><span class="mi">2</span><span class="p">)]</span> <span class="o">/</span> <span class="n">mx0</span>
+        <span class="n">phifl</span><span class="p">[:,</span><span class="n">n_src</span><span class="o">*</span><span class="p">(</span><span class="n">ind_order</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span><span class="n">n_src</span><span class="o">*</span><span class="p">(</span><span class="n">ind_order</span><span class="o">+</span><span class="mi">2</span><span class="p">)]</span> <span class="o">=</span> <span class="n">phifl</span><span class="p">[:,</span><span class="n">n_src</span><span class="o">*</span><span class="p">(</span><span class="n">ind_order</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span><span class="n">n_src</span><span class="o">*</span><span class="p">(</span><span class="n">ind_order</span><span class="o">+</span><span class="mi">2</span><span class="p">)]</span> <span class="o">/</span> <span class="n">mfl0</span>
+        
+    <span class="n">data</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">flTRMomentsdata</span><span class="p">()</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">momentsx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">max_moments</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">momentsfl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">max_moments</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_moments</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">momentsx</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">get_boundary_data</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">phix</span><span class="p">[:,</span> <span class="n">n_src</span><span class="o">*</span><span class="n">i</span><span class="p">:</span><span class="n">n_src</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)])</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">momentsfl</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">get_boundary_data</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">phifl</span><span class="p">[:,</span> <span class="n">n_src</span><span class="o">*</span><span class="n">i</span><span class="p">:</span><span class="n">n_src</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)])</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="p">)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">vol</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">savefield</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">isvol</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">zgrid</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+                <span class="n">tmpx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">mesh2grid</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">phix</span><span class="p">),</span> <span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">ygrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">xgrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">zgrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_moments</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+                <span class="n">tmpfl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">mesh2grid</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">phifl</span><span class="p">),</span> <span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">ygrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">xgrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">zgrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_moments</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">tmpx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">mesh2grid</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">phix</span><span class="p">),</span> <span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">ygrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">xgrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_moments</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+                <span class="n">tmpfl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">mesh2grid</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">phifl</span><span class="p">),</span> <span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">ygrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">xgrid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_moments</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">phix</span> <span class="o">=</span> <span class="n">tmpx</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">phifl</span> <span class="o">=</span> <span class="n">tmpfl</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">phix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">phix</span><span class="p">,</span> <span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">max_moments</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span><span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">phifl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">phifl</span><span class="p">,</span> <span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">max_moments</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span><span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">infox</span><span class="p">,</span> <span class="n">infofl</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Jiaming Cao, MILAB@UoB.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,611 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nirfasterff.meshing.meshutils &mdash; NIRFASTerFF 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            NIRFASTerFF
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/nirfasterff.html">nirfasterff</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">NIRFASTerFF</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">nirfasterff.meshing.meshutils</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for nirfasterff.meshing.meshutils</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Functions used for mesh generation and mesh quality check</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">nirfasterff</span> <span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">nirfasterff</span> <span class="kn">import</span> <span class="n">io</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">auxiliary</span>
+<span class="c1"># from lib import nirfasteruff_cpu</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<div class="viewcode-block" id="RunCGALMeshGenerator">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.meshutils.RunCGALMeshGenerator.html#nirfasterff.meshing.meshutils.RunCGALMeshGenerator">[docs]</a>
+<span class="k">def</span> <span class="nf">RunCGALMeshGenerator</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">MeshingParams</span><span class="p">()):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate a tetrahedral mesh from a volume using CGAL 5.3.2 mesher, where different regions are labeled used a distinct integer.</span>
+<span class="sd">    </span>
+<span class="sd">    Also runs a pruning steps after the mesh generation, where nodes not referred to in the element list are removed.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mask : uint8 NumPy array</span>
+<span class="sd">        3D volumetric data defining the space to mesh. Regions defined by different integers. 0 is background.</span>
+<span class="sd">    opt : nirfasterff.utils.MeshingParams, optional</span>
+<span class="sd">        meshing parameters used. Default values will be used if not specified.</span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`nirfasterff.utils.MeshingParams` for details</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ele : int NumPy array</span>
+<span class="sd">        element list calculated by the mesher, one-based. Last column indicates the region each element belongs to</span>
+<span class="sd">    nodes : double NumPy array</span>
+<span class="sd">        element list calculated by the mesher, in mm.</span>
+<span class="sd">    </span>
+<span class="sd">    References</span>
+<span class="sd">    -------</span>
+<span class="sd">    https://doc.cgal.org/5.3.2/Mesh_3/index.html#Chapter_3D_Mesh_Generation,</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+   
+    <span class="k">if</span> <span class="n">mask</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="s1">&#39;uint8&#39;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: CGAL only supports uint8. I am doing the conversion now, but this can lead to unexpected errors!&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+    
+    <span class="n">tmpmeshfn</span> <span class="o">=</span> <span class="s1">&#39;._out.mesh&#39;</span>
+    <span class="n">tmpinrfn</span> <span class="o">=</span> <span class="s1">&#39;._cgal_mesh.inr&#39;</span>
+
+    <span class="c1"># Save the tmp INRIA file</span>
+    <span class="n">io</span><span class="o">.</span><span class="n">saveinr</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">tmpinrfn</span><span class="p">)</span>
+    
+    <span class="c1"># call the mesher</span>
+    <span class="n">utils</span><span class="o">.</span><span class="n">cpulib</span><span class="o">.</span><span class="n">cgal_mesher</span><span class="p">(</span><span class="n">tmpinrfn</span><span class="p">,</span> <span class="n">tmpmeshfn</span><span class="p">,</span> <span class="n">facet_angle</span><span class="o">=</span><span class="n">opt</span><span class="o">.</span><span class="n">facet_angle</span><span class="p">,</span> <span class="n">facet_size</span><span class="o">=</span><span class="n">opt</span><span class="o">.</span><span class="n">facet_size</span><span class="p">,</span>
+                                 <span class="n">facet_distance</span><span class="o">=</span><span class="n">opt</span><span class="o">.</span><span class="n">facet_distance</span><span class="p">,</span> <span class="n">cell_radius_edge_ratio</span><span class="o">=</span><span class="n">opt</span><span class="o">.</span><span class="n">cell_radius_edge</span><span class="p">,</span>
+                                 <span class="n">general_cell_size</span><span class="o">=</span><span class="n">opt</span><span class="o">.</span><span class="n">general_cell_size</span><span class="p">,</span><span class="n">subdomain</span><span class="o">=</span><span class="n">opt</span><span class="o">.</span><span class="n">subdomain</span><span class="p">,</span> <span class="n">smooth</span><span class="o">=</span><span class="n">opt</span><span class="o">.</span><span class="n">smooth</span><span class="p">)</span>
+    <span class="c1"># read result and cleanup</span>
+    <span class="n">ele_raw</span><span class="p">,</span> <span class="n">nodes_raw</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">readMEDIT</span><span class="p">(</span><span class="n">tmpmeshfn</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">offset</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">nodes_raw</span> <span class="o">=</span> <span class="n">nodes_raw</span> <span class="o">+</span> <span class="n">opt</span><span class="o">.</span><span class="n">offset</span>
+    
+    <span class="n">ele_tmp</span> <span class="o">=</span> <span class="n">ele_raw</span><span class="p">[:,:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">nids</span><span class="p">,</span> <span class="n">ele</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">ele_tmp</span><span class="p">,</span> <span class="n">return_inverse</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">ele</span> <span class="o">+=</span> <span class="mi">1</span> <span class="c1"># to one-based</span>
+    <span class="n">nodes</span> <span class="o">=</span> <span class="n">nodes_raw</span><span class="p">[</span><span class="n">nids</span><span class="o">-</span><span class="mi">1</span><span class="p">,:]</span>
+    <span class="n">ele</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">ele</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">)),</span> <span class="n">ele_raw</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="k">if</span> <span class="n">nodes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">nodes_raw</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39; Removed </span><span class="si">%d</span><span class="s1"> unused nodes from mesh!</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">nodes_raw</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">nodes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># remove the tmpfiles</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">tmpmeshfn</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">tmpinrfn</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ele</span><span class="p">,</span> <span class="n">nodes</span></div>
+
+
+<div class="viewcode-block" id="boundfaces">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.meshutils.boundfaces.html#nirfasterff.meshing.meshutils.boundfaces">[docs]</a>
+<span class="k">def</span> <span class="nf">boundfaces</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">renumber</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Finds the boundary faces of a 3D tetrahedral mesh</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    nodes : double NumPy array</span>
+<span class="sd">        node locations of the mesh. Size (NNodes, 3)</span>
+<span class="sd">    elements : NumPy array</span>
+<span class="sd">        element list of the mesh, can be either one-based or zero-based, which must be specified using the &#39;base&#39; argument.</span>
+<span class="sd">    base : int, optional</span>
+<span class="sd">        one- or zero-based indexing of the element list. Can be 1, or 0. The default is 0.</span>
+<span class="sd">    renumber : bool, optional</span>
+<span class="sd">        whether renumber of the node indices in the extracted surface mesh. The default is True.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    new_faces : int32 NumPy array</span>
+<span class="sd">        list of boundary faces of the mesh. Base of indexing is consistent with input element list</span>
+<span class="sd">        </span>
+<span class="sd">        If `renumber=True`, node indices are renumbered; if not, same node indices as in &#39;elements&#39; are used</span>
+<span class="sd">    new_points : double NumPy array</span>
+<span class="sd">        point locations of the boundary nodes.</span>
+<span class="sd">        </span>
+<span class="sd">        If `renumber=True`, returns the subset of node loations that are on the surface; if not, it is the same as input `nodes`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">base</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">ele</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">elements</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ele</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span>
+    <span class="n">faces</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="n">ele</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]],</span> 
+                  <span class="n">ele</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">]],</span>
+                  <span class="n">ele</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]],</span>
+                  <span class="n">ele</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]]]</span>
+    
+    <span class="n">faces</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">faces</span><span class="p">)</span>
+    <span class="n">unique_faces</span><span class="p">,</span> <span class="n">cnt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">faces</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">return_counts</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">ele_surf</span> <span class="o">=</span> <span class="n">unique_faces</span><span class="p">[</span><span class="n">cnt</span><span class="o">==</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">node_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">ele_surf</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">renumber</span><span class="p">:</span>
+        <span class="n">new_faces</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">node_idx</span><span class="p">,</span> <span class="n">ele_surf</span><span class="p">)</span>
+        <span class="n">new_points</span> <span class="o">=</span> <span class="n">nodes</span><span class="p">[</span><span class="n">node_idx</span><span class="p">,:]</span>
+        <span class="k">if</span> <span class="n">base</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">new_faces</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">new_faces</span> <span class="o">=</span> <span class="n">ele_surf</span>
+        <span class="n">new_points</span> <span class="o">=</span> <span class="n">nodes</span>
+    <span class="k">return</span> <span class="n">new_faces</span><span class="p">,</span> <span class="n">new_points</span></div>
+
+
+<div class="viewcode-block" id="checkmesh3d_solid">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.meshutils.checkmesh3d_solid.html#nirfasterff.meshing.meshutils.checkmesh3d_solid">[docs]</a>
+<span class="k">def</span> <span class="nf">checkmesh3d_solid</span><span class="p">(</span><span class="n">ele</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates and returns the quality metrics of the tetrahedrons in a 3D tetrahedral mesh</span>
+<span class="sd">    </span>
+<span class="sd">    Please consider using :func:`nirfasterff.meshing.CheckMesh3D()` instead.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ele : int32 NumPy array</span>
+<span class="sd">        element list of the mesh, zero-based.</span>
+<span class="sd">    nodes : double NumPy array</span>
+<span class="sd">        node locations of the mesh, in mm.</span>
+<span class="sd">    verbose : bool, optional</span>
+<span class="sd">        whether print the problematic tetrahedrons to stdout, if any. The default is False.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        if mesh is not 3D tetrahedral, or if element list uses undefined nodes.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    vol : double NumPy vector</span>
+<span class="sd">        volume of each tetrahedron, mm^3.</span>
+<span class="sd">    vol_ratio : double NumPy vector</span>
+<span class="sd">        volume ratio, defined as the smallest sine of dihedral angles of each tetrahedron.</span>
+<span class="sd">    zeroflag : bool NumPy vector</span>
+<span class="sd">        flags of whether the volume of a tetrahedron is too small.</span>
+<span class="sd">    faceflag : bool</span>
+<span class="sd">        whether there are faces shared by more than two tetrahedrons.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># ele is zero-based, int</span>
+    <span class="k">if</span> <span class="n">nodes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Mesh must be 3D&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ele</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">ele</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">5</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Mesh must be a tetrahedral mesh&#39;</span><span class="p">)</span>
+        
+    <span class="n">TetrahedronFailQuality</span> <span class="o">=</span> <span class="mf">0.03</span>
+    <span class="n">nnodes</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">nodenumbers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nnodes</span><span class="p">)</span>
+    
+    <span class="c1"># check for nodes not used by any tetrahedron</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">nodenumbers</span><span class="p">,</span> <span class="n">ele</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">tmp</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;checkmesh3d_solid: The provided mesh has extra nodes that are not used in the element list&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: Not all nodes are used in the element connectivity list&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="o">~</span><span class="n">tmp</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+    
+    <span class="c1"># check for non-existing nodes used by tetrahedrons</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">ele</span><span class="p">,</span> <span class="n">nodenumbers</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">tmp</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;checkmesh3d_solid: Some of the tets are using nodes that are not defined in node list!&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">&lt;</span><span class="mi">4</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Some of the tets are using nodes that are not defined in node list!&#39;</span><span class="p">)</span>
+    
+    <span class="c1"># check for tetrahedrons with very small volume</span>
+    <span class="n">span</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">tiny</span> <span class="o">=</span> <span class="n">span</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">*</span><span class="mf">1e-6</span>
+    <span class="n">TetrahedronZeroVol</span> <span class="o">=</span> <span class="n">tiny</span>
+    <span class="n">vol</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">cpulib</span><span class="o">.</span><span class="n">ele_area</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">ele</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Avg Min Max volume: </span><span class="si">%f</span><span class="s1"> </span><span class="si">%f</span><span class="s1"> </span><span class="si">%f</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">vol</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">vol</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">vol</span><span class="p">)),</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">zeroflag</span> <span class="o">=</span> <span class="n">vol</span><span class="o">&lt;=</span><span class="n">TetrahedronZeroVol</span>
+    
+    <span class="c1"># check for small volume ratio</span>
+    <span class="n">vol_ratio</span> <span class="o">=</span> <span class="n">auxiliary</span><span class="o">.</span><span class="n">simpqual</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">ele</span><span class="p">)</span>
+    <span class="n">qualflag</span> <span class="o">=</span> <span class="n">vol_ratio</span><span class="o">&lt;=</span><span class="n">TetrahedronFailQuality</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Avg Min Max volume ratio quality: </span><span class="si">%f</span><span class="s1"> </span><span class="si">%f</span><span class="s1"> </span><span class="si">%f</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">vol_ratio</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">vol_ratio</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">vol_ratio</span><span class="p">)),</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">nvoids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">qualflag</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">nvoids</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;There are </span><span class="si">%d</span><span class="s1"> elements with undesirable quality.&#39;</span> <span class="o">%</span> <span class="n">nvoids</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">qualflag</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># check if any faces are shared by more than two tetrahedrons</span>
+    <span class="n">faceflag</span> <span class="o">=</span> <span class="n">auxiliary</span><span class="o">.</span><span class="n">check_tetrahedron_faces</span><span class="p">(</span><span class="n">ele</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">vol</span><span class="p">,</span> <span class="n">vol_ratio</span><span class="p">,</span> <span class="n">zeroflag</span><span class="p">,</span> <span class="n">faceflag</span></div>
+
+
+<div class="viewcode-block" id="checkmesh3d_surface">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.meshutils.checkmesh3d_surface.html#nirfasterff.meshing.meshutils.checkmesh3d_surface">[docs]</a>
+<span class="k">def</span> <span class="nf">checkmesh3d_surface</span><span class="p">(</span><span class="n">ele</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates and returns the quality metrics of the triangles in a 3D surface mesh</span>
+<span class="sd">    </span>
+<span class="sd">    Please consider using :func:`nirfasterff.meshing.CheckMesh3D()` instead.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ele : int32 NumPy array</span>
+<span class="sd">        element list of the mesh, zero-based.</span>
+<span class="sd">    nodes : double NumPy array</span>
+<span class="sd">        node locations of the mesh, in mm.</span>
+<span class="sd">    verbose : bool, optional</span>
+<span class="sd">        whether print the problematic triangles to stdout, if any. The default is False.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        if mesh is not 3D tetrahedral, or if element list uses undefined nodes.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    q_radius_ratio : double NumPy vector</span>
+<span class="sd">        radius ratio of each triangle, defined as `2*inradius / circumradius`.</span>
+<span class="sd">    q_area_ratio : double NumPy vector</span>
+<span class="sd">        face area divided by &#39;ideal area&#39; for each triangle, </span>
+<span class="sd">        </span>
+<span class="sd">        where ideal area is the area of an equilateral triangle whose edge length equals the longest edge in the face.</span>
+<span class="sd">    area : double NumPy vector</span>
+<span class="sd">        area of each triangle, in mm^2.</span>
+<span class="sd">    zeroflag : bool NumPy vector</span>
+<span class="sd">        flags whether the area a triangle is close to zero.</span>
+<span class="sd">    edgeflag : int</span>
+<span class="sd">        flag if any problematic edges. Flag set by bits &#39;b1b0&#39;:</span>
+<span class="sd">        </span>
+<span class="sd">        b1=1 if dangling edges found, b0=1 if there exist edges shared by more than two triangles</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># ele is zero-based, int</span>
+    <span class="k">if</span> <span class="n">nodes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Mesh must be 3D&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ele</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Mesh must be a surface mesh&#39;</span><span class="p">)</span>
+        
+    <span class="n">nnodes</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">nodenumbers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nnodes</span><span class="p">)</span>
+    
+    <span class="c1"># check for nodes not used by any triangles</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">nodenumbers</span><span class="p">,</span> <span class="n">ele</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">tmp</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;checkmesh3d_surface: The provided mesh has extra nodes that are not used in the patch element list&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: Not all nodes are used in the element connectivity list&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="o">~</span><span class="n">tmp</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+    
+    <span class="c1"># check for non-existing nodes used by triangles</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">ele</span><span class="p">,</span> <span class="n">nodenumbers</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">tmp</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;checkmesh3d_surface: Some of the triangles are using nodes that are not defined in node list!&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;The provided mesh uses node numbers that are not part of the node list!&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># check edge integrity</span>
+    <span class="n">edgeflag</span> <span class="o">=</span> <span class="n">auxiliary</span><span class="o">.</span><span class="n">checkedges</span><span class="p">(</span><span class="n">ele</span><span class="p">)</span>
+    
+    <span class="c1"># check for small triangle areas</span>
+    <span class="n">area</span><span class="p">,</span> <span class="n">zeroflag</span> <span class="o">=</span> <span class="n">auxiliary</span><span class="o">.</span><span class="n">check_facearea</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">ele</span><span class="p">)</span>
+    
+    <span class="c1"># check radius ratio for each triangle</span>
+    <span class="n">q_radius_ratio</span> <span class="o">=</span> <span class="n">auxiliary</span><span class="o">.</span><span class="n">quality_triangle_radius</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">ele</span><span class="p">)</span>
+    
+    <span class="c1"># check area ratio for each triangle</span>
+    <span class="n">l1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">nodes</span><span class="p">[</span><span class="n">ele</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],:]</span> <span class="o">-</span> <span class="n">nodes</span><span class="p">[</span><span class="n">ele</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">l2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">nodes</span><span class="p">[</span><span class="n">ele</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],:]</span> <span class="o">-</span> <span class="n">nodes</span><span class="p">[</span><span class="n">ele</span><span class="p">[:,</span><span class="mi">2</span><span class="p">],:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">l3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">nodes</span><span class="p">[</span><span class="n">ele</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],:]</span> <span class="o">-</span> <span class="n">nodes</span><span class="p">[</span><span class="n">ele</span><span class="p">[:,</span><span class="mi">2</span><span class="p">],:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="n">maxl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">l1</span><span class="p">,</span> <span class="n">l2</span><span class="p">,</span> <span class="n">l3</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">ideal_area</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">*</span><span class="n">maxl</span><span class="o">*</span><span class="n">maxl</span><span class="o">/</span><span class="mi">4</span>
+    <span class="n">q_area_ratio</span> <span class="o">=</span> <span class="n">area</span><span class="o">/</span><span class="n">ideal_area</span>
+    
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">zeroflag</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;At least one of the patches has a very small area!&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Avg Min Max of patch areas: </span><span class="si">%f</span><span class="s1"> </span><span class="si">%f</span><span class="s1"> </span><span class="si">%f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">area</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">area</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">area</span><span class="p">)),</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">q_radius_ratio</span><span class="p">,</span> <span class="n">q_area_ratio</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">zeroflag</span><span class="p">,</span> <span class="n">edgeflag</span></div>
+
+
+<div class="viewcode-block" id="CheckMesh3D">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.meshutils.CheckMesh3D.html#nirfasterff.meshing.meshutils.CheckMesh3D">[docs]</a>
+<span class="k">def</span> <span class="nf">CheckMesh3D</span><span class="p">(</span><span class="n">elements</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Main function that calculates and checks the quality of a 3D mesh, which can be either a solid or surface mesh</span>
+<span class="sd">    </span>
+<span class="sd">    If surface mesh, checkmesh3d_surface() is called</span>
+<span class="sd">    </span>
+<span class="sd">    If solid mesh, checkmesh3d_solid() is first used, and checkmesh3d_surface() is subsequently used to check its outer surface</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ele : int32 NumPy array</span>
+<span class="sd">        element list of the mesh, zero-based.</span>
+<span class="sd">    nodes : double NumPy array</span>
+<span class="sd">        node locations of the mesh, in mm.</span>
+<span class="sd">    base : int, optional</span>
+<span class="sd">        one- or zero-based indexing of the element list. Can be 1, or 0. The default is 1.</span>
+<span class="sd">    verbose : bool, optional</span>
+<span class="sd">        whether print the problematic elements to stdout, if any. The default is False.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        if elements and nodes do not define a valid 3D mesh.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    vol : double NumPy vector</span>
+<span class="sd">        Volume (for solid mesh) or area (for surface mesh) of each element.</span>
+<span class="sd">    vol_ratio : double NumPy vector</span>
+<span class="sd">        volume ratio for each tetrahedron in a solid mesh. Returns scalar 0.0 in case of a surface mesh.</span>
+<span class="sd">    q_area : double NumPy vector</span>
+<span class="sd">        area ratio for each triangle in a surface mesh. Returns scalar 0.0 in case of a solid mesh.</span>
+<span class="sd">    status_solid : int</span>
+<span class="sd">        flags of solid mesh quality, set by bits: &#39;b3b2b1b0&#39;.</span>
+<span class="sd">        </span>
+<span class="sd">        b1 set if small volumes found; b2 set if small volume ratios found; b3 set if faces shared by more than two tetrahedrons found</span>
+<span class="sd">    status_surface : int</span>
+<span class="sd">        flags of surface mesh quality, set by bits: &#39;b3b2b1b0&#39;.</span>
+<span class="sd">        </span>
+<span class="sd">        b1 set if edges shared by more than two triangles found; b2 set if dangling edges found; b3 triangles with small area found</span>
+<span class="sd">        </span>
+<span class="sd">    See Also</span>
+<span class="sd">    -------</span>
+<span class="sd">    :func:`nirfasterff.meshing.checkmesh3d_solid()`, :func:`nirfasterff.meshing.checkmesh3d_surface()`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">nodes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Mesh must be 3D&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">elements</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;element list must be non-negative!&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">base</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">ele</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">elements</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">elements</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: min of element list is 0. Maybe it is zero-based?&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">base</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">ele</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">elements</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: min of element list is 1. Maybe it is one-based?&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">nnpe</span> <span class="o">=</span> <span class="n">ele</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">nnpe</span><span class="o">==</span><span class="mi">5</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: Ignoring last columnn of elements and treating it as a tetrahedral mesh&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">ele</span> <span class="o">=</span> <span class="n">ele</span><span class="p">[:,:</span><span class="mi">4</span><span class="p">]</span>
+        <span class="n">nnpe</span> <span class="o">=</span> <span class="mi">4</span>
+    
+    <span class="n">status_surface</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">status_solid</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">vol</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">vol_ratio</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">q_area</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">q_tri_area_threshold</span> <span class="o">=</span> <span class="mf">0.1</span>
+    <span class="n">TetrahedronFailQuality</span> <span class="o">=</span> <span class="mf">0.03</span>
+    
+    <span class="k">if</span> <span class="n">nnpe</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Checking surface mesh:&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">q_radius</span><span class="p">,</span> <span class="n">q_area</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">zeroflag</span><span class="p">,</span> <span class="n">edgeflag</span> <span class="o">=</span> <span class="n">checkmesh3d_surface</span><span class="p">(</span><span class="n">ele</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+        <span class="n">vol</span> <span class="o">=</span> <span class="n">area</span>
+    <span class="k">elif</span> <span class="n">nnpe</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Checking solid mesh:&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">vol</span><span class="p">,</span> <span class="n">vol_ratio</span><span class="p">,</span> <span class="n">zeroflag</span><span class="p">,</span> <span class="n">faceflag</span> <span class="o">=</span> <span class="n">checkmesh3d_solid</span><span class="p">(</span><span class="n">ele</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;CheckMesh3D doesn&#39;&#39;t support &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">nnpe</span><span class="p">)</span> <span class="o">+</span><span class="s1">&#39; nodes per element!&#39;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">nnpe</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">edgeflag</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">edgeflag</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+                <span class="n">status_surface</span> <span class="o">=</span> <span class="n">status_surface</span> <span class="o">|</span> <span class="mi">2</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Some of mesh edges are shared by more than two triangles!&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  This can be caused by a non-manifold mesh or a multi-region one.&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+            <span class="k">if</span> <span class="n">edgeflag</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+                <span class="n">status_surface</span> <span class="o">=</span> <span class="n">status_surface</span> <span class="o">|</span> <span class="mi">4</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Provided surface is not closed:&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  At least one of the edges is only shared by only one triangle (it should be two)&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+            <span class="k">if</span> <span class="n">edgeflag</span><span class="o">!=</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">edgeflag</span><span class="o">!=</span><span class="mi">2</span><span class="p">:</span>
+                <span class="n">status_surface</span> <span class="o">=</span> <span class="n">status_surface</span> <span class="o">|</span> <span class="mi">6</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Surface mesh is open AND has edges shared by more than 2 triangles!&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        
+        <span class="n">n_small_tri</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">q_area</span> <span class="o">&lt;</span> <span class="n">q_tri_area_threshold</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">n_small_tri</span><span class="p">:</span>
+            <span class="n">status_surface</span> <span class="o">=</span> <span class="n">status_surface</span> <span class="o">|</span> <span class="mi">8</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39; There are </span><span class="si">%d</span><span class="s1"> faces with low quality (q&lt;</span><span class="si">%f</span><span class="s1">).&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">n_small_tri</span><span class="p">,</span> <span class="n">q_tri_area_threshold</span><span class="p">),</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="p">(</span><span class="n">edgeflag</span> <span class="ow">or</span> <span class="n">n_small_tri</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Set &#39;&#39;verbose=True&#39;&#39; to display the problematic triangles&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            
+    <span class="k">elif</span> <span class="n">nnpe</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">faceflag</span><span class="p">:</span>
+            <span class="n">status_solid</span> <span class="o">=</span> <span class="n">status_solid</span> <span class="o">|</span> <span class="mi">8</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">zeroflag</span><span class="p">):</span>
+            <span class="n">status_solid</span> <span class="o">=</span> <span class="n">status_solid</span> <span class="o">|</span> <span class="mi">2</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39; There are </span><span class="si">%d</span><span class="s1"> tetrahedrons with small volume.&#39;</span> <span class="o">%</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">zeroflag</span><span class="p">),</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">n_qfail</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">vol_ratio</span><span class="o">&lt;</span><span class="n">TetrahedronFailQuality</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">n_qfail</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39; There are </span><span class="si">%d</span><span class="s1"> tetrahedrons that have a very low quality (q&lt;</span><span class="si">%f</span><span class="s1">).&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">n_qfail</span><span class="p">,</span> <span class="n">TetrahedronFailQuality</span><span class="p">),</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">status_solid</span> <span class="o">=</span> <span class="n">status_solid</span> <span class="o">|</span> <span class="mi">4</span>
+            
+        <span class="k">if</span> <span class="p">(</span><span class="n">faceflag</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">zeroflag</span><span class="p">)</span> <span class="ow">or</span> <span class="n">n_qfail</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Set &#39;&#39;verbose=True&#39;&#39; to display the problematic tetrahedrons&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        
+        <span class="c1"># get the surface mesh</span>
+        <span class="n">ele_surf</span><span class="p">,</span> <span class="n">nodes_surf</span> <span class="o">=</span> <span class="n">boundfaces</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">ele</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;----&gt; Checking integrity of the surface of the solid mesh...&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># elements are already zero-based, need to specify here</span>
+        <span class="n">_</span><span class="p">,</span><span class="n">_</span><span class="p">,</span><span class="n">_</span><span class="p">,</span><span class="n">_</span><span class="p">,</span><span class="n">status_surface</span> <span class="o">=</span> <span class="n">CheckMesh3D</span><span class="p">(</span><span class="n">ele_surf</span><span class="p">,</span> <span class="n">nodes_surf</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;----&gt; Done.&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">vol</span><span class="p">,</span> <span class="n">vol_ratio</span><span class="p">,</span> <span class="n">q_area</span><span class="p">,</span> <span class="n">status_solid</span><span class="p">,</span> <span class="n">status_surface</span></div>
+
+
+<div class="viewcode-block" id="CheckMesh2D">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.meshutils.CheckMesh2D.html#nirfasterff.meshing.meshutils.CheckMesh2D">[docs]</a>
+<span class="k">def</span> <span class="nf">CheckMesh2D</span><span class="p">(</span><span class="n">elements</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Main function that calculates and checks the quality of a 2D mesh</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    elements : int32 NumPy array</span>
+<span class="sd">        element list of the mesh, zero-based.</span>
+<span class="sd">    nodes : double NumPy array</span>
+<span class="sd">        node locations of the mesh, in mm.</span>
+<span class="sd">    base : int, optional</span>
+<span class="sd">        one- or zero-based indexing of the element list. Can be 1, or 0. The default is 1.</span>
+<span class="sd">    verbose : bool, optional</span>
+<span class="sd">        whether print the problematic elements to stdout, if any. The default is False.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        if elements and nodes do not define a valid 2D mesh.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    flag : int</span>
+<span class="sd">        flags of mesh quality, set by bits: &#39;b2b1b0&#39;.</span>
+<span class="sd">        </span>
+<span class="sd">        b1 set if faulty edges found; b2 set if triangles with small area found</span>
+<span class="sd">    q_radius_ratio : double NumPy array</span>
+<span class="sd">        radius ratio of each triangle, defined as `2*inradius / circumradius`.</span>
+<span class="sd">    area : double NumPy array</span>
+<span class="sd">        area of each triangle in mesh.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">elements</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="mi">3</span> <span class="ow">and</span> <span class="n">nodes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="mi">3</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Mesh must be 2D&#39;</span><span class="p">)</span>
+        
+    <span class="k">if</span> <span class="n">elements</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;element list must be non-negative!&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">base</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">ele</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">elements</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">elements</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: min of element list is 0. Maybe it is zero-based?&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">base</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">ele</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">elements</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: min of element list is 1. Maybe it is one-based?&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Checking 2D mesh...&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># check for small triangle areas</span>
+    <span class="n">area</span><span class="p">,</span> <span class="n">zeroflag</span> <span class="o">=</span> <span class="n">auxiliary</span><span class="o">.</span><span class="n">check_facearea</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">ele</span><span class="p">)</span>
+    
+    <span class="c1"># check radius ratio for each triangle</span>
+    <span class="n">q_radius_ratio</span> <span class="o">=</span> <span class="n">auxiliary</span><span class="o">.</span><span class="n">quality_triangle_radius</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">ele</span><span class="p">)</span>
+    
+    <span class="c1"># check edge integrity</span>
+    <span class="n">edgeflag</span> <span class="o">=</span> <span class="n">auxiliary</span><span class="o">.</span><span class="n">checkedges</span><span class="p">(</span><span class="n">ele</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">edgeflag</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39; Some of the edges of this mesh are shared by more than 2 triangles.&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39; Quality: ranges between 0 and 1, with 1 being best quality:&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39; Min, Max and Average of triangle quality: </span><span class="si">%f</span><span class="s1">, </span><span class="si">%f</span><span class="s1">, </span><span class="si">%f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">q_radius_ratio</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">q_radius_ratio</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">q_radius_ratio</span><span class="p">)),</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39; Min, Max and Average area: </span><span class="si">%f</span><span class="s1">, </span><span class="si">%f</span><span class="s1">, </span><span class="si">%f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">area</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">area</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">area</span><span class="p">)),</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">zeroflag</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39; There are </span><span class="si">%d</span><span class="s1"> triangles whose area is close to zero&#39;</span> <span class="o">%</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">zeroflag</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">zeroflag</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="n">ele2</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">check_element_orientation_2d</span><span class="p">(</span><span class="n">ele</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">nodes</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">ele2</span> <span class="o">-</span> <span class="n">ele</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39; Sone elements of this mesh are not oriented CCW!&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">edgeflag</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">zeroflag</span><span class="p">):</span>
+        <span class="n">flag</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">edgeflag</span><span class="p">:</span>
+        <span class="n">flag</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">zeroflag</span><span class="p">):</span>
+        <span class="n">flag</span> <span class="o">=</span> <span class="n">flag</span> <span class="o">|</span> <span class="mi">4</span>
+    
+    <span class="k">return</span> <span class="n">flag</span><span class="p">,</span> <span class="n">q_radius_ratio</span><span class="p">,</span> <span class="n">area</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Jiaming Cao, MILAB@UoB.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

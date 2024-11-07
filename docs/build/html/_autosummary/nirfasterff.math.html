@@ -1,0 +1,169 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nirfasterff.math &mdash; NIRFASTerFF 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="nirfasterff.math.gen_mass_matrix" href="nirfasterff.math.gen_mass_matrix.html" />
+    <link rel="prev" title="nirfasterff.lib.nirfasterff_cuda.ConvergenceInfoGPU" href="nirfasterff.lib.nirfasterff_cuda.ConvergenceInfoGPU.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            NIRFASTerFF
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="nirfasterff.html">nirfasterff</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.base.html">nirfasterff.base</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.forward.html">nirfasterff.forward</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.inverse.html">nirfasterff.inverse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.io.html">nirfasterff.io</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.lib.html">nirfasterff.lib</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">nirfasterff.math</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.math.gen_mass_matrix.html">nirfasterff.math.gen_mass_matrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.math.gen_sources.html">nirfasterff.math.gen_sources</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.math.gen_sources_fl.html">nirfasterff.math.gen_sources_fl</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.math.get_boundary_data.html">nirfasterff.math.get_boundary_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.math.get_field_CW.html">nirfasterff.math.get_field_CW</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.math.get_field_FD.html">nirfasterff.math.get_field_FD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.math.get_field_TR.html">nirfasterff.math.get_field_TR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.math.get_field_TRFL.html">nirfasterff.math.get_field_TRFL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.math.get_field_TRFLmoments.html">nirfasterff.math.get_field_TRFLmoments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.math.get_field_TRmoments.html">nirfasterff.math.get_field_TRmoments</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.meshing.html">nirfasterff.meshing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.utils.html">nirfasterff.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.visualize.html">nirfasterff.visualize</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">NIRFASTerFF</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="nirfasterff.html">nirfasterff</a></li>
+      <li class="breadcrumb-item active">nirfasterff.math</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/_autosummary/nirfasterff.math.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-nirfasterff.math">
+<span id="nirfasterff-math"></span><h1>nirfasterff.math<a class="headerlink" href="#module-nirfasterff.math" title="Link to this heading"></a></h1>
+<p>Some low-level functions used by the forward solvers.</p>
+<p>It is usually unnecessary to use them directly and caution must be excercised, as many of them interact closely with the C++ libraries and can cause crashes if used incorrectly</p>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="nirfasterff.math.gen_mass_matrix.html#nirfasterff.math.gen_mass_matrix" title="nirfasterff.math.gen_mass_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gen_mass_matrix</span></code></a>(mesh, freq[, solver, GPU])</p></td>
+<td><p>Calculate the MASS matrix, and return the coordinates in CSR format.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="nirfasterff.math.gen_sources.html#nirfasterff.math.gen_sources" title="nirfasterff.math.gen_sources"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gen_sources</span></code></a>(mesh)</p></td>
+<td><p>Calculate the source vectors (point source only) for the sources in mesh.source field</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="nirfasterff.math.gen_sources_fl.html#nirfasterff.math.gen_sources_fl" title="nirfasterff.math.gen_sources_fl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gen_sources_fl</span></code></a>(mesh, phix[, frequency, ...])</p></td>
+<td><p>Calculates FEM sources vector for re-emission.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="nirfasterff.math.get_boundary_data.html#nirfasterff.math.get_boundary_data" title="nirfasterff.math.get_boundary_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_boundary_data</span></code></a>(mesh, phi)</p></td>
+<td><p>Calculates boundary data given the field data in mesh</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="nirfasterff.math.get_field_CW.html#nirfasterff.math.get_field_CW" title="nirfasterff.math.get_field_CW"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_field_CW</span></code></a>(csrI, csrJ, csrV, qvec[, opt, ...])</p></td>
+<td><p>Call the Preconditioned Conjugate Gradient solver with FSAI preconditioner.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="nirfasterff.math.get_field_FD.html#nirfasterff.math.get_field_FD" title="nirfasterff.math.get_field_FD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_field_FD</span></code></a>(csrI, csrJ, csrV, qvec[, opt, ...])</p></td>
+<td><p>Call the Preconditioned BiConjugate Stablized solver with FSAI preconditioner.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="nirfasterff.math.get_field_TR.html#nirfasterff.math.get_field_TR" title="nirfasterff.math.get_field_TR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_field_TR</span></code></a>(csrI, csrJ, csrV, qvec, dt, ...)</p></td>
+<td><p>Call the Preconditioned Conjugate Gradient solver with FSAI preconditioner.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="nirfasterff.math.get_field_TRFL.html#nirfasterff.math.get_field_TRFL" title="nirfasterff.math.get_field_TRFL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_field_TRFL</span></code></a>(csrI, csrJ, csrV, phix, dt, ...)</p></td>
+<td><p>Call the Preconditioned Conjugate Gradient solver with FSAI preconditioner.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="nirfasterff.math.get_field_TRFLmoments.html#nirfasterff.math.get_field_TRFLmoments" title="nirfasterff.math.get_field_TRFLmoments"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_field_TRFLmoments</span></code></a>(csrI, csrJ, csrV, mx, ...)</p></td>
+<td><p>Call the Preconditioned Conjugate Gradient solver with FSAI preconditioner.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="nirfasterff.math.get_field_TRmoments.html#nirfasterff.math.get_field_TRmoments" title="nirfasterff.math.get_field_TRmoments"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_field_TRmoments</span></code></a>(csrI, csrJ, csrV, qvec, ...)</p></td>
+<td><p>Call the Preconditioned Conjugate Gradient solver with FSAI preconditioner.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="nirfasterff.lib.nirfasterff_cuda.ConvergenceInfoGPU.html" class="btn btn-neutral float-left" title="nirfasterff.lib.nirfasterff_cuda.ConvergenceInfoGPU" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="nirfasterff.math.gen_mass_matrix.html" class="btn btn-neutral float-right" title="nirfasterff.math.gen_mass_matrix" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Jiaming Cao, MILAB@UoB.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,671 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nirfasterff.inverse &mdash; NIRFASTerFF 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            NIRFASTerFF
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/nirfasterff.html">nirfasterff</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">NIRFASTerFF</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">nirfasterff.inverse</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for nirfasterff.inverse</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Calculation of the Jacobian matrices and a basic Tikhonov regularization function</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">nirfasterff</span> <span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">nirfasterff</span> <span class="kn">import</span> <span class="n">base</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">sparse</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">linalg</span>
+
+<div class="viewcode-block" id="tikhonov">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.inverse.tikhonov.html#nirfasterff.inverse.tikhonov">[docs]</a>
+<span class="k">def</span> <span class="nf">tikhonov</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">reg</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Solves Tikhonov regularization (ie ridge regression)</span>
+<span class="sd">    </span>
+<span class="sd">    That is, given a linear system y = Ax, it solves :math:`\\arg\\min_x ||Ax-y||_2^2+||\\Gamma x||_2^2` </span>
+<span class="sd">    </span>
+<span class="sd">    where A is the forward matrix, y is the recording, and :math:`\\Gamma` is the regularization matrix</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    A : double NumPy array</span>
+<span class="sd">        forward matrix, e.g. the Jacobian in DOT.</span>
+<span class="sd">    reg : double NumPy array or scalar</span>
+<span class="sd">        if a scalar, the same regularization is applied to all elements of x, i.e. :math:`\\Gamma=reg*I`.</span>
+<span class="sd">        </span>
+<span class="sd">        if a vector, the regularization matrix is assumed to be diagonal, with the diagonal elements specified in reg, i.e. :math:`\\Gamma=diag(reg)`.</span>
+<span class="sd">        </span>
+<span class="sd">        if a matrix, it must be symmetric. In this case, :math:`\\Gamma=reg`.</span>
+<span class="sd">    y : double NumPy vector</span>
+<span class="sd">        measurement vector, e.g. dOD at each channel in DOT.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        if reg is of incompatible size or not symmetric (if matrix).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    result : double NumPy vector</span>
+<span class="sd">        Tikhonov regularized solution to the linear system.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">reg</span><span class="p">):</span>
+        <span class="n">reg</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">*</span><span class="n">reg</span>
+        <span class="n">reg_type</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">reg</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">reg</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">reg</span><span class="p">)</span><span class="o">!=</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;regularizer size mismatch&#39;</span><span class="p">)</span>
+                <span class="n">reg_type</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">reg</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">reg</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">linalg</span><span class="o">.</span><span class="n">issymmetric</span><span class="p">(</span><span class="n">reg</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;regularizer must be symmetric&#39;</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">reg</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;regularizer size mismatch&#39;</span><span class="p">)</span>
+                <span class="n">reg_type</span> <span class="o">=</span> <span class="mi">2</span>
+    
+    <span class="n">m</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">m</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">reg_type</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">A</span> <span class="o">+</span> <span class="n">reg</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">reg_type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">A</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">reg</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">A</span> <span class="o">+</span> <span class="n">reg</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">reg</span>
+        <span class="n">beta</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">y</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">overwrite_b</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">assume_a</span><span class="o">=</span><span class="s1">&#39;sym&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">reg_type</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">reg_type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">reg_type</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">A2T</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">T</span> <span class="o">/</span> <span class="n">reg</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">A2T</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">T</span> <span class="o">/</span> <span class="n">reg</span><span class="p">[:,</span><span class="kc">None</span><span class="p">]</span>
+            <span class="n">beta</span> <span class="o">=</span> <span class="n">A2T</span> <span class="o">@</span> <span class="n">y</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">beta</span> <span class="o">/</span> <span class="n">reg</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">L</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">cholesky</span><span class="p">(</span><span class="n">reg</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">reg</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">A2T</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">solve_triangular</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">A</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">beta</span> <span class="o">=</span> <span class="n">A2T</span> <span class="o">@</span> <span class="n">y</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">solve_triangular</span><span class="p">(</span><span class="n">L</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">beta</span><span class="p">)</span>
+        <span class="n">beta</span> <span class="o">=</span> <span class="n">A2T</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">beta</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">A2T</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">A2T</span>
+        <span class="n">tmp</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+        <span class="n">beta</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">overwrite_b</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">assume_a</span><span class="o">=</span><span class="s1">&#39;sym&#39;</span><span class="p">)</span>
+        <span class="n">beta</span> <span class="o">=</span> <span class="n">A2T</span> <span class="o">@</span> <span class="n">beta</span>
+        
+        <span class="k">if</span> <span class="n">reg_type</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">reg_type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">beta</span> <span class="o">=</span> <span class="n">beta</span> <span class="o">/</span> <span class="n">reg</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">beta</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">solve_triangular</span><span class="p">(</span><span class="n">L</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">overwrite_b</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span> <span class="o">-</span> <span class="n">beta</span>
+        
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="jacobian_stnd_FD">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.inverse.jacobian_stnd_FD.html#nirfasterff.inverse.jacobian_stnd_FD">[docs]</a>
+<span class="k">def</span> <span class="nf">jacobian_stnd_FD</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">mus</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">()):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates the frequency-domain Jacobian matrix using the adjoint method</span>
+<span class="sd">    </span>
+<span class="sd">    Calculates spatial distributions of sensitivity of field registerd on the mesh boundary to changes of optical properties per voxel.</span>
+<span class="sd">    </span>
+<span class="sd">    When freq=0, see :func:`~nirfasterff.inverse.jacobian_stnd_CW()` for the structure of the Jacobian</span>
+<span class="sd">    </span>
+<span class="sd">    When freq&gt;0, the Jacobian is structured as, suppose we have M channels and N voxels::</span>
+<span class="sd">        </span>
+<span class="sd">        [dA_1/dmusp_1, dA_1/dmusp_2, ..., dA_1/dmusp_{N}, dA_1/dmua_1, dA_1/dmua_2, ..., dA_1/dmua_{N}]</span>
+<span class="sd">        [dPhi_1/dmusp_1, dPhi_1/dmusp_2, ..., dPhi_1/dmusp_{N}, dPhi_1/dmua_1, dPhi_1/dmua_2, ..., dPhi_1/dmua_{N}]</span>
+<span class="sd">        [dA_2/dmusp_1, dA_2/dmusp_2, ..., dA_2/dmusp_{N}, dA_2/dmua_1, dA_2/dmua_2, ..., dA_2/dmua_{N}]</span>
+<span class="sd">        [dPhi_2/dmusp_1, dPhi_2/dmusp_2, ..., dPhi_2/dmusp_{N}, dPhi_2/dmua_1, dPhi_2/dmua_2, ..., dPhi_2/dmua_{N}]</span>
+<span class="sd">        ...</span>
+<span class="sd">        [dA_M/dmusp_1, dA_M/dmusp_2, ..., dA_M/dmusp_{N}, dA_M/dmua_1, dA_M/dmua_2, ..., dA_M/dmua_{N}]</span>
+<span class="sd">        [dPhi_M/dmusp_1, dPhi_M/dmusp_2, ..., dPhi_M/dmusp_{N}, dPhi_M/dmua_1, dPhi_M/dmua_2, ..., dPhi_M/dmua_{N}]</span>
+<span class="sd">    </span>
+<span class="sd">    where A and Phi denote the measured amplitude and the phase if `normalize=False`, and the log of them if `normalize=True`</span>
+<span class="sd">        </span>
+<span class="sd">    Note that the calculation is only done in the volumetric space</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mesh : nirfasterff.base.stndmesh</span>
+<span class="sd">        mesh on which the Jacobian is calculated.</span>
+<span class="sd">    freq : double</span>
+<span class="sd">        modulation frequency, in Hz.</span>
+<span class="sd">    normalize : bool, optional</span>
+<span class="sd">        whether normalize the Jacobian to the amplitudes of boundary measurements, i.e. use Rytov approximation. </span>
+<span class="sd">        </span>
+<span class="sd">        The default is True.</span>
+<span class="sd">    mus : bool, optional</span>
+<span class="sd">        whether derivates wrt mus (left half of the &#39;full&#39; Jacobian) is calculated. Only has effect when freq=0. The default is True.</span>
+<span class="sd">    solver : str, optional</span>
+<span class="sd">        Choose between &#39;CPU&#39; or &#39;GPU&#39; solver (case insensitive). Automatically determined (GPU prioritized) if not specified</span>
+<span class="sd">    opt : nirfasterff.utils.SolverOptions, optional</span>
+<span class="sd">        Solver options. Uses default parameters if not specified, and they should suffice in most cases. </span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.SolverOptions` for details</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        if mesh is not a stnd mesh, or mesh.vol is not defined.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    J : double or complex double NumPy array</span>
+<span class="sd">        The Jacobian matrix. Size (NChannel*2, NVoxel*2) if freq&gt;0, (NChannel, NVoxel*2) if freq=0 and mus=True, (NChannel, NVoxel) if freq=0 and mus=False</span>
+<span class="sd">    data1 : nirfasterff.base.FDdata</span>
+<span class="sd">        The calculated direct field. The same as directly calling mesh.femdata(freq)</span>
+<span class="sd">    data2 : nirfasterff.base.FDdata</span>
+<span class="sd">        The calculated adjoint field. The same as calling mesh.femdata(freq) AFTER swapping the locations of sources and detectors</span>
+<span class="sd">        </span>
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Arridge, Applied Optics, 1995. doi:10.1364/AO.34.007395</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">mesh</span><span class="o">.</span><span class="n">type</span><span class="o">==</span><span class="s1">&#39;stnd&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Must be a standard mesh&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">mesh</span><span class="o">.</span><span class="n">isvol</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Starting from this version of NIRFASTer, Jacobian calculation is only supported in grid space. Please run mesh.gen_intmat() first&#39;</span><span class="p">)</span>
+        
+    <span class="c1"># Let&#39;s make a duplicate of the mesh, so we don&#39;t accidentcally mess up the original</span>
+    <span class="n">mesh2</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">stndmesh</span><span class="p">()</span>
+    <span class="n">mesh2</span><span class="o">.</span><span class="n">from_copy</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+    <span class="n">mesh2</span><span class="o">.</span><span class="n">vol</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">meshvol</span><span class="p">()</span>  <span class="c1"># empty the vol field for now. This avoids automatic space conversion, and makes full jacobian calculation easier</span>
+    <span class="c1"># Calculate direct field</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Calculating direct field...&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">data1</span><span class="p">,</span><span class="n">_</span> <span class="o">=</span> <span class="n">mesh2</span><span class="o">.</span><span class="n">femdata</span><span class="p">(</span><span class="n">freq</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">opt</span><span class="p">)</span>
+    <span class="c1"># swap sources and detectors</span>
+    <span class="n">src2</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh2</span><span class="o">.</span><span class="n">meas</span><span class="p">)</span>
+    <span class="n">det2</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh2</span><span class="o">.</span><span class="n">source</span><span class="p">)</span>
+    <span class="n">mesh2</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">src2</span>
+    <span class="n">mesh2</span><span class="o">.</span><span class="n">meas</span> <span class="o">=</span> <span class="n">det2</span>
+    <span class="n">mesh2</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]]</span>
+    <span class="c1"># calculate adjoint field</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Calculating adjoint field...&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">data2</span><span class="p">,</span><span class="n">_</span> <span class="o">=</span> <span class="n">mesh2</span><span class="o">.</span><span class="n">femdata</span><span class="p">(</span><span class="n">freq</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">opt</span><span class="p">)</span>
+    
+    <span class="c1"># get the active indices</span>
+    <span class="n">active_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">link</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="p">[</span><span class="n">active_idx</span><span class="p">,:]))</span>
+    <span class="c1"># Integrate</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Integrating...&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">((</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">mesh2grid</span> <span class="o">@</span> <span class="n">data1</span><span class="o">.</span><span class="n">phi</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="n">aphi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">((</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">mesh2grid</span> <span class="o">@</span> <span class="n">data2</span><span class="o">.</span><span class="n">phi</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">freq</span><span class="o">==</span><span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">mus</span><span class="p">:</span>
+        <span class="n">J</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">phi</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">J</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="o">-</span><span class="n">utils</span><span class="o">.</span><span class="n">cpulib</span><span class="o">.</span><span class="n">IntGrid</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="n">aphi</span><span class="p">,</span> <span class="n">link</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">res</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">normalize</span><span class="p">:</span>
+            <span class="n">J</span><span class="p">[</span><span class="n">active_idx</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">tmp</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">J</span><span class="p">[</span><span class="n">active_idx</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">tmp</span> <span class="o">/</span> <span class="n">data1</span><span class="o">.</span><span class="n">amplitude</span><span class="p">[</span><span class="n">active_idx</span><span class="p">,</span><span class="kc">None</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dim</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">dimension</span>
+        <span class="n">intfunc_grad</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">cpulib</span><span class="o">.</span><span class="n">gradientIntfunc2</span><span class="p">(</span><span class="n">mesh2</span><span class="o">.</span><span class="n">elements</span><span class="p">,</span> <span class="n">mesh2</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">gridinmesh</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">))</span>
+        <span class="n">nodes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">gridinmesh</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],:]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">gradx_mesh2grid</span> <span class="o">=</span> <span class="n">sparse</span><span class="o">.</span><span class="n">csc_matrix</span><span class="p">((</span><span class="n">intfunc_grad</span><span class="p">[:,</span><span class="mi">0</span><span class="p">:</span><span class="n">dim</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">),</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">gridinmesh</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">nodes</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">))),</span> <span class="n">shape</span><span class="o">=</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">mesh2grid</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">grady_mesh2grid</span> <span class="o">=</span> <span class="n">sparse</span><span class="o">.</span><span class="n">csc_matrix</span><span class="p">((</span><span class="n">intfunc_grad</span><span class="p">[:,</span><span class="n">dim</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">dim</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">),</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">gridinmesh</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">nodes</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">))),</span> <span class="n">shape</span><span class="o">=</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">mesh2grid</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">dx_phi</span> <span class="o">=</span> <span class="p">(</span><span class="n">gradx_mesh2grid</span> <span class="o">@</span> <span class="n">data1</span><span class="o">.</span><span class="n">phi</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">dy_phi</span> <span class="o">=</span> <span class="p">(</span><span class="n">grady_mesh2grid</span> <span class="o">@</span> <span class="n">data1</span><span class="o">.</span><span class="n">phi</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">dx_aphi</span> <span class="o">=</span> <span class="p">(</span><span class="n">gradx_mesh2grid</span> <span class="o">@</span> <span class="n">data2</span><span class="o">.</span><span class="n">phi</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">dy_aphi</span> <span class="o">=</span> <span class="p">(</span><span class="n">grady_mesh2grid</span> <span class="o">@</span> <span class="n">data2</span><span class="o">.</span><span class="n">phi</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">kappa</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">mesh2grid</span> <span class="o">@</span> <span class="n">mesh</span><span class="o">.</span><span class="n">kappa</span>
+        <span class="k">if</span> <span class="n">dim</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+            <span class="n">tmp1</span> <span class="o">=</span> <span class="mi">3</span><span class="o">*</span><span class="n">utils</span><span class="o">.</span><span class="n">cpulib</span><span class="o">.</span><span class="n">IntGradGrid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">dx_phi</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">dy_phi</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dx_phi</span><span class="o">.</span><span class="n">dtype</span><span class="p">),</span> 
+                                             <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">dx_aphi</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">dy_aphi</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dx_aphi</span><span class="o">.</span><span class="n">dtype</span><span class="p">),</span> <span class="n">link</span><span class="p">,</span> <span class="n">dim</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">kappa</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">res</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">dim</span><span class="o">==</span><span class="mi">3</span><span class="p">:</span>
+            <span class="n">gradz_mesh2grid</span> <span class="o">=</span> <span class="n">sparse</span><span class="o">.</span><span class="n">csc_matrix</span><span class="p">((</span><span class="n">intfunc_grad</span><span class="p">[:,</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">dim</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span><span class="mi">3</span><span class="o">*</span><span class="p">(</span><span class="n">dim</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">),</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">gridinmesh</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">nodes</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">))),</span> <span class="n">shape</span><span class="o">=</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">mesh2grid</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+            <span class="n">dz_phi</span> <span class="o">=</span> <span class="p">(</span><span class="n">gradz_mesh2grid</span> <span class="o">@</span> <span class="n">data1</span><span class="o">.</span><span class="n">phi</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+            <span class="n">dz_aphi</span> <span class="o">=</span> <span class="p">(</span><span class="n">gradz_mesh2grid</span> <span class="o">@</span> <span class="n">data2</span><span class="o">.</span><span class="n">phi</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+            <span class="n">tmp1</span> <span class="o">=</span> <span class="mi">3</span><span class="o">*</span><span class="n">utils</span><span class="o">.</span><span class="n">cpulib</span><span class="o">.</span><span class="n">IntGradGrid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">dx_phi</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">dy_phi</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">dz_phi</span><span class="p">),</span> 
+                                             <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">dx_aphi</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">dy_aphi</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">dz_aphi</span><span class="p">),</span> <span class="n">link</span><span class="p">,</span> <span class="n">dim</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">kappa</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">res</span><span class="p">)</span>
+        
+        <span class="n">tmp2</span> <span class="o">=</span> <span class="o">-</span><span class="n">utils</span><span class="o">.</span><span class="n">cpulib</span><span class="o">.</span><span class="n">IntGrid</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="n">aphi</span><span class="p">,</span> <span class="n">link</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">res</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">normalize</span><span class="p">:</span>
+            <span class="n">J</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">phi</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">data1</span><span class="o">.</span><span class="n">phi</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+            <span class="n">J</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+            <span class="n">J</span><span class="p">[</span><span class="n">active_idx</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">tmp1</span><span class="p">,</span> <span class="n">tmp2</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">freq</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+                <span class="n">J</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">phi</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">))</span>
+                <span class="n">J</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+                <span class="n">J</span><span class="p">[</span><span class="n">active_idx</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">tmp1</span><span class="p">,</span> <span class="n">tmp2</span><span class="p">]</span> <span class="o">/</span> <span class="n">data1</span><span class="o">.</span><span class="n">amplitude</span><span class="p">[</span><span class="n">active_idx</span><span class="p">,</span><span class="kc">None</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">J</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="n">phi</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">))</span>
+                <span class="n">J</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+                <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">tmp1</span><span class="p">,</span> <span class="n">tmp2</span><span class="p">]</span> <span class="o">/</span> <span class="n">data1</span><span class="o">.</span><span class="n">complex</span><span class="p">[</span><span class="n">active_idx</span><span class="p">,</span><span class="kc">None</span><span class="p">]</span>
+                <span class="n">J</span><span class="p">[</span><span class="n">active_idx</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+                <span class="n">J</span><span class="p">[</span><span class="n">active_idx</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+    <span class="n">data1</span><span class="o">.</span><span class="n">togrid</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+    <span class="n">data2</span><span class="o">.</span><span class="n">togrid</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">J</span><span class="p">,</span> <span class="n">data1</span><span class="p">,</span> <span class="n">data2</span></div>
+
+
+<div class="viewcode-block" id="jacobian_stnd_CW">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.inverse.jacobian_stnd_CW.html#nirfasterff.inverse.jacobian_stnd_CW">[docs]</a>
+<span class="k">def</span> <span class="nf">jacobian_stnd_CW</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">mus</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">()):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates the continuous-wave Jacobian matrix using the adjoint method</span>
+<span class="sd">    </span>
+<span class="sd">    Calculates spatial distributions of sensitivity of field registerd on the mesh boundary to changes of optical properties per voxel.</span>
+<span class="sd">        </span>
+<span class="sd">    When mus is set to True, the Jacobian is structured as, suppose we have M channels and N voxels::</span>
+<span class="sd">        </span>
+<span class="sd">        [dA_1/dmusp_1, dA_1/dmusp_2, ..., dA_1/dmusp_{N}, dA_1/dmua_1, dA_1/dmua_2, ..., dA_1/dmua_{N}]</span>
+<span class="sd">        [dA_2/dmusp_1, dA_2/dmusp_2, ..., dA_2/dmusp_{N}, dA_2/dmua_1, dA_2/dmua_2, ..., dA_2/dmua_{N}]</span>
+<span class="sd">        ...</span>
+<span class="sd">        [dA_M/dmusp_1, dA_M/dmusp_2, ..., dA_M/dmusp_{N}, dA_M/dmua_1, dA_M/dmua_2, ..., dA_M/dmua_{N}]</span>
+<span class="sd">    </span>
+<span class="sd">    where A and Phi denote the measured amplitude and the phase if `normalize=False`, and the log of them if `normalize=True`</span>
+<span class="sd">    </span>
+<span class="sd">    When mus is set to False, the returned Jacobian is only the right half of the above. That is, only derivatives wrt mua</span>
+<span class="sd">    </span>
+<span class="sd">    Note that the calculation is only done in the volumetric space</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mesh : nirfasterff.base.stndmesh</span>
+<span class="sd">        mesh on which the Jacobian is calculated.</span>
+<span class="sd">    normalize : bool, optional</span>
+<span class="sd">        whether normalize the Jacobian to the amplitudes of boundary measurements, i.e. use Rytov approximation. </span>
+<span class="sd">        </span>
+<span class="sd">        The default is True.</span>
+<span class="sd">    mus : bool, optional</span>
+<span class="sd">        whether derivates wrt mus (left half of the &#39;full&#39; Jacobian) is calculated. The default is False.</span>
+<span class="sd">    solver : str, optional</span>
+<span class="sd">        Choose between &#39;CPU&#39; or &#39;GPU&#39; solver (case insensitive). Automatically determined (GPU prioritized) if not specified</span>
+<span class="sd">    opt : nirfasterff.utils.SolverOptions, optional</span>
+<span class="sd">        Solver options. Uses default parameters if not specified, and they should suffice in most cases. </span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.SolverOptions` for details</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        if mesh is not a stnd mesh, or mesh.vol is not defined.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    J : double NumPy array</span>
+<span class="sd">        The Jacobian matrix. Size (NChannel, NVoxel*2) if mus=True, (NChannel, NVoxel) if mus=False</span>
+<span class="sd">    data1 : nirfasterff.base.FDdata</span>
+<span class="sd">        The calculated direct field. The same as directly calling mesh.femdata(0)</span>
+<span class="sd">    data2 : nirfasterff.base.FDdata</span>
+<span class="sd">        The calculated adjoint field. The same as calling mesh.femdata(0) AFTER swapping the locations of sources and detectors</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">jacobian_stnd_FD</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">normalize</span><span class="p">,</span> <span class="n">mus</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">opt</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="jacobian_fl_CW">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.inverse.jacobian_fl_CW.html#nirfasterff.inverse.jacobian_fl_CW">[docs]</a>
+<span class="k">def</span> <span class="nf">jacobian_fl_CW</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">()):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates the continuous-wave fluorescence Jacobian matrix using the adjoint method</span>
+<span class="sd">    </span>
+<span class="sd">    J_{ij} = dA_i / d_gamma_j</span>
+<span class="sd">    </span>
+<span class="sd">    where A is fluorescence amplitude if normalization is False, fluorescence amplitude divided by excitation amplitude (&#39;Born ratio&#39;) if True</span>
+<span class="sd">    </span>
+<span class="sd">    gamma_j = mesh.eta[j]*mesh.muaf[j]</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mesh : nirfasterff.base.fluormesh</span>
+<span class="sd">        mesh on which the Jacobian is calculated.</span>
+<span class="sd">    normalize : bool, optional</span>
+<span class="sd">        whether normalize the Jacobian to the amplitudes of boundary measurements at excitation wavelength (&#39;Born ratio&#39;). </span>
+<span class="sd">        </span>
+<span class="sd">        The default is True.</span>
+<span class="sd">    solver : str, optional</span>
+<span class="sd">        Choose between &#39;CPU&#39; or &#39;GPU&#39; solver (case insensitive). Automatically determined (GPU prioritized) if not specified</span>
+<span class="sd">    opt : nirfasterff.utils.SolverOptions, optional</span>
+<span class="sd">        Solver options. Uses default parameters if not specified, and they should suffice in most cases. </span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.SolverOptions` for details</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        if mesh is not a fluor mesh, or mesh.vol is not defined.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    J : double NumPy array</span>
+<span class="sd">        The Jacobian matrix. Size (NChannel, NVoxel) </span>
+<span class="sd">    data1 : nirfasterff.base.FLdata</span>
+<span class="sd">        The calculated direct field. The same as directly calling mesh.femdata(0)</span>
+<span class="sd">    data2 : nirfasterff.base.FLdata</span>
+<span class="sd">        The calculated adjoint field. The same as calling mesh.femdata(0) AFTER swapping the locations of sources and detectors</span>
+<span class="sd">    </span>
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Milstein et al., JOSA A, 2004. doi:10.1364/JOSAA.21.001035</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">mesh</span><span class="o">.</span><span class="n">type</span><span class="o">==</span><span class="s1">&#39;fluor&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Must be a fluorescence mesh&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">mesh</span><span class="o">.</span><span class="n">isvol</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Starting from this version of NIRFASTer, Jacobian calculation is only supported in grid space. Please run mesh.gen_intmat() first&#39;</span><span class="p">)</span>
+    <span class="c1"># Let&#39;s make a duplicate of the mesh, so we don&#39;t accidentcally mess up the original</span>
+    <span class="n">mesh2</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">fluormesh</span><span class="p">()</span>
+    <span class="n">mesh2</span><span class="o">.</span><span class="n">from_copy</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+    <span class="c1"># Calculate direct field</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Calculating direct field...&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">data1</span> <span class="o">=</span> <span class="n">mesh2</span><span class="o">.</span><span class="n">femdata</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">mmflag</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c1"># swap sources and detectors</span>
+    <span class="n">src2</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh2</span><span class="o">.</span><span class="n">meas</span><span class="p">)</span>
+    <span class="n">det2</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh2</span><span class="o">.</span><span class="n">source</span><span class="p">)</span>
+    <span class="n">mesh2</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">src2</span>
+    <span class="n">mesh2</span><span class="o">.</span><span class="n">meas</span> <span class="o">=</span> <span class="n">det2</span>
+    <span class="n">mesh2</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]]</span>
+    <span class="c1"># calculate adjoint field</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Calculating adjoint field...&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">data2</span> <span class="o">=</span> <span class="n">mesh2</span><span class="o">.</span><span class="n">femdata</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">xflag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">flflag</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    
+    <span class="c1"># get the active indices</span>
+    <span class="n">active_idx</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="n">link</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="p">[</span><span class="n">active_idx</span><span class="p">,:]))</span>
+    <span class="c1"># Integrate</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Integrating...&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">data1</span><span class="o">.</span><span class="n">phix</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">data1</span><span class="o">.</span><span class="n">phix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="n">aphi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">data2</span><span class="o">.</span><span class="n">phimm</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">data2</span><span class="o">.</span><span class="n">phimm</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="n">J</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">phi</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="n">J</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">cpulib</span><span class="o">.</span><span class="n">IntGrid</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="n">aphi</span><span class="p">,</span> <span class="n">link</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">res</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">normalize</span><span class="p">:</span>
+        <span class="n">J</span><span class="p">[</span><span class="n">active_idx</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">tmp</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">J</span><span class="p">[</span><span class="n">active_idx</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">tmp</span> <span class="o">/</span> <span class="n">data1</span><span class="o">.</span><span class="n">amplitudex</span><span class="p">[</span><span class="n">active_idx</span><span class="p">,</span><span class="kc">None</span><span class="p">]</span>
+        
+    <span class="k">return</span> <span class="n">J</span><span class="p">,</span> <span class="n">data1</span><span class="p">,</span> <span class="n">data2</span></div>
+
+
+<div class="viewcode-block" id="jacobian_fl_FD">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.inverse.jacobian_fl_FD.html#nirfasterff.inverse.jacobian_fl_FD">[docs]</a>
+<span class="k">def</span> <span class="nf">jacobian_fl_FD</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">()):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates the frequency-domain fluorescence Jacobian matrix using the adjoint method</span>
+<span class="sd">    </span>
+<span class="sd">    The Jacobian is structured as, suppose we have M channels and N voxels::</span>
+<span class="sd">        </span>
+<span class="sd">        [d_real{A_1}/d_gamma_1, d_real{A_1}/d_gamma_2, ..., d_real{A_1}/d_gamma_{N}, d_real{A_1}/dtau_1, d_real{A_1}/dtau_2, ..., d_real{A_1}/dtau_{N}]</span>
+<span class="sd">        [d_imag{A_1}/d_gamma_1, d_imag{A_1}/d_gamma_2, ..., d_imag{A_1}/d_gamma_{N}, d_imag{A_1}/dtau_1, d_imag{A_1}/dtau_2, ..., d_imag{A_1}/dtau_{N}]</span>
+<span class="sd">        [d_real{A_2}/d_gamma_1, d_real{A_2}/d_gamma_2, ..., d_real{A_2}/d_gamma_{N}, d_real{A_2}/dtau_1, d_real{A_2}/dtau_2, ..., d_real{A_2}/dtau_{N}]</span>
+<span class="sd">        [d_imag{A_2}/d_gamma_1, d_imag{A_2}/d_gamma_2, ..., d_imag{A_2}/d_gamma_{N}, d_imag{A_2}/dtau_1, d_imag{A_2}/dtau_2, ..., d_imag{A_2}/dtau_{N}]</span>
+<span class="sd">        ...</span>
+<span class="sd">        [d_real{A_M}/d_gamma_1, d_real{A_M}/d_gamma_2, ..., d_real{A_M}/d_gamma_{N}, d_real{A_M}/dtau_1, d_real{A_M}/dtau_2, ..., d_real{A_M}/dtau_{N}]</span>
+<span class="sd">        [d_imag{A_M}/d_gamma_1, d_imag{A_M}/d_gamma_2, ..., d_imag{A_M}/d_gamma_{N}, d_imag{A_M}/dtau_1, d_imag{A_M}/dtau_2, ..., d_imag{A_M}/dtau_{N}]</span>
+<span class="sd">    </span>
+<span class="sd">    where A is fluorescence amplitude if normalization is False, fluorescence amplitude divided by excitation amplitude (&#39;Born ratio&#39;) if True</span>
+<span class="sd">    gamma_j = mesh.eta[j]*mesh.muaf[j]</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mesh : nirfasterff.base.fluormesh</span>
+<span class="sd">        mesh on which the Jacobian is calculated.</span>
+<span class="sd">    freq : double</span>
+<span class="sd">        modulation frequency in Hz.</span>
+<span class="sd">    normalize : bool, optional</span>
+<span class="sd">        whether normalize the Jacobian to the amplitudes of boundary measurements at excitation wavelength (&#39;Born ratio&#39;). </span>
+<span class="sd">        </span>
+<span class="sd">        The default is True.</span>
+<span class="sd">    solver : str, optional</span>
+<span class="sd">        Choose between &#39;CPU&#39; or &#39;GPU&#39; solver (case insensitive). Automatically determined (GPU prioritized) if not specified</span>
+<span class="sd">    opt : nirfasterff.utils.SolverOptions, optional</span>
+<span class="sd">        Solver options. Uses default parameters if not specified, and they should suffice in most cases. </span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.SolverOptions` for details</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        if mesh is not a fluor mesh, or mesh.vol is not defined.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    J : double NumPy array</span>
+<span class="sd">        The Jacobian matrix. Size (NChannel*2, NVoxel*2) </span>
+<span class="sd">    data1 : nirfasterff.base.FLdata</span>
+<span class="sd">        The calculated direct field. The same as directly calling mesh.femdata(freq)</span>
+<span class="sd">    data2 : nirfasterff.base.FLdata</span>
+<span class="sd">        The calculated adjoint field. The same as calling mesh.femdata(freq) AFTER swapping the locations of sources and detectors</span>
+<span class="sd">    </span>
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Milstein et al., JOSA A, 2004. doi:10.1364/JOSAA.21.001035</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">mesh</span><span class="o">.</span><span class="n">type</span><span class="o">==</span><span class="s1">&#39;fluor&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Must be a fluorescence mesh&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">mesh</span><span class="o">.</span><span class="n">isvol</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Starting from this version of NIRFASTer, Jacobian calculation is only supported in grid space. Please run mesh.gen_intmat() first&#39;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">freq</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">jacobian_fl_CW</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">normalize</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">opt</span><span class="p">)</span>
+    <span class="c1"># Let&#39;s make a duplicate of the mesh, so we don&#39;t accidentcally mess up the original</span>
+    <span class="n">mesh2</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">fluormesh</span><span class="p">()</span>
+    <span class="n">mesh2</span><span class="o">.</span><span class="n">from_copy</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+    <span class="n">mesh2</span><span class="o">.</span><span class="n">vol</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">meshvol</span><span class="p">()</span>  <span class="c1"># empty the vol field for now. This avoids automatic space conversion, and makes full jacobian calculation easier</span>
+    <span class="c1"># Calculate direct field</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Calculating direct field...&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">data1</span> <span class="o">=</span> <span class="n">mesh2</span><span class="o">.</span><span class="n">femdata</span><span class="p">(</span><span class="n">freq</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">mmflag</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c1"># swap sources and detectors</span>
+    <span class="n">src2</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh2</span><span class="o">.</span><span class="n">meas</span><span class="p">)</span>
+    <span class="n">det2</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh2</span><span class="o">.</span><span class="n">source</span><span class="p">)</span>
+    <span class="n">mesh2</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">src2</span>
+    <span class="n">mesh2</span><span class="o">.</span><span class="n">meas</span> <span class="o">=</span> <span class="n">det2</span>
+    <span class="n">mesh2</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]]</span>
+    <span class="c1"># calculate adjoint field</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Calculating adjoint field...&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">data2</span> <span class="o">=</span> <span class="n">mesh2</span><span class="o">.</span><span class="n">femdata</span><span class="p">(</span><span class="n">freq</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">xflag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">flflag</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c1"># define gamma</span>
+    <span class="n">omega</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">freq</span>
+    <span class="c1"># get the active indices</span>
+    <span class="n">active_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">link</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="p">[</span><span class="n">active_idx</span><span class="p">,:]))</span>
+    <span class="c1"># Integrate</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Integrating...&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">((</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">mesh2grid</span> <span class="o">@</span> <span class="n">data1</span><span class="o">.</span><span class="n">phix</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="n">aphi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">((</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">mesh2grid</span> <span class="o">@</span> <span class="n">data2</span><span class="o">.</span><span class="n">phimm</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="n">J</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="n">phi</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">J</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+    <span class="c1"># The complex jacobian, wrt eta*muaf/(1+j*omega*tau)</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">cpulib</span><span class="o">.</span><span class="n">IntGrid</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="n">aphi</span><span class="p">,</span> <span class="n">link</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">res</span><span class="p">)</span>
+    <span class="n">tau</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">mesh2grid</span> <span class="o">@</span> <span class="n">mesh</span><span class="o">.</span><span class="n">tau</span>
+    <span class="n">eta_muaf</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">mesh2grid</span> <span class="o">@</span> <span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">eta</span> <span class="o">*</span> <span class="n">mesh</span><span class="o">.</span><span class="n">muaf</span><span class="p">)</span>
+    <span class="c1"># Jacobian for eta*muaf</span>
+    <span class="n">tmp1</span> <span class="o">=</span> <span class="n">tmp</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">omega</span> <span class="o">*</span> <span class="n">tau</span><span class="p">)</span>
+    <span class="c1"># Jacobian for tau</span>
+    <span class="n">tmp2</span> <span class="o">=</span> <span class="n">tmp</span> <span class="o">*</span> <span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">omega</span> <span class="o">*</span> <span class="n">eta_muaf</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">omega</span> <span class="o">*</span> <span class="n">tau</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">normalize</span><span class="p">:</span>
+        <span class="n">J</span><span class="p">[</span><span class="n">active_idx</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">tmp1</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">tmp2</span><span class="p">)]</span>
+        <span class="n">J</span><span class="p">[</span><span class="n">active_idx</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">tmp1</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">tmp2</span><span class="p">)]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">J</span><span class="p">[</span><span class="n">active_idx</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">tmp1</span><span class="o">/</span> <span class="n">data1</span><span class="o">.</span><span class="n">complexx</span><span class="p">[</span><span class="n">active_idx</span><span class="p">,</span><span class="kc">None</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">tmp2</span><span class="o">/</span> <span class="n">data1</span><span class="o">.</span><span class="n">complexx</span><span class="p">[</span><span class="n">active_idx</span><span class="p">,</span><span class="kc">None</span><span class="p">])]</span>
+        <span class="n">J</span><span class="p">[</span><span class="n">active_idx</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">tmp1</span><span class="o">/</span> <span class="n">data1</span><span class="o">.</span><span class="n">complexx</span><span class="p">[</span><span class="n">active_idx</span><span class="p">,</span><span class="kc">None</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">tmp2</span><span class="o">/</span> <span class="n">data1</span><span class="o">.</span><span class="n">complexx</span><span class="p">[</span><span class="n">active_idx</span><span class="p">,</span><span class="kc">None</span><span class="p">])]</span>
+        
+    <span class="k">return</span> <span class="n">J</span><span class="p">,</span> <span class="n">data1</span><span class="p">,</span> <span class="n">data2</span></div>
+
+
+<div class="viewcode-block" id="jacobian_DCS">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.inverse.jacobian_DCS.html#nirfasterff.inverse.jacobian_DCS">[docs]</a>
+<span class="k">def</span> <span class="nf">jacobian_DCS</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">tvec</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">()):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates the Jacobian matrix for a DCS mesh using the adjoint method</span>
+<span class="sd">    </span>
+<span class="sd">    One Jacobian is calcualted at each time point in tvec, and the derivative is taken with regard to aDb</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mesh : nirfasterff.base.dcsmesh</span>
+<span class="sd">        mesh on which the Jacobian is calculated.</span>
+<span class="sd">    tvec : double NumPy vector</span>
+<span class="sd">        time vector used.</span>
+<span class="sd">    normalize : bool, optional</span>
+<span class="sd">        if True, Jacobbians are normalized to the measured boundary amplitude. The default is True.</span>
+<span class="sd">    solver : str, optional</span>
+<span class="sd">        Choose between &#39;CPU&#39; or &#39;GPU&#39; solver (case insensitive). Automatically determined (GPU prioritized) if not specified</span>
+<span class="sd">    opt : nirfasterff.utils.SolverOptions, optional</span>
+<span class="sd">        Solver options. Uses default parameters if not specified, and they should suffice in most cases. </span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.SolverOptions` for details</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        if mesh is not a DCS mesh, or mesh.vol is not defined.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    J : double NumPy array</span>
+<span class="sd">        The Jacobian matrix. Size (NChannel, NVoxel, NTime) </span>
+<span class="sd">    data1 : nirfasterff.base.FLdata</span>
+<span class="sd">        The calculated direct field. The same as directly calling mesh.femdata(tvec)</span>
+<span class="sd">    data2 : nirfasterff.base.FLdata</span>
+<span class="sd">        The calculated adjoint field. The same as calling mesh.femdata(tvec) AFTER swapping the locations of sources and detectors</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">mesh</span><span class="o">.</span><span class="n">type</span><span class="o">==</span><span class="s1">&#39;dcs&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Must be a DCS mesh&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">mesh</span><span class="o">.</span><span class="n">isvol</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Starting from this version of NIRFASTer, Jacobian calculation is only supported in grid space. Please run mesh.gen_intmat() first&#39;</span><span class="p">)</span>
+    <span class="c1"># Let&#39;s make a duplicate of the mesh, so we don&#39;t accidentcally mess up the original</span>
+    <span class="n">mesh2</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">dcsmesh</span><span class="p">()</span>
+    <span class="n">mesh2</span><span class="o">.</span><span class="n">from_copy</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+    <span class="c1"># Calculate direct field</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Calculating direct field...&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">data1</span><span class="p">,</span><span class="n">_</span> <span class="o">=</span> <span class="n">mesh2</span><span class="o">.</span><span class="n">femdata</span><span class="p">(</span><span class="n">tvec</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">opt</span><span class="p">)</span>
+    <span class="c1"># swap sources and detectors</span>
+    <span class="n">src2</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh2</span><span class="o">.</span><span class="n">meas</span><span class="p">)</span>
+    <span class="n">det2</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh2</span><span class="o">.</span><span class="n">source</span><span class="p">)</span>
+    <span class="n">mesh2</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">src2</span>
+    <span class="n">mesh2</span><span class="o">.</span><span class="n">meas</span> <span class="o">=</span> <span class="n">det2</span>
+    <span class="n">mesh2</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]]</span>
+    <span class="c1"># calculate adjoint field</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Calculating adjoint field...&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">data2</span><span class="p">,</span><span class="n">_</span> <span class="o">=</span> <span class="n">mesh2</span><span class="o">.</span><span class="n">femdata</span><span class="p">(</span><span class="n">tvec</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">opt</span><span class="p">)</span>
+    <span class="c1"># get the active indices</span>
+    <span class="n">active_idx</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="n">link</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="p">[</span><span class="n">active_idx</span><span class="p">,:]))</span>
+    <span class="c1"># Integrate</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Integrating...&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">J</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">data1</span><span class="o">.</span><span class="n">phi_DCS</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]),</span> <span class="nb">len</span><span class="p">(</span><span class="n">tvec</span><span class="p">)))</span>
+    <span class="n">J</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+    <span class="n">k0</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">wv_DCS</span><span class="o">/</span><span class="mf">1e6</span><span class="p">)</span>
+    <span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">data1</span><span class="o">.</span><span class="n">phi_DCS</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">data1</span><span class="o">.</span><span class="n">phi_DCS</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="n">data1</span><span class="o">.</span><span class="n">phi_DCS</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+    <span class="n">aphi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">data2</span><span class="o">.</span><span class="n">phi_DCS</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">data2</span><span class="o">.</span><span class="n">phi_DCS</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="n">data2</span><span class="o">.</span><span class="n">phi_DCS</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tvec</span><span class="p">)):</span>
+        <span class="n">tmp_phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">phi</span><span class="p">[:,:,</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+        <span class="n">tmp_aphi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">aphi</span><span class="p">[:,:,</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+        <span class="n">tmpJ</span> <span class="o">=</span> <span class="o">-</span><span class="n">utils</span><span class="o">.</span><span class="n">cpulib</span><span class="o">.</span><span class="n">IntGrid</span><span class="p">(</span><span class="n">tmp_phi</span><span class="p">,</span> <span class="n">tmp_aphi</span><span class="p">,</span> <span class="n">link</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">res</span><span class="p">)</span>
+        <span class="n">musp</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">mesh2grid</span> <span class="o">@</span> <span class="n">mesh</span><span class="o">.</span><span class="n">mus</span>
+        <span class="k">if</span> <span class="n">normalize</span><span class="p">:</span>
+            <span class="n">J</span><span class="p">[</span><span class="n">active_idx</span><span class="p">,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmpJ</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">k0</span><span class="o">*</span><span class="n">k0</span><span class="o">*</span><span class="n">musp</span><span class="o">*</span><span class="n">tvec</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">data1</span><span class="o">.</span><span class="n">G1_DCS</span><span class="p">[:,</span><span class="n">i</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">J</span><span class="p">[</span><span class="n">active_idx</span><span class="p">,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmpJ</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">k0</span><span class="o">*</span><span class="n">k0</span><span class="o">*</span><span class="n">musp</span><span class="o">*</span><span class="n">tvec</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">J</span><span class="p">,</span> <span class="n">data1</span><span class="p">,</span> <span class="n">data2</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Jiaming Cao, MILAB@UoB.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

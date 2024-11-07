@@ -1,0 +1,186 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nirfasterff.forward.femdata.femdata_stnd_TR_moments &mdash; NIRFASTerFF 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="nirfasterff.inverse" href="nirfasterff.inverse.html" />
+    <link rel="prev" title="nirfasterff.forward.femdata.femdata_stnd_TR" href="nirfasterff.forward.femdata.femdata_stnd_TR.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            NIRFASTerFF
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="nirfasterff.html">nirfasterff</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.base.html">nirfasterff.base</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="nirfasterff.forward.html">nirfasterff.forward</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.forward.analytical.html">nirfasterff.forward.analytical</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="nirfasterff.forward.femdata.html">nirfasterff.forward.femdata</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="nirfasterff.forward.femdata.femdata_DCS.html">nirfasterff.forward.femdata.femdata_DCS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nirfasterff.forward.femdata.femdata_fl_CW.html">nirfasterff.forward.femdata.femdata_fl_CW</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nirfasterff.forward.femdata.femdata_fl_FD.html">nirfasterff.forward.femdata.femdata_fl_FD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nirfasterff.forward.femdata.femdata_fl_TR.html">nirfasterff.forward.femdata.femdata_fl_TR</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nirfasterff.forward.femdata.femdata_fl_TR_moments.html">nirfasterff.forward.femdata.femdata_fl_TR_moments</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nirfasterff.forward.femdata.femdata_stnd_CW.html">nirfasterff.forward.femdata.femdata_stnd_CW</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nirfasterff.forward.femdata.femdata_stnd_FD.html">nirfasterff.forward.femdata.femdata_stnd_FD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nirfasterff.forward.femdata.femdata_stnd_TR.html">nirfasterff.forward.femdata.femdata_stnd_TR</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">nirfasterff.forward.femdata.femdata_stnd_TR_moments</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.inverse.html">nirfasterff.inverse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.io.html">nirfasterff.io</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.lib.html">nirfasterff.lib</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.math.html">nirfasterff.math</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.meshing.html">nirfasterff.meshing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.utils.html">nirfasterff.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.visualize.html">nirfasterff.visualize</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">NIRFASTerFF</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="nirfasterff.html">nirfasterff</a></li>
+          <li class="breadcrumb-item"><a href="nirfasterff.forward.html">nirfasterff.forward</a></li>
+          <li class="breadcrumb-item"><a href="nirfasterff.forward.femdata.html">nirfasterff.forward.femdata</a></li>
+      <li class="breadcrumb-item active">nirfasterff.forward.femdata.femdata_stnd_TR_moments</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/_autosummary/nirfasterff.forward.femdata.femdata_stnd_TR_moments.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="nirfasterff-forward-femdata-femdata-stnd-tr-moments">
+<h1>nirfasterff.forward.femdata.femdata_stnd_TR_moments<a class="headerlink" href="#nirfasterff-forward-femdata-femdata-stnd-tr-moments" title="Link to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="nirfasterff.forward.femdata.femdata_stnd_TR_moments">
+<span class="sig-prename descclassname"><span class="pre">nirfasterff.forward.femdata.</span></span><span class="sig-name descname"><span class="pre">femdata_stnd_TR_moments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_moments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">savefield</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">utils.get_solver()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">utils.SolverOptions()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/forward/femdata.html#femdata_stnd_TR_moments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.forward.femdata.femdata_stnd_TR_moments" title="Link to this definition"></a></dt>
+<dd><p>Forward modeling calculating TR moments using Mellin transform on a standard mesh. Please consider using mesh.femdata_moments() instead.</p>
+<p>The function calculates the MASS matrices, the source vectors, and calls the Mellin moments solver (preconditioned conjugated gradient).</p>
+<p>Calculates 0th, 1st, 2nd, .., max_moments-th moments directly without calculating TPSF first.</p>
+<p>This is more efficient, if the actual TPSFs are not of concern.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mesh</strong> (<em>nirfasterff.base.stndmesh</em>) – the mesh used to calcuate the forward data.</p></li>
+<li><p><strong>max_moments</strong> (<em>int32</em><em>, </em><em>optional</em>) – max order of moments to calculate. That is, 0th, 1st, 2nd, .., max_moments-th will be calculated. The default is 3.</p></li>
+<li><p><strong>savefield</strong> (<em>bool</em><em>, </em><em>optional</em>) – <p>If True, the internal moments are also returned. If False, only boundary moments are returned and data.phi will be empty.</p>
+<p>The default is False.</p>
+</p></li>
+<li><p><strong>solver</strong> (<em>str</em><em>, </em><em>optional</em>) – Choose between ‘CPU’ or ‘GPU’ solver (case insensitive). Automatically determined (GPU prioritized) if not specified</p></li>
+<li><p><strong>opt</strong> (<a class="reference internal" href="nirfasterff.utils.SolverOptions.html#nirfasterff.utils.SolverOptions" title="nirfasterff.utils.SolverOptions"><em>nirfasterff.utils.SolverOptions</em></a><em>, </em><em>optional</em>) – <p>Solver options. Uses default parameters if not specified, and they should suffice in most cases.</p>
+<p>See <a class="reference internal" href="nirfasterff.utils.SolverOptions.html#nirfasterff.utils.SolverOptions" title="nirfasterff.utils.SolverOptions"><code class="xref py py-func docutils literal notranslate"><span class="pre">SolverOptions()</span></code></a> for details</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – If mesh is not a stnd mesh.</p></li>
+<li><p><strong>ValueError</strong> – If max_moments is negative.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul>
+<li><p><strong>data</strong> (<em>nirfasterff.base.TRMomentsdata</em>) – internal and boundary moments given the mesh and optodes.</p>
+<p>If mesh.vol is defined and <cite>savefield==True</cite>, the returned internal moments will be in volumetric space</p>
+<p>See <a class="reference internal" href="nirfasterff.base.data.TRMomentsdata.html#nirfasterff.base.data.TRMomentsdata" title="nirfasterff.base.data.TRMomentsdata"><code class="xref py py-func docutils literal notranslate"><span class="pre">TRMomentsdata()</span></code></a> for details.</p>
+</li>
+<li><p><strong>info</strong> (<em>nirfasterff.utils.ConvergenceInfo</em>) – convergence information of the solver.</p>
+<p>Only the convergence info of highest order moments is returned.</p>
+<p>See <a class="reference internal" href="nirfasterff.utils.ConvergenceInfo.html#nirfasterff.utils.ConvergenceInfo" title="nirfasterff.utils.ConvergenceInfo"><code class="xref py py-func docutils literal notranslate"><span class="pre">ConvergenceInfo()</span></code></a> for details</p>
+</li>
+</ul>
+</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="nirfasterff.math.gen_mass_matrix.html#nirfasterff.math.gen_mass_matrix" title="nirfasterff.math.gen_mass_matrix"><code class="xref py py-func docutils literal notranslate"><span class="pre">gen_mass_matrix()</span></code></a>, <a class="reference internal" href="nirfasterff.math.gen_sources.html#nirfasterff.math.gen_sources" title="nirfasterff.math.gen_sources"><code class="xref py py-func docutils literal notranslate"><span class="pre">gen_sources()</span></code></a>, and <a class="reference internal" href="nirfasterff.math.get_field_TRmoments.html#nirfasterff.math.get_field_TRmoments" title="nirfasterff.math.get_field_TRmoments"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_field_TRmoments()</span></code></a></p>
+</div>
+<p class="rubric">References</p>
+<p>Arridge and Schweiger, Applied Optics, 1995. doi:10.1364/AO.34.002683</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="nirfasterff.forward.femdata.femdata_stnd_TR.html" class="btn btn-neutral float-left" title="nirfasterff.forward.femdata.femdata_stnd_TR" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="nirfasterff.inverse.html" class="btn btn-neutral float-right" title="nirfasterff.inverse" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Jiaming Cao, MILAB@UoB.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

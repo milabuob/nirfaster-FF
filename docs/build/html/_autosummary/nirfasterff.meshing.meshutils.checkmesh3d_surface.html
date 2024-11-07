@@ -1,0 +1,167 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nirfasterff.meshing.meshutils.checkmesh3d_surface &mdash; NIRFASTerFF 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="nirfasterff.utils" href="nirfasterff.utils.html" />
+    <link rel="prev" title="nirfasterff.meshing.meshutils.checkmesh3d_solid" href="nirfasterff.meshing.meshutils.checkmesh3d_solid.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            NIRFASTerFF
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="nirfasterff.html">nirfasterff</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.base.html">nirfasterff.base</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.forward.html">nirfasterff.forward</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.inverse.html">nirfasterff.inverse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.io.html">nirfasterff.io</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.lib.html">nirfasterff.lib</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.math.html">nirfasterff.math</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="nirfasterff.meshing.html">nirfasterff.meshing</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.meshing.auxiliary.html">nirfasterff.meshing.auxiliary</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="nirfasterff.meshing.meshutils.html">nirfasterff.meshing.meshutils</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="nirfasterff.meshing.meshutils.CheckMesh2D.html">nirfasterff.meshing.meshutils.CheckMesh2D</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nirfasterff.meshing.meshutils.CheckMesh3D.html">nirfasterff.meshing.meshutils.CheckMesh3D</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nirfasterff.meshing.meshutils.RunCGALMeshGenerator.html">nirfasterff.meshing.meshutils.RunCGALMeshGenerator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nirfasterff.meshing.meshutils.boundfaces.html">nirfasterff.meshing.meshutils.boundfaces</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nirfasterff.meshing.meshutils.checkmesh3d_solid.html">nirfasterff.meshing.meshutils.checkmesh3d_solid</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">nirfasterff.meshing.meshutils.checkmesh3d_surface</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.utils.html">nirfasterff.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.visualize.html">nirfasterff.visualize</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">NIRFASTerFF</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="nirfasterff.html">nirfasterff</a></li>
+          <li class="breadcrumb-item"><a href="nirfasterff.meshing.html">nirfasterff.meshing</a></li>
+          <li class="breadcrumb-item"><a href="nirfasterff.meshing.meshutils.html">nirfasterff.meshing.meshutils</a></li>
+      <li class="breadcrumb-item active">nirfasterff.meshing.meshutils.checkmesh3d_surface</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/_autosummary/nirfasterff.meshing.meshutils.checkmesh3d_surface.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="nirfasterff-meshing-meshutils-checkmesh3d-surface">
+<h1>nirfasterff.meshing.meshutils.checkmesh3d_surface<a class="headerlink" href="#nirfasterff-meshing-meshutils-checkmesh3d-surface" title="Link to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="nirfasterff.meshing.meshutils.checkmesh3d_surface">
+<span class="sig-prename descclassname"><span class="pre">nirfasterff.meshing.meshutils.</span></span><span class="sig-name descname"><span class="pre">checkmesh3d_surface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ele</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/meshing/meshutils.html#checkmesh3d_surface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.meshing.meshutils.checkmesh3d_surface" title="Link to this definition"></a></dt>
+<dd><p>Calculates and returns the quality metrics of the triangles in a 3D surface mesh</p>
+<p>Please consider using <code class="xref py py-func docutils literal notranslate"><span class="pre">nirfasterff.meshing.CheckMesh3D()</span></code> instead.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ele</strong> (<em>int32 NumPy array</em>) – element list of the mesh, zero-based.</p></li>
+<li><p><strong>nodes</strong> (<em>double NumPy array</em>) – node locations of the mesh, in mm.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – whether print the problematic triangles to stdout, if any. The default is False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>TypeError</strong> – if mesh is not 3D tetrahedral, or if element list uses undefined nodes.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul>
+<li><p><strong>q_radius_ratio</strong> (<em>double NumPy vector</em>) – radius ratio of each triangle, defined as <cite>2*inradius / circumradius</cite>.</p></li>
+<li><p><strong>q_area_ratio</strong> (<em>double NumPy vector</em>) – face area divided by ‘ideal area’ for each triangle,</p>
+<p>where ideal area is the area of an equilateral triangle whose edge length equals the longest edge in the face.</p>
+</li>
+<li><p><strong>area</strong> (<em>double NumPy vector</em>) – area of each triangle, in mm^2.</p></li>
+<li><p><strong>zeroflag</strong> (<em>bool NumPy vector</em>) – flags whether the area a triangle is close to zero.</p></li>
+<li><p><strong>edgeflag</strong> (<em>int</em>) – flag if any problematic edges. Flag set by bits ‘b1b0’:</p>
+<p>b1=1 if dangling edges found, b0=1 if there exist edges shared by more than two triangles</p>
+</li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="nirfasterff.meshing.meshutils.checkmesh3d_solid.html" class="btn btn-neutral float-left" title="nirfasterff.meshing.meshutils.checkmesh3d_solid" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="nirfasterff.utils.html" class="btn btn-neutral float-right" title="nirfasterff.utils" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Jiaming Cao, MILAB@UoB.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,1160 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nirfasterff.base.stnd_mesh &mdash; NIRFASTerFF 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            NIRFASTerFF
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/nirfasterff.html">nirfasterff</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">NIRFASTerFF</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">nirfasterff.base.stnd_mesh</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for nirfasterff.base.stnd_mesh</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Define the standard mesh class</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="c1"># from data import FDdata</span>
+<span class="kn">from</span> <span class="nn">.data</span> <span class="kn">import</span> <span class="n">meshvol</span>
+<span class="kn">from</span> <span class="nn">.optodes</span> <span class="kn">import</span> <span class="n">optode</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">nirfasterff</span> <span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">nirfasterff</span> <span class="kn">import</span> <span class="n">meshing</span>
+<span class="kn">from</span> <span class="nn">nirfasterff</span> <span class="kn">import</span> <span class="n">forward</span>
+<span class="kn">from</span> <span class="nn">nirfasterff</span> <span class="kn">import</span> <span class="n">inverse</span>
+<span class="kn">import</span> <span class="nn">scipy.io</span> <span class="k">as</span> <span class="nn">sio</span>
+
+<div class="viewcode-block" id="stndmesh">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.stnd_mesh.stndmesh.html#nirfasterff.base.stnd_mesh.stndmesh">[docs]</a>
+<span class="k">class</span> <span class="nc">stndmesh</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Main class for standard mesh. The methods should cover most of the commonly-used functionalities</span>
+<span class="sd">    </span>
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">        name: str</span>
+<span class="sd">            name of the mesh. Default: &#39;EmptyMesh&#39;</span>
+<span class="sd">        nodes: double NumPy array</span>
+<span class="sd">            locations of nodes in the mesh. Unit: mm. Size (NNodes, dim)</span>
+<span class="sd">        bndvtx: double NumPy array</span>
+<span class="sd">            indicator of whether a node is at boundary (1) or internal (0). Size (NNodes,)</span>
+<span class="sd">        type: str</span>
+<span class="sd">            type of the mesh. It is always &#39;stnd&#39;.</span>
+<span class="sd">        mua: double NumPy array</span>
+<span class="sd">            absorption coefficient (mm^-1) at each node. Size (NNodes,)</span>
+<span class="sd">        kappa: double NumPy array </span>
+<span class="sd">            diffusion coefficient (mm) at each node. Size (NNodes,). Defined as 1/(3*(mua + mus))</span>
+<span class="sd">        ri: double NumPy array </span>
+<span class="sd">            refractive index at each node. Size (NNodes,)</span>
+<span class="sd">        mus:(double NumPy array </span>
+<span class="sd">            reduced scattering coefficient (mm^-1) at each node. Size (NNodes,)</span>
+<span class="sd">        elements: double NumPy array </span>
+<span class="sd">            triangulation (tetrahedrons or triangles) of the mesh, Size (NElements, dim+1)</span>
+<span class="sd">            </span>
+<span class="sd">            Row i contains the indices of the nodes that form tetrahedron/triangle i</span>
+<span class="sd">            </span>
+<span class="sd">            One-based indexing for direct interoperatability with the Matlab version</span>
+<span class="sd">        region: double NumPy array </span>
+<span class="sd">            region labeling of each node. Starting from 1. Size (NNodes,)</span>
+<span class="sd">        source: nirfasterff.base.optode </span>
+<span class="sd">            information about the sources</span>
+<span class="sd">        meas: nirfasterff.base.optode</span>
+<span class="sd">            information about the the detectors</span>
+<span class="sd">        link: int32 NumPy array </span>
+<span class="sd">            list of source-detector pairs, i.e. channels. Size (NChannels,3)</span>
+<span class="sd">            </span>
+<span class="sd">            First column: source; Second column: detector; Third column: active (1) or not (0)</span>
+<span class="sd">        c: double NumPy array </span>
+<span class="sd">            light speed (mm/sec) at each node.  Size (NNodes,). Defined as c0/ri, where c0 is the light speed in vacuum</span>
+<span class="sd">        ksi: double NumPy array </span>
+<span class="sd">            photon fluence rate scale factor on the mesh-outside_mesh boundary as derived from Fresenel&#39;s law. Size (NNodes,)</span>
+<span class="sd">        element_area: double NumPy array </span>
+<span class="sd">            volume/area (mm^3 or mm^2) of each element. Size (NElements,)</span>
+<span class="sd">        support: double NumPy array </span>
+<span class="sd">            total volume/area of all the elements each node belongs to. Size (NNodes,)</span>
+<span class="sd">        vol: nirfasterff.base.meshvol </span>
+<span class="sd">            object holding information for converting between mesh and volumetric space.</span>
+<span class="sd">        </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="stndmesh.__init__">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.stnd_mesh.stndmesh.html#nirfasterff.base.stnd_mesh.stndmesh.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;EmptyMesh&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bndvtx</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="s1">&#39;stnd&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mua</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kappa</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ri</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mus</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">elements</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dimension</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">region</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">optode</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">meas</span> <span class="o">=</span> <span class="n">optode</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ksi</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">element_area</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">support</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vol</span> <span class="o">=</span> <span class="n">meshvol</span><span class="p">()</span></div>
+
+    
+<div class="viewcode-block" id="stndmesh.from_copy">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.stnd_mesh.stndmesh.html#nirfasterff.base.stnd_mesh.stndmesh.from_copy">[docs]</a>
+    <span class="k">def</span> <span class="nf">from_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Deep copy all fields from another mesh.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        mesh : nirfasterff.base.stndmesh</span>
+<span class="sd">            the mesh to copy from.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bndvtx</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">bndvtx</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="s1">&#39;stnd&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mua</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">mua</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kappa</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">kappa</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ri</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">ri</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mus</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">mus</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">elements</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">elements</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dimension</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">dimension</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">region</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">region</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">source</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">meas</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">meas</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">c</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ksi</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">ksi</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">element_area</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">element_area</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">support</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">support</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vol</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="stndmesh.from_file">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.stnd_mesh.stndmesh.html#nirfasterff.base.stnd_mesh.stndmesh.from_file">[docs]</a>
+    <span class="k">def</span> <span class="nf">from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Read from classic NIRFAST mesh (ASCII) format, not checking the correctness of the loaded integration functions.</span>
+<span class="sd">        </span>
+<span class="sd">        All fields after loading should be directly compatible with Matlab version.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        file : str</span>
+<span class="sd">            name of the mesh. Any extension will be ignored.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; mesh = nirfasterff.base.stndmesh()</span>
+<span class="sd">        &gt;&gt;&gt; mesh.from_file(&#39;meshname&#39;)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="s1">&#39;.mat&#39;</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Error: seemingly you are trying to load a mat file. Please use .from_mat method instead&#39;</span><span class="p">)</span>
+        <span class="c1"># clear data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">file</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># in case an extension is accidentally included</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">file</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># Read the nodes</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file</span> <span class="o">+</span> <span class="s1">&#39;.node&#39;</span><span class="p">):</span>
+            <span class="n">fullname</span> <span class="o">=</span> <span class="n">file</span> <span class="o">+</span> <span class="s1">&#39;.node&#39;</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">fullname</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bndvtx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">tmp</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">tmp</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dimension</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Error: &#39;</span> <span class="o">+</span> <span class="n">file</span> <span class="o">+</span> <span class="s1">&#39;.node file is not present&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Read the parameters</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file</span> <span class="o">+</span> <span class="s1">&#39;.param&#39;</span><span class="p">):</span>
+            <span class="n">fullname</span> <span class="o">=</span> <span class="n">file</span> <span class="o">+</span> <span class="s1">&#39;.param&#39;</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fullname</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">paramfile</span><span class="p">:</span>
+                <span class="n">header</span> <span class="o">=</span> <span class="n">paramfile</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">ord</span><span class="p">(</span><span class="n">header</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">&gt;=</span><span class="mi">48</span> <span class="ow">and</span> <span class="nb">ord</span><span class="p">(</span><span class="n">header</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">&lt;=</span><span class="mi">57</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Error: header missing in .param file. You are probably using the old format, which is no longer supported&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="s1">&#39;stnd&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">header</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Error: the mesh you are trying to load is not a standard mesh&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">fullname</span><span class="p">,</span> <span class="n">skip_header</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+                <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mua</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">tmp</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">kappa</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">tmp</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ri</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">tmp</span><span class="p">[:,</span><span class="mi">2</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mus</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">kappa</span><span class="p">)</span><span class="o">/</span><span class="mf">3.</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">mua</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Error: &#39;</span> <span class="o">+</span> <span class="n">file</span> <span class="o">+</span> <span class="s1">&#39;.param file is not present&#39;</span><span class="p">)</span>
+        <span class="c1"># Read the elements</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file</span> <span class="o">+</span> <span class="s1">&#39;.elem&#39;</span><span class="p">):</span>
+            <span class="n">fullname</span> <span class="o">=</span> <span class="n">file</span> <span class="o">+</span> <span class="s1">&#39;.elem&#39;</span>
+            <span class="n">ele</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">fullname</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+            <span class="n">ele</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">ele</span><span class="p">)</span>
+            <span class="n">ele</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">ele</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimension</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">elements</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">check_element_orientation_2d</span><span class="p">(</span><span class="n">ele</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">elements</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">ele</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ele</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimension</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: nodes and elements seem to have incompatable dimentions. Are you using an old 2D mesh?&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Error: &#39;</span> <span class="o">+</span> <span class="n">file</span> <span class="o">+</span> <span class="s1">&#39;.elem file is not present&#39;</span><span class="p">)</span>
+        <span class="c1"># Read the region information</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file</span> <span class="o">+</span> <span class="s1">&#39;.region&#39;</span><span class="p">):</span>
+            <span class="n">fullname</span> <span class="o">=</span> <span class="n">file</span> <span class="o">+</span> <span class="s1">&#39;.region&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">region</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">fullname</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">))</span>                    
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Error: &#39;</span> <span class="o">+</span> <span class="n">file</span> <span class="o">+</span> <span class="s1">&#39;.region file is not present&#39;</span><span class="p">)</span>
+        <span class="c1"># Read the source file</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file</span> <span class="o">+</span> <span class="s1">&#39;.source&#39;</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: source file is not present&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fullname</span> <span class="o">=</span> <span class="n">file</span> <span class="o">+</span> <span class="s1">&#39;.source&#39;</span>
+            <span class="n">errorflag</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fullname</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">srcfile</span><span class="p">:</span>
+                <span class="n">hdr1</span> <span class="o">=</span> <span class="n">srcfile</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+                <span class="n">hdr2</span> <span class="o">=</span> <span class="n">srcfile</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">ord</span><span class="p">(</span><span class="n">hdr1</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">&gt;=</span><span class="mi">48</span> <span class="ow">and</span> <span class="nb">ord</span><span class="p">(</span><span class="n">hdr1</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">&lt;=</span><span class="mi">57</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;WARNING: header missing in .source file. You are probably using the old format, which is no longer supported.</span><span class="se">\n</span><span class="s1">Source not loaded&#39;</span><span class="p">)</span>
+                <span class="n">errorflag</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">elif</span> <span class="s1">&#39;num&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">hdr1</span> <span class="ow">and</span> <span class="s1">&#39;num&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">hdr2</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;WARNING: Incorrect or old header format.</span><span class="se">\n</span><span class="s1">Source not loaded&#39;</span><span class="p">)</span>
+                <span class="n">errorflag</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">elif</span> <span class="s1">&#39;fixed&#39;</span> <span class="ow">in</span> <span class="n">hdr1</span><span class="p">:</span>
+                <span class="n">fixed</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="n">N_hdr</span> <span class="o">=</span> <span class="mi">2</span>
+                <span class="n">hdr</span> <span class="o">=</span> <span class="n">hdr2</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">fixed</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">N_hdr</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="n">hdr</span> <span class="o">=</span> <span class="n">hdr1</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">errorflag</span><span class="p">:</span>
+                <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">fullname</span><span class="p">,</span> <span class="n">skip_header</span><span class="o">=</span><span class="n">N_hdr</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+                <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+                <span class="n">src</span> <span class="o">=</span> <span class="n">optode</span><span class="p">()</span>
+                <span class="n">src</span><span class="o">.</span><span class="n">fixed</span> <span class="o">=</span> <span class="n">fixed</span>
+                <span class="n">src</span><span class="o">.</span><span class="n">num</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[:,</span> <span class="n">hdr</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;num&#39;</span><span class="p">)]</span>
+                <span class="k">if</span> <span class="s1">&#39;z&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">hdr</span><span class="p">:</span>
+                    <span class="n">src</span><span class="o">.</span><span class="n">coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">tmp</span><span class="p">[:,</span> <span class="n">hdr</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)],</span> <span class="n">tmp</span><span class="p">[:,</span> <span class="n">hdr</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">)]]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">src</span><span class="o">.</span><span class="n">coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">tmp</span><span class="p">[:,</span> <span class="n">hdr</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)],</span> <span class="n">tmp</span><span class="p">[:,</span> <span class="n">hdr</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">)],</span> <span class="n">tmp</span><span class="p">[:,</span> <span class="n">hdr</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">)]]</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimension</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: Sources are 3D, mesh is 2D.&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="s1">&#39;fwhm&#39;</span> <span class="ow">in</span> <span class="n">hdr</span><span class="p">:</span>
+                    <span class="n">fwhm</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[:,</span> <span class="n">hdr</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;fwhm&#39;</span><span class="p">)]</span>
+                    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">fwhm</span><span class="p">):</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: Only point sources supported. Ignoring field fwhm&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="s1">&#39;ele&#39;</span> <span class="ow">in</span> <span class="n">hdr</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="s1">&#39;ip1&#39;</span> <span class="ow">in</span> <span class="n">hdr</span> <span class="ow">and</span> <span class="s1">&#39;ip2&#39;</span> <span class="ow">in</span> <span class="n">hdr</span> <span class="ow">and</span> <span class="s1">&#39;ip3&#39;</span> <span class="ow">in</span> <span class="n">hdr</span><span class="p">:</span>
+                        <span class="n">src</span><span class="o">.</span><span class="n">int_func</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">tmp</span><span class="p">[:,</span> <span class="n">hdr</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;ele&#39;</span><span class="p">)],</span> <span class="n">tmp</span><span class="p">[:,</span> <span class="n">hdr</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;ip1&#39;</span><span class="p">)],</span> <span class="n">tmp</span><span class="p">[:,</span> <span class="n">hdr</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;ip2&#39;</span><span class="p">)],</span> <span class="n">tmp</span><span class="p">[:,</span> <span class="n">hdr</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;ip3&#39;</span><span class="p">)]]</span>
+                        <span class="k">if</span> <span class="s1">&#39;ip4&#39;</span> <span class="ow">in</span> <span class="n">hdr</span><span class="p">:</span>
+                            <span class="n">src</span><span class="o">.</span><span class="n">int_func</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">src</span><span class="o">.</span><span class="n">int_func</span><span class="p">,</span> <span class="n">tmp</span><span class="p">[:,</span> <span class="n">hdr</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;ip4&#39;</span><span class="p">)]]</span>
+                            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimension</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+                                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: Sources &#39;&#39;int_func&#39;&#39; are 3D, mesh is 2D.&#39;</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimension</span><span class="o">==</span><span class="mi">3</span><span class="p">:</span>
+                                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: Sources &#39;&#39;int_func&#39;&#39; are 2D, mesh is 3D. Will recalculate&#39;</span><span class="p">)</span>
+                                <span class="n">src</span><span class="o">.</span><span class="n">int_func</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: source int_func stored in wrong format or missing. Will recalculate&#39;</span><span class="p">)</span>
+                
+                <span class="k">if</span> <span class="n">src</span><span class="o">.</span><span class="n">fixed</span><span class="o">==</span><span class="mi">1</span>  <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">int_func</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">src</span><span class="o">.</span><span class="n">fixed</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Fixed sources&#39;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">int_func</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Sources integration functions loaded&#39;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># non-fixed sources and no int_func loaded. Let&#39;s move the sources by one scattering length now</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Moving Sources&#39;</span><span class="p">,</span> <span class="n">flush</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="n">src</span><span class="o">.</span><span class="n">move_sources</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">int_func</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Calculating sources integration functions&#39;</span><span class="p">,</span> <span class="n">flush</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="n">ind</span><span class="p">,</span> <span class="n">int_func</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">pointLocation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src</span><span class="o">.</span><span class="n">coord</span><span class="p">)</span>
+                    <span class="n">src</span><span class="o">.</span><span class="n">int_func</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">ind</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">int_func</span><span class="p">]</span>
+                <span class="n">src</span><span class="o">.</span><span class="n">int_func</span><span class="p">[</span><span class="n">src</span><span class="o">.</span><span class="n">int_func</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">src</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">int_func</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])):</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: some sources might be outside the mesh&#39;</span><span class="p">)</span>
+        <span class="c1"># Read the detector file</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file</span> <span class="o">+</span> <span class="s1">&#39;.meas&#39;</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: detector file is not present&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fullname</span> <span class="o">=</span> <span class="n">file</span> <span class="o">+</span> <span class="s1">&#39;.meas&#39;</span>
+            <span class="n">errorflag</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fullname</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">srcfile</span><span class="p">:</span>
+                <span class="n">hdr1</span> <span class="o">=</span> <span class="n">srcfile</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+                <span class="n">hdr2</span> <span class="o">=</span> <span class="n">srcfile</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">ord</span><span class="p">(</span><span class="n">hdr1</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">&gt;=</span><span class="mi">48</span> <span class="ow">and</span> <span class="nb">ord</span><span class="p">(</span><span class="n">hdr1</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">&lt;=</span><span class="mi">57</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;WARNING: header missing in .meas file. You are probably using the old format, which is no longer supported.</span><span class="se">\n</span><span class="s1">Detector not loaded&#39;</span><span class="p">)</span>
+                <span class="n">errorflag</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">elif</span> <span class="s1">&#39;num&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">hdr1</span> <span class="ow">and</span> <span class="s1">&#39;num&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">hdr2</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;WARNING: Incorrect or old header format.</span><span class="se">\n</span><span class="s1">Detector not loaded&#39;</span><span class="p">)</span>
+                <span class="n">errorflag</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">elif</span> <span class="s1">&#39;fixed&#39;</span> <span class="ow">in</span> <span class="n">hdr1</span><span class="p">:</span>
+                <span class="n">fixed</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="n">N_hdr</span> <span class="o">=</span> <span class="mi">2</span>
+                <span class="n">hdr</span> <span class="o">=</span> <span class="n">hdr2</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">fixed</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">N_hdr</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="n">hdr</span> <span class="o">=</span> <span class="n">hdr1</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">errorflag</span><span class="p">:</span>
+                <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">fullname</span><span class="p">,</span> <span class="n">skip_header</span><span class="o">=</span><span class="n">N_hdr</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+                <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+                <span class="n">det</span> <span class="o">=</span> <span class="n">optode</span><span class="p">()</span>
+                <span class="n">det</span><span class="o">.</span><span class="n">fixed</span> <span class="o">=</span> <span class="n">fixed</span>
+                <span class="n">det</span><span class="o">.</span><span class="n">num</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[:,</span> <span class="n">hdr</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;num&#39;</span><span class="p">)]</span>
+                <span class="k">if</span> <span class="s1">&#39;z&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">hdr</span><span class="p">:</span>
+                    <span class="n">det</span><span class="o">.</span><span class="n">coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">tmp</span><span class="p">[:,</span> <span class="n">hdr</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)],</span> <span class="n">tmp</span><span class="p">[:,</span> <span class="n">hdr</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">)]]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">det</span><span class="o">.</span><span class="n">coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">tmp</span><span class="p">[:,</span> <span class="n">hdr</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)],</span> <span class="n">tmp</span><span class="p">[:,</span> <span class="n">hdr</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">)],</span> <span class="n">tmp</span><span class="p">[:,</span> <span class="n">hdr</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">)]]</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimension</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: Detectors are 3D, mesh is 2D.&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="s1">&#39;ele&#39;</span> <span class="ow">in</span> <span class="n">hdr</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="s1">&#39;ip1&#39;</span> <span class="ow">in</span> <span class="n">hdr</span> <span class="ow">and</span> <span class="s1">&#39;ip2&#39;</span> <span class="ow">in</span> <span class="n">hdr</span> <span class="ow">and</span> <span class="s1">&#39;ip3&#39;</span> <span class="ow">in</span> <span class="n">hdr</span><span class="p">:</span>
+                        <span class="n">det</span><span class="o">.</span><span class="n">int_func</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">tmp</span><span class="p">[:,</span> <span class="n">hdr</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;ele&#39;</span><span class="p">)],</span> <span class="n">tmp</span><span class="p">[:,</span> <span class="n">hdr</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;ip1&#39;</span><span class="p">)],</span> <span class="n">tmp</span><span class="p">[:,</span> <span class="n">hdr</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;ip2&#39;</span><span class="p">)],</span> <span class="n">tmp</span><span class="p">[:,</span> <span class="n">hdr</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;ip3&#39;</span><span class="p">)]]</span>
+                        <span class="k">if</span> <span class="s1">&#39;ip4&#39;</span> <span class="ow">in</span> <span class="n">hdr</span><span class="p">:</span>
+                            <span class="n">det</span><span class="o">.</span><span class="n">int_func</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">det</span><span class="o">.</span><span class="n">int_func</span><span class="p">,</span> <span class="n">tmp</span><span class="p">[:,</span> <span class="n">hdr</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;ip4&#39;</span><span class="p">)]]</span>
+                            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimension</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+                                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: Detectors &#39;&#39;int_func&#39;&#39; are 3D, mesh is 2D.&#39;</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimension</span><span class="o">==</span><span class="mi">3</span><span class="p">:</span>
+                                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: Detectors &#39;&#39;int_func&#39;&#39; are 2D, mesh is 3D. Will recalculate&#39;</span><span class="p">)</span>
+                                <span class="n">det</span><span class="o">.</span><span class="n">int_func</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: detector int_func stored in wrong format. Will recalculate&#39;</span><span class="p">)</span>
+                
+                <span class="k">if</span> <span class="n">det</span><span class="o">.</span><span class="n">fixed</span><span class="o">==</span><span class="mi">1</span>  <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">det</span><span class="o">.</span><span class="n">int_func</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">det</span><span class="o">.</span><span class="n">fixed</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Fixed detectors&#39;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">det</span><span class="o">.</span><span class="n">int_func</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Detectors integration functions loaded&#39;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># non-fixed sources and no int_func loaded. Let&#39;s move the sources by one scattering length now</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Moving Detectors&#39;</span><span class="p">,</span> <span class="n">flush</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="n">det</span><span class="o">.</span><span class="n">move_detectors</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">det</span><span class="o">.</span><span class="n">int_func</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Calculating detectors integration functions&#39;</span><span class="p">,</span> <span class="n">flush</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="n">ind</span><span class="p">,</span> <span class="n">int_func</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">pointLocation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">det</span><span class="o">.</span><span class="n">coord</span><span class="p">)</span>
+                    <span class="n">det</span><span class="o">.</span><span class="n">int_func</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">ind</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">int_func</span><span class="p">]</span>
+                <span class="n">det</span><span class="o">.</span><span class="n">int_func</span><span class="p">[</span><span class="n">det</span><span class="o">.</span><span class="n">int_func</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">meas</span> <span class="o">=</span> <span class="n">det</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">det</span><span class="o">.</span><span class="n">int_func</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])):</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: some detectors might be outside the mesh&#39;</span><span class="p">)</span>
+        <span class="c1"># load link list</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file</span> <span class="o">+</span> <span class="s1">&#39;.link&#39;</span><span class="p">):</span>
+            <span class="n">fullname</span> <span class="o">=</span> <span class="n">file</span> <span class="o">+</span> <span class="s1">&#39;.link&#39;</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fullname</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">linkfile</span><span class="p">:</span>
+                <span class="n">header</span> <span class="o">=</span> <span class="n">linkfile</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">ord</span><span class="p">(</span><span class="n">header</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">&gt;=</span><span class="mi">48</span> <span class="ow">and</span> <span class="nb">ord</span><span class="p">(</span><span class="n">header</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">&lt;=</span><span class="mi">57</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: header missing in .link file. You are probably using the old format, which is no longer supported&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">fullname</span><span class="p">,</span> <span class="n">skip_header</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: link file is not present&#39;</span><span class="p">)</span>
+        <span class="c1"># Speed of light in medium</span>
+        <span class="n">c0</span> <span class="o">=</span> <span class="mf">299792458000.0</span> <span class="c1"># mm/s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="n">c0</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">ri</span>
+        <span class="c1"># Set boundary coefficient using definition of baundary attenuation A using the Fresenel&#39;s law; Robin type</span>
+        <span class="n">n_air</span> <span class="o">=</span> <span class="mf">1.</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ri</span><span class="o">/</span><span class="n">n_air</span>
+        <span class="n">R0</span> <span class="o">=</span> <span class="p">((</span><span class="n">n</span><span class="o">-</span><span class="mf">1.</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="p">((</span><span class="n">n</span><span class="o">+</span><span class="mf">1.</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.0</span><span class="o">/</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">R0</span><span class="p">)</span> <span class="o">-</span><span class="mf">1.</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ksi</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">A</span><span class="p">)</span>
+        <span class="c1"># area and support for each element</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">element_area</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">cpulib</span><span class="o">.</span><span class="n">ele_area</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">support</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">cpulib</span><span class="o">.</span><span class="n">mesh_support</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">element_area</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="stndmesh.from_mat">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.stnd_mesh.stndmesh.html#nirfasterff.base.stnd_mesh.stndmesh.from_mat">[docs]</a>
+    <span class="k">def</span> <span class="nf">from_mat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matfile</span><span class="p">,</span> <span class="n">varname</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Read from Matlab .mat file that contains a NIRFASTer mesh struct. All fields copied as is without error checking.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        matfile : str</span>
+<span class="sd">            name of the .mat file to load. Use of extension is optional.</span>
+<span class="sd">        varname : str, optional</span>
+<span class="sd">            if your .mat file contains multiple variables, use this argument to specify which one to load. The default is None.</span>
+<span class="sd">            </span>
+<span class="sd">            When `varname==None`, `matfile` should contain exatly one structure, which is a NIRFASTer mesh, or the function will do nothing</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">matfile</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;argument 1 must be a string!&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">varname</span> <span class="o">!=</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">varname</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;argument 2 must be a string!&#39;</span><span class="p">)</span>
+        
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="n">sio</span><span class="o">.</span><span class="n">loadmat</span><span class="p">(</span><span class="n">matfile</span><span class="p">,</span> <span class="n">struct_as_record</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">squeeze_me</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Failed to load Matlab file &#39;</span> <span class="o">+</span> <span class="n">matfile</span> <span class="o">+</span> <span class="s1">&#39;!&#39;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">varname</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">mesh</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Cannot load mesh &#39;</span> <span class="o">+</span> <span class="n">varname</span> <span class="o">+</span> <span class="s1">&#39; from mat file &#39;</span> <span class="o">+</span> <span class="n">matfile</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">allkeys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">tmp</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="n">is_struct</span> <span class="o">=</span> <span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="n">tmp</span><span class="p">[</span><span class="n">key</span><span class="p">])</span><span class="o">==</span><span class="n">sio</span><span class="o">.</span><span class="n">matlab</span><span class="o">.</span><span class="n">_mio5_params</span><span class="o">.</span><span class="n">mat_struct</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">allkeys</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">sum</span><span class="p">(</span><span class="n">is_struct</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;There must be precisely one struct in the mat file, if &quot;varname&quot; is not provided&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">varname</span> <span class="o">=</span> <span class="n">allkeys</span><span class="p">[</span><span class="n">is_struct</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="kc">True</span><span class="p">)]</span>
+                <span class="n">mesh</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span>
+                
+        <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="s1">&#39;stnd&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;mesh type must be standard&#39;</span><span class="p">)</span>
+        <span class="c1"># Now let&#39;s copy the data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bndvtx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">bndvtx</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mua</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">mua</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kappa</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">kappa</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ri</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">ri</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mus</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">mus</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">elements</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">elements</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dimension</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">dimension</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">region</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">region</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ksi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">ksi</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">c</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">element_area</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">element_area</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">support</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">support</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="n">allfields</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">_fieldnames</span>
+        <span class="k">if</span> <span class="s1">&#39;source&#39;</span> <span class="ow">in</span> <span class="n">allfields</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">fixed</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">fixed</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">num</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">num</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">coord</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">int_func</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">int_func</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: sources are not present in mesh&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;meas&#39;</span> <span class="ow">in</span> <span class="n">allfields</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">meas</span><span class="o">.</span><span class="n">fixed</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">meas</span><span class="o">.</span><span class="n">fixed</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">meas</span><span class="o">.</span><span class="n">num</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">meas</span><span class="o">.</span><span class="n">num</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">meas</span><span class="o">.</span><span class="n">coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">meas</span><span class="o">.</span><span class="n">coord</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">meas</span><span class="o">.</span><span class="n">int_func</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">meas</span><span class="o">.</span><span class="n">int_func</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: detectors are not present in mesh&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;link&#39;</span> <span class="ow">in</span> <span class="n">allfields</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: link is not present in mesh&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;vol&#39;</span> <span class="ow">in</span> <span class="n">allfields</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">xgrid</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">xgrid</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">ygrid</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">ygrid</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">zgrid</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">zgrid</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">mesh2grid</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">mesh2grid</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">gridinmesh</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">gridinmesh</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">res</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">grid2mesh</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">grid2mesh</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">meshingrid</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">meshingrid</span></div>
+
+            
+<div class="viewcode-block" id="stndmesh.from_solid">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.stnd_mesh.stndmesh.html#nirfasterff.base.stnd_mesh.stndmesh.from_solid">[docs]</a>
+    <span class="k">def</span> <span class="nf">from_solid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ele</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">prop</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">src</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">det</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">link</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct a NIRFASTer mesh from a 3D solid mesh generated by a mesher. Similar to the solidmesh2nirfast function in Matlab version.</span>
+<span class="sd">        </span>
+<span class="sd">        Can also set the optical properties and optodes if supplied</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ele : int/double NumPy array</span>
+<span class="sd">            element list in one-based indexing. If four columns, all nodes will be labeled as region 1</span>
+<span class="sd">            </span>
+<span class="sd">            If five columns, the last column will be used for region labeling.</span>
+<span class="sd">        nodes : double NumPy array</span>
+<span class="sd">            node locations in the mesh. Unit: mm. Size (NNodes,3).</span>
+<span class="sd">        prop : double NumPy array, optional</span>
+<span class="sd">            If not `None`, calls `stndmesh.set_prop()` and sets the optical properties in the mesh. The default is None.</span>
+<span class="sd">            </span>
+<span class="sd">            See :func:`~nirfasterff.base.stnd_mesh.stndmesh.set_prop()` for details. </span>
+<span class="sd">        src : nirfasterff.base.optode, optional</span>
+<span class="sd">            If not `None`, sets the sources and moves them to the appropriate locations. The default is None.</span>
+<span class="sd">            </span>
+<span class="sd">            See :func:`~nirfasterff.base.optodes.optode.touch_sources()` for details.</span>
+<span class="sd">        det : nirfasterff.base.optode, optional</span>
+<span class="sd">            If not `None`, sets the detectors and moves them to the appropriate locations. The default is None.</span>
+<span class="sd">            </span>
+<span class="sd">            See :func:`~nirfasterff.base.optodes.optode.touch_detectors()` for details.</span>
+<span class="sd">        link : int32 NumPy array, optional</span>
+<span class="sd">            If not `None`, sets the channel information. Uses one-based indexing. The default is None.</span>
+<span class="sd">            </span>
+<span class="sd">            Each row represents a channel, in the form of `[src, det, active]`, where `active` is 0 or 1</span>
+<span class="sd">            </span>
+<span class="sd">            If `link` contains only two columns, all channels are considered active.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="n">num_nodes</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ele</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="c1"># no region label</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">elements</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">ele</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">region</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">num_nodes</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">ele</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">region</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_nodes</span><span class="p">)</span>
+            <span class="c1"># convert element label to node label</span>
+            <span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">ele</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)):</span>
+                <span class="n">tmp</span> <span class="o">=</span> <span class="n">ele</span><span class="p">[</span><span class="n">ele</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">region</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">elements</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">ele</span><span class="p">[:,:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Error: elements in wrong format&#39;</span><span class="p">)</span>
+
+        <span class="c1"># find the boundary nodes: find faces that are referred to only once</span>
+        <span class="n">faces</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="n">ele</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]],</span> 
+                      <span class="n">ele</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">]],</span>
+                      <span class="n">ele</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]],</span>
+                      <span class="n">ele</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]]]</span>
+        
+        <span class="n">faces</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">faces</span><span class="p">)</span>
+        <span class="n">unique_faces</span><span class="p">,</span> <span class="n">cnt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">faces</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">return_counts</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">bnd_faces</span> <span class="o">=</span> <span class="n">unique_faces</span><span class="p">[</span><span class="n">cnt</span><span class="o">==</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">bndvtx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">bnd_faces</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bndvtx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nodes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bndvtx</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">bndvtx</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="c1"># area and support for each element</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">element_area</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">cpulib</span><span class="o">.</span><span class="n">ele_area</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">support</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">cpulib</span><span class="o">.</span><span class="n">mesh_support</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">element_area</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dimension</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">prop</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_prop</span><span class="p">(</span><span class="n">prop</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: optical properties not specified&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">src</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">touch_sources</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: no sources specified&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">det</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">meas</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">det</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">meas</span><span class="o">.</span><span class="n">touch_detectors</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: no detectors specified&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">link</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">link</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="mi">3</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">link</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">link</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">link</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">link</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: link in wrong format. Ignored.&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: no link specified&#39;</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="stndmesh.from_volume">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.stnd_mesh.stndmesh.html#nirfasterff.base.stnd_mesh.stndmesh.from_volume">[docs]</a>
+    <span class="k">def</span> <span class="nf">from_volume</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vol</span><span class="p">,</span> <span class="n">param</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">MeshingParams</span><span class="p">(),</span> <span class="n">prop</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">src</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">det</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">link</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct mesh from a segmented 3D volume using the built-in CGAL mesher. Calls stndmesh.from_solid after meshing step.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        vol : uint8 NumPy array</span>
+<span class="sd">            3D segmented volume to be meshed. 0 is considered as outside. Regions labeled using unique integers.</span>
+<span class="sd">        param : nirfasterff.utils.MeshingParams, optional</span>
+<span class="sd">            parameters used in the CGAL mesher. If not specified, uses the default parameters defined in nirfasterff.utils.MeshingParams().</span>
+<span class="sd">            </span>
+<span class="sd">            Please modify fields xPixelSpacing, yPixelSpacing, and SliceThickness if your volume doesn&#39;t have [1,1,1] resolution</span>
+<span class="sd">            </span>
+<span class="sd">            See :func:`~nirfasterff.utils.MeshingParams()` for details.</span>
+<span class="sd">        prop : double NumPy array, optional</span>
+<span class="sd">            If not `None`, calls `stndmesh.set_prop()` and sets the optical properties in the mesh. The default is None.</span>
+<span class="sd">            </span>
+<span class="sd">            See :func:`~nirfasterff.base.stnd_mesh.stndmesh.set_prop()` for details. </span>
+<span class="sd">        src : nirfasterff.base.optode, optional</span>
+<span class="sd">            If not `None`, sets the sources and moves them to the appropriate locations. The default is None.</span>
+<span class="sd">            </span>
+<span class="sd">            See :func:`~nirfasterff.base.optodes.optode.touch_sources()` for details.</span>
+<span class="sd">        det : nirfasterff.base.optode, optional</span>
+<span class="sd">            If not `None`, sets the detectors and moves them to the appropriate locations. The default is None.</span>
+<span class="sd">            </span>
+<span class="sd">            See :func:`~nirfasterff.base.optodes.optode.touch_detectors()` for details.</span>
+<span class="sd">        link : int32 NumPy array, optional</span>
+<span class="sd">            If not `None`, sets the channel information. Uses one-based indexing. The default is None.</span>
+<span class="sd">            </span>
+<span class="sd">            Each row represents a channel, in the form of `[src, det, active]`, where `active` is 0 or 1</span>
+<span class="sd">            </span>
+<span class="sd">            If `link` contains only two columns, all channels are considered active.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vol</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Error: vol should be a 3D matrix in unit8&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Running CGAL mesher&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">ele</span><span class="p">,</span> <span class="n">nodes</span> <span class="o">=</span> <span class="n">meshing</span><span class="o">.</span><span class="n">RunCGALMeshGenerator</span><span class="p">(</span><span class="n">vol</span><span class="p">,</span> <span class="n">param</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Converting to NIRFAST format&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">from_solid</span><span class="p">(</span><span class="n">ele</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">prop</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="n">det</span><span class="p">,</span> <span class="n">link</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="stndmesh.set_prop">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.stnd_mesh.stndmesh.html#nirfasterff.base.stnd_mesh.stndmesh.set_prop">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prop</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set optical properties of the whole mesh, using information provided in prop.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        prop : double NumPy array</span>
+<span class="sd">            optical property info, similar to the MCX format::</span>
+<span class="sd">                </span>
+<span class="sd">                [region mua(mm-1) musp(mm-1) ri]</span>
+<span class="sd">                [region mua(mm-1) musp(mm-1) ri]</span>
+<span class="sd">                [...]</span>
+<span class="sd">                </span>
+<span class="sd">            where &#39;region&#39; is the region label, and they should match exactly with unique(mesh.region). The order doesn&#39;t matter.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">num_nodes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mua</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_nodes</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mus</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_nodes</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kappa</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_nodes</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_nodes</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ksi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_nodes</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ri</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_nodes</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">prop</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">!=</span><span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">region</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span><span class="n">prop</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">region</span><span class="p">))</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">prop</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">region</span><span class="p">))):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: regions in mesh and regions in prop matrix mismatch. Ignored.&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">prop</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">!=</span><span class="mi">4</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: prop matrix has wrong number of columns. Should be: region mua(mm-1) musp(mm-1) ri. Ignored&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">labels</span> <span class="o">=</span> <span class="n">prop</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mua</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">region</span><span class="o">==</span><span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">prop</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mus</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">region</span><span class="o">==</span><span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">prop</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ri</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">region</span><span class="o">==</span><span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">prop</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kappa</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="mf">3.0</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mua</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">mus</span><span class="p">))</span>
+            <span class="n">c0</span> <span class="o">=</span> <span class="mf">299792458000.0</span> <span class="c1"># mm/s</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="n">c0</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">ri</span>
+            <span class="n">n_air</span> <span class="o">=</span> <span class="mf">1.</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ri</span><span class="o">/</span><span class="n">n_air</span>
+            <span class="n">R0</span> <span class="o">=</span> <span class="p">((</span><span class="n">n</span><span class="o">-</span><span class="mf">1.</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="p">((</span><span class="n">n</span><span class="o">+</span><span class="mf">1.</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="n">n</span><span class="p">)</span>
+            <span class="n">A</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.0</span><span class="o">/</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">R0</span><span class="p">)</span> <span class="o">-</span><span class="mf">1.</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ksi</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">A</span><span class="p">)</span></div>
+
+            
+<div class="viewcode-block" id="stndmesh.change_prop">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.stnd_mesh.stndmesh.html#nirfasterff.base.stnd_mesh.stndmesh.change_prop">[docs]</a>
+    <span class="k">def</span> <span class="nf">change_prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">prop</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Change optical properties (mua, musp, and ri) at nodes specified in idx, and automatically change fields kappa, c, and ksi as well</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        idx : list or NumPy array or -1</span>
+<span class="sd">            zero-based indices of nodes to change. If `idx==-1`, function changes all the nodes</span>
+<span class="sd">        prop : list or NumPy array of length 3</span>
+<span class="sd">            new optical properties to be assigned to the specified nodes. [mua(mm-1) musp(mm-1) ri].</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">idx</span><span class="o">==-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mua</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">prop</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mus</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">prop</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ri</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">prop</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">kappa</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">3.0</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mua</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">mus</span><span class="p">))</span>
+        <span class="n">c0</span> <span class="o">=</span> <span class="mf">299792458000.0</span> <span class="c1"># mm/s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="n">c0</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">ri</span>
+        <span class="n">n_air</span> <span class="o">=</span> <span class="mf">1.</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ri</span><span class="o">/</span><span class="n">n_air</span>
+        <span class="n">R0</span> <span class="o">=</span> <span class="p">((</span><span class="n">n</span><span class="o">-</span><span class="mf">1.</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="p">((</span><span class="n">n</span><span class="o">+</span><span class="mf">1.</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.0</span><span class="o">/</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">R0</span><span class="p">)</span> <span class="o">-</span><span class="mf">1.</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ksi</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">A</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="stndmesh.touch_optodes">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.stnd_mesh.stndmesh.html#nirfasterff.base.stnd_mesh.stndmesh.touch_optodes">[docs]</a>
+    <span class="k">def</span> <span class="nf">touch_optodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Moves all optodes (if non fixed) and recalculate the integration functions (i.e. barycentric coordinates). </span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.base.optodes.optode.touch_sources()` and :func:`~nirfasterff.base.optodes.optode.touch_detectors()` for details</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># make sure the optodes sit correctly: moved if needed, calculate the int func</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;touching sources&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">touch_sources</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;touching detectors&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">meas</span><span class="o">.</span><span class="n">touch_detectors</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="stndmesh.save_nirfast">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.stnd_mesh.stndmesh.html#nirfasterff.base.stnd_mesh.stndmesh.save_nirfast">[docs]</a>
+    <span class="k">def</span> <span class="nf">save_nirfast</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Save mesh in the classic NIRFASTer ASCII format, which is directly compatible with the Matlab version</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename : str</span>
+<span class="sd">            name of the file to be saved as. Should have no extensions.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="c1"># save nodes</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">filename</span><span class="o">+</span><span class="s1">&#39;.node&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">bndvtx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">],</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%.16g</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="c1"># save elements</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">filename</span><span class="o">+</span><span class="s1">&#39;.elem&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%g</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="c1"># save params</span>
+        <span class="n">kappa</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="mf">3.0</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mua</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">mus</span><span class="p">))</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">filename</span><span class="o">+</span><span class="s1">&#39;.param&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">mua</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ri</span><span class="p">],</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%g</span><span class="s1">&#39;</span><span class="p">,</span>
+                   <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s1">&#39;stnd&#39;</span><span class="p">,</span> <span class="n">comments</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="c1"># save regions</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">filename</span><span class="o">+</span><span class="s1">&#39;.region&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">region</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%g</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="c1"># save sources, if exist</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">coord</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename</span><span class="o">+</span><span class="s1">&#39;.source&#39;</span><span class="p">):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">filename</span><span class="o">+</span><span class="s1">&#39;.source&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">int_func</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">int_func</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">coord</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimension</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+                    <span class="n">hdr</span> <span class="o">=</span> <span class="s1">&#39;num x y ele ip1 ip2 ip3&#39;</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimension</span><span class="o">==</span><span class="mi">3</span><span class="p">:</span>
+                    <span class="n">hdr</span> <span class="o">=</span> <span class="s1">&#39;num x y z ele ip1 ip2 ip3 ip4&#39;</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">num</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">coord</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">int_func</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimension</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+                    <span class="n">hdr</span> <span class="o">=</span> <span class="s1">&#39;num x y&#39;</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimension</span><span class="o">==</span><span class="mi">3</span><span class="p">:</span>
+                    <span class="n">hdr</span> <span class="o">=</span> <span class="s1">&#39;num x y z&#39;</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">num</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">coord</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">fixed</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">hdr</span> <span class="o">=</span> <span class="s1">&#39;fixed</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">hdr</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">filename</span><span class="o">+</span><span class="s1">&#39;.source&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%.16g</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="n">hdr</span><span class="p">,</span> <span class="n">comments</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="c1"># save detectors, if exist</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">meas</span><span class="o">.</span><span class="n">coord</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename</span><span class="o">+</span><span class="s1">&#39;.meas&#39;</span><span class="p">):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">filename</span><span class="o">+</span><span class="s1">&#39;.meas&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">meas</span><span class="o">.</span><span class="n">int_func</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">meas</span><span class="o">.</span><span class="n">int_func</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="bp">self</span><span class="o">.</span><span class="n">meas</span><span class="o">.</span><span class="n">coord</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimension</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+                    <span class="n">hdr</span> <span class="o">=</span> <span class="s1">&#39;num x y ele ip1 ip2 ip3&#39;</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimension</span><span class="o">==</span><span class="mi">3</span><span class="p">:</span>
+                    <span class="n">hdr</span> <span class="o">=</span> <span class="s1">&#39;num x y z ele ip1 ip2 ip3 ip4&#39;</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">meas</span><span class="o">.</span><span class="n">num</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">meas</span><span class="o">.</span><span class="n">coord</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">meas</span><span class="o">.</span><span class="n">int_func</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimension</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+                    <span class="n">hdr</span> <span class="o">=</span> <span class="s1">&#39;num x y&#39;</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimension</span><span class="o">==</span><span class="mi">3</span><span class="p">:</span>
+                    <span class="n">hdr</span> <span class="o">=</span> <span class="s1">&#39;num x y z&#39;</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">meas</span><span class="o">.</span><span class="n">num</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">meas</span><span class="o">.</span><span class="n">coord</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">meas</span><span class="o">.</span><span class="n">fixed</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">hdr</span> <span class="o">=</span> <span class="s1">&#39;fixed</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">hdr</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">filename</span><span class="o">+</span><span class="s1">&#39;.meas&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%.16g</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="n">hdr</span><span class="p">,</span> <span class="n">comments</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="c1"># save link, if exist</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">link</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename</span><span class="o">+</span><span class="s1">&#39;.link&#39;</span><span class="p">):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">filename</span><span class="o">+</span><span class="s1">&#39;.link&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">hdr</span> <span class="o">=</span> <span class="s1">&#39;source detector active&#39;</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">filename</span><span class="o">+</span><span class="s1">&#39;.link&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">link</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%g</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="n">hdr</span><span class="p">,</span> <span class="n">comments</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="stndmesh.femdata">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.stnd_mesh.stndmesh.html#nirfasterff.base.stnd_mesh.stndmesh.femdata">[docs]</a>
+    <span class="k">def</span> <span class="nf">femdata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span><span class="o">=</span><span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">()):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculates fluences for each source using a FEM solver, and then the boudary measurables for each channel </span>
+<span class="sd">        </span>
+<span class="sd">        If `mesh.vol` is set, fluence data will be represented in volumetric space</span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.forward.femdata.femdata_stnd_CW()` and :func:`~nirfasterff.forward.femdata.femdata_stnd_FD()` for details</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        freq : double</span>
+<span class="sd">            modulation frequency in Hz. If CW, set to zero and a more efficient CW solver will be used.</span>
+<span class="sd">        solver : str, optional</span>
+<span class="sd">            Choose between &#39;CPU&#39; or &#39;GPU&#39; solver (case insensitive). Automatically determined (GPU prioritized) if not specified</span>
+<span class="sd">        opt : nirfasterff.utils.SolverOptions, optional</span>
+<span class="sd">            Solver options. Uses default parameters if not specified, and they should suffice in most cases. </span>
+<span class="sd">            </span>
+<span class="sd">            See :func:`~nirfasterff.utils.SolverOptions` for details</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        data : nirfasterff.base.FDdata</span>
+<span class="sd">            fluence and boundary measurables given the mesh and optodes.</span>
+<span class="sd">            </span>
+<span class="sd">            See :func:`~nirfasterff.base.data.FDdata` for details.</span>
+<span class="sd">        info : nirfasterff.utils.ConvergenceInfo</span>
+<span class="sd">            convergence information of the solver.</span>
+<span class="sd">            </span>
+<span class="sd">            See :func:`~nirfasterff.utils.ConvergenceInfo` for details</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="c1"># freq in Hz</span>
+        <span class="k">if</span> <span class="n">freq</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">forward</span><span class="o">.</span><span class="n">femdata_stnd_CW</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">opt</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">info</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">forward</span><span class="o">.</span><span class="n">femdata_stnd_FD</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">opt</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">info</span></div>
+
+    
+<div class="viewcode-block" id="stndmesh.femdata_tpsf">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.stnd_mesh.stndmesh.html#nirfasterff.base.stnd_mesh.stndmesh.femdata_tpsf">[docs]</a>
+    <span class="k">def</span> <span class="nf">femdata_tpsf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tmax</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">savefield</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">beautify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span><span class="o">=</span><span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">()):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculates TPSF at each location in the mesh for each source using a FEM solver, and then the boudary measurables for each channel </span>
+<span class="sd">        </span>
+<span class="sd">        If `mesh.vol` is set and `savefield` is set to `True`, internal TPSF data will be represented in volumetric space</span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.forward.femdata.femdata_stnd_TR()` for details</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        tmax : double</span>
+<span class="sd">            maximum time simulated, in seconds.</span>
+<span class="sd">        dt : double</span>
+<span class="sd">            size of each time step, in seconds.</span>
+<span class="sd">        savefield : bool, optional</span>
+<span class="sd">            If True, the internal TPSFs are also returned. If False, only boundary TPSFs are returned and data.phi will be empty. </span>
+<span class="sd">            </span>
+<span class="sd">            The default is False.</span>
+<span class="sd">        beautify : bool, optional</span>
+<span class="sd">            If true, zeros the initial unstable parts of the boundary TPSFs. The default is True.</span>
+<span class="sd">        solver : str, optional</span>
+<span class="sd">            Choose between &#39;CPU&#39; or &#39;GPU&#39; solver (case insensitive). Automatically determined (GPU prioritized) if not specified</span>
+<span class="sd">        opt : nirfasterff.utils.SolverOptions, optional</span>
+<span class="sd">            Solver options. Uses default parameters if not specified, and they should suffice in most cases. </span>
+<span class="sd">            </span>
+<span class="sd">            See :func:`~nirfasterff.utils.SolverOptions` for details</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        data : nirfasterff.base.TPSFdata</span>
+<span class="sd">            internal and boundary TPSFs given the mesh and optodes.</span>
+<span class="sd">            </span>
+<span class="sd">            See :func:`~nirfasterff.base.data.TPSFdata` for details.</span>
+<span class="sd">        info : nirfasterff.utils.ConvergenceInfo</span>
+<span class="sd">            convergence information of the solver. </span>
+<span class="sd">            </span>
+<span class="sd">            Only the convergence info of the last time step is returned.</span>
+<span class="sd">            </span>
+<span class="sd">            See :func:`~nirfasterff.utils.ConvergenceInfo` for details</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">forward</span><span class="o">.</span><span class="n">femdata_stnd_TR</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tmax</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">savefield</span><span class="p">,</span> <span class="n">beautify</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">opt</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">info</span></div>
+
+    
+<div class="viewcode-block" id="stndmesh.femdata_moments">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.stnd_mesh.stndmesh.html#nirfasterff.base.stnd_mesh.stndmesh.femdata_moments">[docs]</a>
+    <span class="k">def</span> <span class="nf">femdata_moments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_moments</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">savefield</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span><span class="o">=</span><span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">()):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculates TR moments at each location in the mesh for each source directly using Mellin transform, and then the boudary measurables for each channel </span>
+<span class="sd">        </span>
+<span class="sd">        If `mesh.vol` is set and `savefield` is set to `True`, internal moments data will be represented in volumetric space</span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.forward.femdata.femdata_stnd_TR_moments()` for details</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        max_moments : int32, optional</span>
+<span class="sd">            max order of moments to calculate. That is, 0th, 1st, 2nd, .., max_moments-th will be calculated. The default is 3.</span>
+<span class="sd">        savefield : bool, optional</span>
+<span class="sd">            If True, the internal moments are also returned. If False, only boundary moments are returned and data.phi will be empty. </span>
+<span class="sd">            </span>
+<span class="sd">            The default is False.</span>
+<span class="sd">        solver : str, optional</span>
+<span class="sd">            Choose between &#39;CPU&#39; or &#39;GPU&#39; solver (case insensitive). Automatically determined (GPU prioritized) if not specified</span>
+<span class="sd">        opt : nirfasterff.utils.SolverOptions, optional</span>
+<span class="sd">            Solver options. Uses default parameters if not specified, and they should suffice in most cases. </span>
+<span class="sd">            </span>
+<span class="sd">            See :func:`~nirfasterff.utils.SolverOptions` for details</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        data : nirfasterff.base.TRMomentsdata</span>
+<span class="sd">            internal and boundary moments given the mesh and optodes.</span>
+<span class="sd">            </span>
+<span class="sd">            See :func:`~nirfasterff.base.data.TRMomentsdata` for details.</span>
+<span class="sd">        info : nirfasterff.utils.ConvergenceInfo</span>
+<span class="sd">            convergence information of the solver. </span>
+<span class="sd">            </span>
+<span class="sd">            Only the convergence info of highest order moments is returned.</span>
+<span class="sd">            </span>
+<span class="sd">            See :func:`~nirfasterff.utils.ConvergenceInfo` for details</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">data</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">forward</span><span class="o">.</span><span class="n">femdata_stnd_TR_moments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_moments</span><span class="p">,</span> <span class="n">savefield</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">opt</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">info</span></div>
+
+    
+<div class="viewcode-block" id="stndmesh.jacobian">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.stnd_mesh.stndmesh.html#nirfasterff.base.stnd_mesh.stndmesh.jacobian">[docs]</a>
+    <span class="k">def</span> <span class="nf">jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">mus</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">()):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculates the Jacobian matrix</span>
+<span class="sd">        </span>
+<span class="sd">        Returns the Jacobian, direct field data, and the adjoint data</span>
+<span class="sd">        </span>
+<span class="sd">        Structure of the Jacobian is detailed in :func:`~nirfasterff.inverse.jacobian_stnd_CW()` and :func:`~nirfasterff.inverse.jacobian_stnd_FD()`</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        freq : double</span>
+<span class="sd">            modulation frequency, in Hz.</span>
+<span class="sd">        normalize : bool, optional</span>
+<span class="sd">            whether normalize the Jacobian to the amplitudes of boundary measurements, i.e. use Rytov approximation. </span>
+<span class="sd">            </span>
+<span class="sd">            The default is True.</span>
+<span class="sd">        mus : bool, optional</span>
+<span class="sd">            whether derivates wrt mus (left half of the &#39;full&#39; Jacobian) is calculated. Only has effect when freq=0. The default is True.</span>
+<span class="sd">        solver : str, optional</span>
+<span class="sd">            Choose between &#39;CPU&#39; or &#39;GPU&#39; solver (case insensitive). Automatically determined (GPU prioritized) if not specified</span>
+<span class="sd">        opt : nirfasterff.utils.SolverOptions, optional</span>
+<span class="sd">            Solver options. Uses default parameters if not specified, and they should suffice in most cases. </span>
+<span class="sd">            </span>
+<span class="sd">            See :func:`~nirfasterff.utils.SolverOptions` for details</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            if freq is negative.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        J : double or complex double NumPy array</span>
+<span class="sd">            The Jacobian matrix. Size (NChannel*2, NVoxel*2) if freq&gt;0, (NChannel, NVoxel*2) if freq=0 and mus=True, (NChannel, NVoxel) if freq=0 and mus=False</span>
+<span class="sd">        data1 : nirfasterff.base.FDdata</span>
+<span class="sd">            The calculated direct field. The same as directly calling mesh.femdata(freq)</span>
+<span class="sd">        data2 : nirfasterff.base.FDdata</span>
+<span class="sd">            The calculated adjoint field. The same as calling mesh.femdata(freq) AFTER swapping the locations of sources and detectors</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">freq</span><span class="o">&gt;=</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">J</span><span class="p">,</span> <span class="n">data1</span><span class="p">,</span> <span class="n">data2</span> <span class="o">=</span> <span class="n">inverse</span><span class="o">.</span><span class="n">jacobian_stnd_FD</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span> <span class="n">normalize</span><span class="p">,</span> <span class="n">mus</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">opt</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Modulation frequency must be non-negative&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">J</span><span class="p">,</span> <span class="n">data1</span><span class="p">,</span> <span class="n">data2</span></div>
+
+        
+<div class="viewcode-block" id="stndmesh.isvol">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.stnd_mesh.stndmesh.html#nirfasterff.base.stnd_mesh.stndmesh.isvol">[docs]</a>
+    <span class="k">def</span> <span class="nf">isvol</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if convertion matrices between mesh and volumetric spaces are calculated</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            True if attribute `.vol` is calculate, False if not.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">xgrid</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+    
+<div class="viewcode-block" id="stndmesh.gen_intmat">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.stnd_mesh.stndmesh.html#nirfasterff.base.stnd_mesh.stndmesh.gen_intmat">[docs]</a>
+    <span class="k">def</span> <span class="nf">gen_intmat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xgrid</span><span class="p">,</span> <span class="n">ygrid</span><span class="p">,</span> <span class="n">zgrid</span><span class="o">=</span><span class="p">[]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate the information needed to convert data between mesh and volumetric space, specified by x, y, z (if 3D) grids.</span>
+<span class="sd">        </span>
+<span class="sd">        All grids must be uniform. The results will from a nirfasterff.base.meshvol object stored in field .vol</span>
+<span class="sd">        </span>
+<span class="sd">        If field .vol already exists, it will be calculated again, and a warning will be thrown</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        xgrid : double NumPy array</span>
+<span class="sd">            x grid in mm.</span>
+<span class="sd">        ygrid : double NumPy array</span>
+<span class="sd">            x grid in mm.</span>
+<span class="sd">        zgrid : double NumPy array, optional</span>
+<span class="sd">            x grid in mm. Leave empty for 2D meshes. The default is [].</span>
+<span class="sd">        </span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            if grids not uniform, or zgrid empty for 3D mesh</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">xgrid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">xgrid</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span>
+        <span class="n">ygrid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ygrid</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span>
+        <span class="n">zgrid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">zgrid</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">xgrid</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">tmp</span><span class="o">-</span><span class="n">tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;xgrid must be uniform&#39;</span><span class="p">)</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">ygrid</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">tmp</span><span class="o">-</span><span class="n">tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;ygrid must be uniform&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimension</span> <span class="o">==</span><span class="mi">3</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">zgrid</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;zgrid must be non-empty for 3D mesh&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">zgrid</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">zgrid</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">tmp</span><span class="o">-</span><span class="n">tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;zgrid must be uniform&#39;</span><span class="p">)</span>
+            
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isvol</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: recalculating intmat&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">xgrid</span> <span class="o">=</span> <span class="n">xgrid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">ygrid</span> <span class="o">=</span> <span class="n">ygrid</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">zgrid</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">zgrid</span> <span class="o">=</span> <span class="n">zgrid</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">xgrid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">xgrid</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ygrid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">ygrid</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">zgrid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">zgrid</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">xgrid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">xgrid</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ygrid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">ygrid</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+        
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">gridinmesh</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">meshingrid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">mesh2grid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">grid2mesh</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">gen_intmat_impl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xgrid</span><span class="p">,</span> <span class="n">ygrid</span><span class="p">,</span> <span class="n">zgrid</span><span class="p">)</span></div>
+</div>
+
+        
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Jiaming Cao, MILAB@UoB.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

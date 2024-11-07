@@ -1,0 +1,887 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nirfasterff.math &mdash; NIRFASTerFF 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            NIRFASTerFF
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/nirfasterff.html">nirfasterff</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">NIRFASTerFF</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">nirfasterff.math</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for nirfasterff.math</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Some low-level functions used by the forward solvers.</span>
+
+<span class="sd">It is usually unnecessary to use them directly and caution must be excercised, as many of them interact closely with the C++ libraries and can cause crashes if used incorrectly</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">nirfasterff</span> <span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">sparse</span>
+
+<div class="viewcode-block" id="gen_mass_matrix">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.math.gen_mass_matrix.html#nirfasterff.math.gen_mass_matrix">[docs]</a>
+<span class="k">def</span> <span class="nf">gen_mass_matrix</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">GPU</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate the MASS matrix, and return the coordinates in CSR format.</span>
+<span class="sd">    </span>
+<span class="sd">    The current Matlab version outputs COO format, so the results are NOT directly compatible</span>
+<span class="sd">    </span>
+<span class="sd">    If calculation fails on GPU (if chosen), it will generate a warning and automatically switch to CPU</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mesh : nirfasterff.base.stndmesh</span>
+<span class="sd">        the mesh used to calculate the MASS matrix.</span>
+<span class="sd">    freq : double</span>
+<span class="sd">        modulation frequency, in Hz.</span>
+<span class="sd">    solver : str, optional</span>
+<span class="sd">        Choose between &#39;CPU&#39; or &#39;GPU&#39; solver (case insensitive). Automatically determined (GPU prioritized) if not specified</span>
+<span class="sd">    GPU : int, optional</span>
+<span class="sd">        GPU selection. -1 for automatic, 0, 1, ... for manual selection on multi-GPU systems. The default is -1.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    RuntimeError</span>
+<span class="sd">        if both CUDA and CPU versions fail.</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        if &#39;solver&#39; is not &#39;CPU&#39; or &#39;GPU&#39;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    csrI: int32 NumPy vector, zero-based</span>
+<span class="sd">        I indices of the MASS matrix, in CSR format. Size (NNodes,)</span>
+<span class="sd">    csrJ: int32 NumPy vector, zero-based</span>
+<span class="sd">        J indices of the MASS matrix, in CSR format. Size (nnz(MASS),)</span>
+<span class="sd">    csrV: float64 or complex128 NumPy vector</span>
+<span class="sd">        values of the MASS matrix, in CSR format. Size (nnz(MASS),)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">if</span> <span class="n">solver</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">==</span><span class="s1">&#39;gpu&#39;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">utils</span><span class="o">.</span><span class="n">isCUDA</span><span class="p">():</span>
+        <span class="n">solver</span> <span class="o">=</span> <span class="s1">&#39;CPU&#39;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: No capable CUDA device found. using CPU instead&#39;</span><span class="p">)</span>
+        
+    <span class="k">if</span> <span class="n">solver</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">==</span><span class="s1">&#39;gpu&#39;</span> <span class="ow">and</span> <span class="n">utils</span><span class="o">.</span><span class="n">isCUDA</span><span class="p">():</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="p">[</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">csrV</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">cudalib</span><span class="o">.</span><span class="n">gen_mass_matrix</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">elements</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">bndvtx</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">mua</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">kappa</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">ksi</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">c</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span> <span class="n">GPU</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">freq</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+                <span class="n">csrV</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">csrV</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: GPU code failed. Rolling back to CPU code&#39;</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="p">[</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">csrV</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">cpulib</span><span class="o">.</span><span class="n">gen_mass_matrix</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">elements</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">bndvtx</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">mua</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">kappa</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">ksi</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">c</span><span class="p">,</span> <span class="n">freq</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">freq</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+                    <span class="n">csrV</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">csrV</span><span class="p">)</span>    
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Error: couldn&#39;&#39;t generate mass matrix&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">solver</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">==</span><span class="s1">&#39;cpu&#39;</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="p">[</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">csrV</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">cpulib</span><span class="o">.</span><span class="n">gen_mass_matrix</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">elements</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">bndvtx</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">mua</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">kappa</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">ksi</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">c</span><span class="p">,</span> <span class="n">freq</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">freq</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+                <span class="n">csrV</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">csrV</span><span class="p">)</span> 
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Error: couldn&#39;&#39;t generate mass matrix&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Error: Solver should be &#39;&#39;GPU&#39;&#39; or &#39;&#39;CPU&#39;&#39;&#39;</span><span class="p">)</span>
+        
+    <span class="k">return</span> <span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">csrV</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_field_CW">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.math.get_field_CW.html#nirfasterff.math.get_field_CW">[docs]</a>
+<span class="k">def</span> <span class="nf">get_field_CW</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">csrV</span><span class="p">,</span> <span class="n">qvec</span><span class="p">,</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">(),</span> <span class="n">solver</span><span class="o">=</span><span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">()):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Call the Preconditioned Conjugate Gradient solver with FSAI preconditioner. For CW data only.</span>
+<span class="sd">    </span>
+<span class="sd">    The current Matlab version uses COO format input, so they are NOT directly compatible</span>
+<span class="sd">    </span>
+<span class="sd">    If calculation fails on GPU (if chosen), it will generate a warning and automatically switch to CPU.</span>
+<span class="sd">    </span>
+<span class="sd">    On GPU, the algorithm first tries to solve for all sources simultaneously, but this can fail due to insufficient GPU memory.</span>
+<span class="sd">    </span>
+<span class="sd">    If this is the case, it will generate a warning and solve the sources one by one. The latter is not as fast, but requires much less memory.</span>
+<span class="sd">    </span>
+<span class="sd">    On CPU, the algorithm only solves the sources one by one.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    csrI : int32 NumPy vector, zero-based</span>
+<span class="sd">        I indices of the MASS matrix, in CSR format.</span>
+<span class="sd">    csrJ : int32 NumPy vector, zero-based</span>
+<span class="sd">        J indices of the MASS matrix, in CSR format.</span>
+<span class="sd">    csrV : double NumPy vector</span>
+<span class="sd">        values of the MASS matrix, in CSR format.</span>
+<span class="sd">    qvec : double NumPy array, or Scipy CSC sparse matrix</span>
+<span class="sd">        The source vectors. i-th column corresponds to source i. Size (NNode, NSource)</span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.math.gen_sources()` for details.</span>
+<span class="sd">    solver : str, optional</span>
+<span class="sd">        Choose between &#39;CPU&#39; or &#39;GPU&#39; solver (case insensitive). Automatically determined (GPU prioritized) if not specified</span>
+<span class="sd">    opt : nirfasterff.utils.SolverOptions, optional</span>
+<span class="sd">        Solver options. Uses default parameters if not specified, and they should suffice in most cases. </span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.SolverOptions` for details</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        if MASS matrix and source vectors are not both real, or if solver is not &#39;CPU&#39; or &#39;GPU&#39;.</span>
+<span class="sd">    RuntimeError</span>
+<span class="sd">        if both GPU and CPU solvers fail.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    phi: double NumPy array</span>
+<span class="sd">        Calculated fluence at each source. Size (NNodes, Nsources)</span>
+<span class="sd">    info: nirfasterff.utils.ConvergenceInfo </span>
+<span class="sd">        convergence information of the solver.</span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.ConvergenceInfo` for details</span>
+<span class="sd">    </span>
+<span class="sd">    See Also</span>
+<span class="sd">    -------</span>
+<span class="sd">    :func:`~nirfasterff.math.gen_mass_matrix()`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isreal</span><span class="p">(</span><span class="n">csrV</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">isrealobj</span><span class="p">(</span><span class="n">qvec</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;MASS matrix and qvec should be both real&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">solver</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">==</span><span class="s1">&#39;gpu&#39;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">utils</span><span class="o">.</span><span class="n">isCUDA</span><span class="p">():</span>
+        <span class="n">solver</span> <span class="o">=</span> <span class="s1">&#39;CPU&#39;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: No capable CUDA device found. using CPU instead&#39;</span><span class="p">)</span>
+        
+    <span class="k">if</span> <span class="n">solver</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">==</span><span class="s1">&#39;gpu&#39;</span> <span class="ow">and</span> <span class="n">utils</span><span class="o">.</span><span class="n">isCUDA</span><span class="p">():</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="p">[</span><span class="n">phi</span><span class="p">,</span> <span class="n">info</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">cudalib</span><span class="o">.</span><span class="n">get_field_CW</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">csrV</span><span class="p">,</span> <span class="n">qvec</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_iter</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">AbsoluteTolerance</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">RelativeTolerance</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">divergence</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">GPU</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: GPU solver failed. Rolling back to CPU solver&#39;</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="p">[</span><span class="n">phi</span><span class="p">,</span> <span class="n">info</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">cpulib</span><span class="o">.</span><span class="n">get_field_CW</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">csrV</span><span class="p">,</span> <span class="n">qvec</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_iter</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">AbsoluteTolerance</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">RelativeTolerance</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">divergence</span><span class="p">)</span>  
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Error: solver failed&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">solver</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">==</span><span class="s1">&#39;cpu&#39;</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="p">[</span><span class="n">phi</span><span class="p">,</span> <span class="n">info</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">cpulib</span><span class="o">.</span><span class="n">get_field_CW</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">csrV</span><span class="p">,</span> <span class="n">qvec</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_iter</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">AbsoluteTolerance</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">RelativeTolerance</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">divergence</span><span class="p">)</span>  
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Error: solver failed&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Error: Solver should be &#39;&#39;GPU&#39;&#39; or &#39;&#39;CPU&#39;&#39;&#39;</span><span class="p">)</span>
+        
+    <span class="k">return</span> <span class="n">phi</span><span class="p">,</span> <span class="n">utils</span><span class="o">.</span><span class="n">ConvergenceInfo</span><span class="p">(</span><span class="n">info</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_field_FD">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.math.get_field_FD.html#nirfasterff.math.get_field_FD">[docs]</a>
+<span class="k">def</span> <span class="nf">get_field_FD</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">csrV</span><span class="p">,</span> <span class="n">qvec</span><span class="p">,</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">(),</span> <span class="n">solver</span><span class="o">=</span><span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">()):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Call the Preconditioned BiConjugate Stablized solver with FSAI preconditioner. </span>
+<span class="sd">    </span>
+<span class="sd">    This is designed for FD data, but can also work for CW is an all-zero imaginary part is added to the MASS matrix and source vectors.</span>
+<span class="sd">    </span>
+<span class="sd">    The current Matlab version uses COO format input, so they are NOT directly compatible</span>
+<span class="sd">    </span>
+<span class="sd">    If calculation fails on GPU (if chosen), it will generate a warning and automatically switch to CPU.</span>
+<span class="sd">    </span>
+<span class="sd">    On GPU, the algorithm first tries to solve for all sources simultaneously, but this can fail due to insufficient GPU memory.</span>
+<span class="sd">    </span>
+<span class="sd">    If this is the case, it will generate a warning and solve the sources one by one. The latter is not as fast, but requires much less memory.</span>
+<span class="sd">    </span>
+<span class="sd">    On CPU, the algorithm only solves the sources one by one.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    csrI : int32 NumPy vector, zero-based</span>
+<span class="sd">        I indices of the MASS matrix, in CSR format.</span>
+<span class="sd">    csrJ : int32 NumPy vector, zero-based</span>
+<span class="sd">        J indices of the MASS matrix, in CSR format.</span>
+<span class="sd">    csrV : complex double NumPy vector</span>
+<span class="sd">        values of the MASS matrix, in CSR format.</span>
+<span class="sd">    qvec : complex double NumPy array, or Scipy CSC sparse matrix</span>
+<span class="sd">        The source vectors. i-th column corresponds to source i. Size (NNode, NSource)</span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.math.gen_sources()` for details.</span>
+<span class="sd">    solver : str, optional</span>
+<span class="sd">        Choose between &#39;CPU&#39; or &#39;GPU&#39; solver (case insensitive). Automatically determined (GPU prioritized) if not specified</span>
+<span class="sd">    opt : nirfasterff.utils.SolverOptions, optional</span>
+<span class="sd">        Solver options. Uses default parameters if not specified, and they should suffice in most cases. </span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.SolverOptions` for details</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        if MASS matrix and source vectors are not both complex, or if solver is not &#39;CPU&#39; or &#39;GPU&#39;.</span>
+<span class="sd">    RuntimeError</span>
+<span class="sd">        if both GPU and CPU solvers fail.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    phi: complex double NumPy array</span>
+<span class="sd">        Calculated fluence at each source. Size (NNodes, Nsources)</span>
+<span class="sd">    info: nirfasterff.utils.ConvergenceInfo </span>
+<span class="sd">        convergence information of the solver.</span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.ConvergenceInfo` for details</span>
+<span class="sd">    </span>
+<span class="sd">    See Also</span>
+<span class="sd">    -------</span>
+<span class="sd">    :func:`~nirfasterff.math.gen_mass_matrix()`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">iscomplex</span><span class="p">(</span><span class="n">csrV</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">iscomplexobj</span><span class="p">(</span><span class="n">qvec</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;MASS matrix and qvec should be both complex&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">solver</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">==</span><span class="s1">&#39;gpu&#39;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">utils</span><span class="o">.</span><span class="n">isCUDA</span><span class="p">():</span>
+        <span class="n">solver</span> <span class="o">=</span> <span class="s1">&#39;CPU&#39;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: No capable CUDA device found. using CPU instead&#39;</span><span class="p">)</span>
+        
+    <span class="k">if</span> <span class="n">solver</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">==</span><span class="s1">&#39;gpu&#39;</span> <span class="ow">and</span> <span class="n">utils</span><span class="o">.</span><span class="n">isCUDA</span><span class="p">():</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="p">[</span><span class="n">phi</span><span class="p">,</span> <span class="n">info</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">cudalib</span><span class="o">.</span><span class="n">get_field_FD</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">csrV</span><span class="p">,</span> <span class="n">qvec</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_iter</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">AbsoluteTolerance</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">RelativeTolerance</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">divergence</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">GPU</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: GPU solver failed. Rolling back to CPU solver&#39;</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="p">[</span><span class="n">phi</span><span class="p">,</span> <span class="n">info</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">cpulib</span><span class="o">.</span><span class="n">get_field_FD</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">csrV</span><span class="p">,</span> <span class="n">qvec</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_iter</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">AbsoluteTolerance</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">RelativeTolerance</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">divergence</span><span class="p">)</span>  
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Error: solver failed&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">solver</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">==</span><span class="s1">&#39;cpu&#39;</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="p">[</span><span class="n">phi</span><span class="p">,</span> <span class="n">info</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">cpulib</span><span class="o">.</span><span class="n">get_field_FD</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">csrV</span><span class="p">,</span> <span class="n">qvec</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_iter</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">AbsoluteTolerance</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">RelativeTolerance</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">divergence</span><span class="p">)</span>  
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Error: solver failed&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Error: Solver should be &#39;&#39;GPU&#39;&#39; or &#39;&#39;CPU&#39;&#39;&#39;</span><span class="p">)</span>
+        
+    <span class="k">return</span> <span class="n">phi</span><span class="p">,</span> <span class="n">utils</span><span class="o">.</span><span class="n">ConvergenceInfo</span><span class="p">(</span><span class="n">info</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_field_TR">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.math.get_field_TR.html#nirfasterff.math.get_field_TR">[docs]</a>
+<span class="k">def</span> <span class="nf">get_field_TR</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">csrV</span><span class="p">,</span> <span class="n">qvec</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">max_step</span><span class="p">,</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">(),</span> <span class="n">solver</span><span class="o">=</span><span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">()):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Call the Preconditioned Conjugate Gradient solver with FSAI preconditioner. Calculates TPSF data</span>
+<span class="sd">    </span>
+<span class="sd">    NOT interchangeable with the current MATLAB version</span>
+<span class="sd">    </span>
+<span class="sd">    If calculation fails on GPU (if chosen), it will generate a warning and automatically switch to CPU.</span>
+<span class="sd">    </span>
+<span class="sd">    On both GPU and CPU, the algorithm solves the sources one by one</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    csrI : int32 NumPy vector, zero-based</span>
+<span class="sd">        I indices of the MASS matrices, in CSR format.</span>
+<span class="sd">    csrJ : int32 NumPy vector, zero-based</span>
+<span class="sd">        J indices of the MASS matrices, in CSR format.</span>
+<span class="sd">    csrV : complex double NumPy vector</span>
+<span class="sd">        values of the MASS matrices, in CSR format. </span>
+<span class="sd">        </span>
+<span class="sd">        This is calculated using gen_mass_matrix with omega=1. The real part coincides with K+C, and the imaginary part coincides with -M.</span>
+<span class="sd">        </span>
+<span class="sd">        See references for details</span>
+<span class="sd">    qvec : double NumPy array, or Scipy CSC sparse matrix</span>
+<span class="sd">        The source vectors. i-th column corresponds to source i. Size (NNode, NSource)</span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.math.gen_sources()` for details.</span>
+<span class="sd">    dt : double </span>
+<span class="sd">        time step size, in seconds.</span>
+<span class="sd">    max_step : int32</span>
+<span class="sd">        total number of time steps.</span>
+<span class="sd">    solver : str, optional</span>
+<span class="sd">        Choose between &#39;CPU&#39; or &#39;GPU&#39; solver (case insensitive). Automatically determined (GPU prioritized) if not specified</span>
+<span class="sd">    opt : nirfasterff.utils.SolverOptions, optional</span>
+<span class="sd">        Solver options. Uses default parameters if not specified, and they should suffice in most cases. </span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.SolverOptions` for details</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        if csrV is not complex, or if qvec is not real, or if solver is not &#39;CPU&#39; or &#39;GPU&#39;.</span>
+<span class="sd">    RuntimeError</span>
+<span class="sd">        if both GPU and CPU solvers fail.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    phi: double NumPy array</span>
+<span class="sd">        Calculated TPSF at each source. Size (NNodes, Nsources*max_step), structured as,</span>
+<span class="sd">        </span>
+<span class="sd">        [src0_step0, src1_step0,...,src0_step1, src1_step1,...]</span>
+<span class="sd">    info: nirfasterff.utils.ConvergenceInfo </span>
+<span class="sd">        convergence information of the solver.</span>
+<span class="sd">        </span>
+<span class="sd">        Only the convergence info of the last time step is returned.</span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.ConvergenceInfo` for details</span>
+<span class="sd">    </span>
+<span class="sd">    See Also</span>
+<span class="sd">    -------</span>
+<span class="sd">    :func:`~nirfasterff.math.gen_mass_matrix()`</span>
+<span class="sd">    </span>
+<span class="sd">    References</span>
+<span class="sd">    -------</span>
+<span class="sd">    Arridges et al., Med. Phys,, 1993. doi:10.1118/1.597069</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+   
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">iscomplex</span><span class="p">(</span><span class="n">csrV</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Missing M matrix&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isrealobj</span><span class="p">(</span><span class="n">qvec</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;qvec must be real&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">solver</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">==</span><span class="s1">&#39;gpu&#39;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">utils</span><span class="o">.</span><span class="n">isCUDA</span><span class="p">():</span>
+        <span class="n">solver</span> <span class="o">=</span> <span class="s1">&#39;CPU&#39;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: No capable CUDA device found. using CPU instead&#39;</span><span class="p">)</span>
+        
+    <span class="n">Sr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">csrV</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+    <span class="n">Si</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">csrV</span><span class="o">.</span><span class="n">imag</span><span class="p">)</span>
+    <span class="c1"># MASS matrix calculated with w=1, therefore real part of csrV corresponds to K+C, and imag part corresponds to -M</span>
+    <span class="k">if</span> <span class="n">solver</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">==</span><span class="s1">&#39;gpu&#39;</span> <span class="ow">and</span> <span class="n">utils</span><span class="o">.</span><span class="n">isCUDA</span><span class="p">():</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="p">[</span><span class="n">phi</span><span class="p">,</span> <span class="n">info</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">cudalib</span><span class="o">.</span><span class="n">get_field_TR</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">Sr</span><span class="o">-</span><span class="n">Si</span><span class="o">/</span><span class="n">dt</span><span class="p">,</span> <span class="o">-</span><span class="p">(</span><span class="mf">0.5</span><span class="o">*</span><span class="n">Sr</span><span class="o">+</span><span class="n">Si</span><span class="o">/</span><span class="n">dt</span><span class="p">),</span> <span class="n">qvec</span><span class="p">,</span> <span class="n">max_step</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_iter</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">AbsoluteTolerance</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">RelativeTolerance</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">divergence</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">GPU</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: GPU solver failed. Rolling back to CPU solver&#39;</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="p">[</span><span class="n">phi</span><span class="p">,</span> <span class="n">info</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">cpulib</span><span class="o">.</span><span class="n">get_field_TR</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">Sr</span><span class="o">-</span><span class="n">Si</span><span class="o">/</span><span class="n">dt</span><span class="p">,</span> <span class="o">-</span><span class="p">(</span><span class="mf">0.5</span><span class="o">*</span><span class="n">Sr</span><span class="o">+</span><span class="n">Si</span><span class="o">/</span><span class="n">dt</span><span class="p">),</span> <span class="n">qvec</span><span class="p">,</span> <span class="n">max_step</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_iter</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">AbsoluteTolerance</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">RelativeTolerance</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">divergence</span><span class="p">)</span>  
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Error: solver failed&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">solver</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">==</span><span class="s1">&#39;cpu&#39;</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="p">[</span><span class="n">phi</span><span class="p">,</span> <span class="n">info</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">cpulib</span><span class="o">.</span><span class="n">get_field_TR</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">Sr</span><span class="o">-</span><span class="n">Si</span><span class="o">/</span><span class="n">dt</span><span class="p">,</span> <span class="o">-</span><span class="p">(</span><span class="mf">0.5</span><span class="o">*</span><span class="n">Sr</span><span class="o">+</span><span class="n">Si</span><span class="o">/</span><span class="n">dt</span><span class="p">),</span> <span class="n">qvec</span><span class="p">,</span> <span class="n">max_step</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_iter</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">AbsoluteTolerance</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">RelativeTolerance</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">divergence</span><span class="p">)</span>  
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Error: solver failed&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Error: Solver should be &#39;&#39;GPU&#39;&#39; or &#39;&#39;CPU&#39;&#39;&#39;</span><span class="p">)</span>
+        
+    <span class="k">return</span> <span class="n">phi</span><span class="p">,</span> <span class="n">utils</span><span class="o">.</span><span class="n">ConvergenceInfo</span><span class="p">(</span><span class="n">info</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_field_TRmoments">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.math.get_field_TRmoments.html#nirfasterff.math.get_field_TRmoments">[docs]</a>
+<span class="k">def</span> <span class="nf">get_field_TRmoments</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">csrV</span><span class="p">,</span> <span class="n">qvec</span><span class="p">,</span> <span class="n">max_moment</span><span class="p">,</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">(),</span> <span class="n">solver</span><span class="o">=</span><span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">()):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Call the Preconditioned Conjugate Gradient solver with FSAI preconditioner. Directly calculates moments of TR data using Mellin transform</span>
+<span class="sd">    </span>
+<span class="sd">    NOT interchangeable with the current MATLAB version</span>
+<span class="sd">    </span>
+<span class="sd">    If calculation fails on GPU (if chosen), it will generate a warning and automatically switch to CPU.</span>
+<span class="sd">    </span>
+<span class="sd">    On both GPU and CPU, the algorithm solves the sources one by one</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    csrI : int32 NumPy vector, zero-based</span>
+<span class="sd">        I indices of the MASS matrices, in CSR format.</span>
+<span class="sd">    csrJ : int32 NumPy vector, zero-based</span>
+<span class="sd">        J indices of the MASS matrices, in CSR format.</span>
+<span class="sd">    csrV : complex double NumPy vector</span>
+<span class="sd">        values of the MASS matrices, in CSR format. </span>
+<span class="sd">        </span>
+<span class="sd">        This is calculated using gen_mass_matrix with omega=1. The real part coincides with K+C, and the imaginary part coincides with -B.</span>
+<span class="sd">        </span>
+<span class="sd">        See references for details</span>
+<span class="sd">    qvec : double NumPy array, or Scipy CSC sparse matrix</span>
+<span class="sd">        The source vectors. i-th column corresponds to source i. Size (NNode, NSource)</span>
+<span class="sd">    max_moment : int32</span>
+<span class="sd">        max order of moments to calculate. That is, 0th, 1st, 2nd, .., max_moments-th will be calculated.</span>
+<span class="sd">    solver : str, optional</span>
+<span class="sd">        Choose between &#39;CPU&#39; or &#39;GPU&#39; solver (case insensitive). Automatically determined (GPU prioritized) if not specified</span>
+<span class="sd">    opt : nirfasterff.utils.SolverOptions, optional</span>
+<span class="sd">        Solver options. Uses default parameters if not specified, and they should suffice in most cases. </span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.SolverOptions` for details</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        if csrV is not complex, or if qvec is not real, or if solver is not &#39;CPU&#39; or &#39;GPU&#39;.</span>
+<span class="sd">    RuntimeError</span>
+<span class="sd">        if both GPU and CPU solvers fail.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    phi: double NumPy array</span>
+<span class="sd">        Calculated Mellin transform at each source. Size (NNodes, Nsources*(max_moment+1)), structured as,</span>
+<span class="sd">        </span>
+<span class="sd">        [src0_m0, src1_m0,...,src0_m1, src1_m1,...]</span>
+<span class="sd">        </span>
+<span class="sd">    info: nirfasterff.utils.ConvergenceInfo </span>
+<span class="sd">        convergence information of the solver.</span>
+<span class="sd">        </span>
+<span class="sd">        Only the convergence info of the highest order moments is returned.</span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.ConvergenceInfo` for details</span>
+<span class="sd">    </span>
+<span class="sd">    See Also</span>
+<span class="sd">    -------</span>
+<span class="sd">    :func:`~nirfasterff.math.gen_mass_matrix()`</span>
+<span class="sd">    </span>
+<span class="sd">    References</span>
+<span class="sd">    -------</span>
+<span class="sd">    Arridge and Schweiger, Applied Optics, 1995. doi:10.1364/AO.34.002683</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">iscomplex</span><span class="p">(</span><span class="n">csrV</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Missing B matrix&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isrealobj</span><span class="p">(</span><span class="n">qvec</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;qvec must be real&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">solver</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">==</span><span class="s1">&#39;gpu&#39;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">utils</span><span class="o">.</span><span class="n">isCUDA</span><span class="p">():</span>
+        <span class="n">solver</span> <span class="o">=</span> <span class="s1">&#39;CPU&#39;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: No capable CUDA device found. using CPU instead&#39;</span><span class="p">)</span>
+        
+    <span class="n">Sr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">csrV</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+    <span class="n">Si</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">csrV</span><span class="o">.</span><span class="n">imag</span><span class="p">)</span>
+    <span class="c1"># MASS matrix calculated with w=1, therefore real part of csrV corresponds to K+C, and imag part corresponds to -B</span>
+    <span class="k">if</span> <span class="n">solver</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">==</span><span class="s1">&#39;gpu&#39;</span> <span class="ow">and</span> <span class="n">utils</span><span class="o">.</span><span class="n">isCUDA</span><span class="p">():</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="p">[</span><span class="n">phi</span><span class="p">,</span> <span class="n">info</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">cudalib</span><span class="o">.</span><span class="n">get_field_TR_moments</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">Sr</span><span class="p">,</span> <span class="o">-</span><span class="n">Si</span><span class="p">,</span> <span class="n">qvec</span><span class="p">,</span> <span class="n">max_moment</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_iter</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">AbsoluteTolerance</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">RelativeTolerance</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">divergence</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">GPU</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: GPU solver failed. Rolling back to CPU solver&#39;</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="p">[</span><span class="n">phi</span><span class="p">,</span> <span class="n">info</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">cpulib</span><span class="o">.</span><span class="n">get_field_TR_moments</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span>  <span class="n">Sr</span><span class="p">,</span> <span class="o">-</span><span class="n">Si</span><span class="p">,</span> <span class="n">qvec</span><span class="p">,</span> <span class="n">max_moment</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_iter</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">AbsoluteTolerance</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">RelativeTolerance</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">divergence</span><span class="p">)</span>  
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Error: solver failed&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">solver</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">==</span><span class="s1">&#39;cpu&#39;</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="p">[</span><span class="n">phi</span><span class="p">,</span> <span class="n">info</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">cpulib</span><span class="o">.</span><span class="n">get_field_TR_moments</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span>  <span class="n">Sr</span><span class="p">,</span> <span class="o">-</span><span class="n">Si</span><span class="p">,</span> <span class="n">qvec</span><span class="p">,</span> <span class="n">max_moment</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_iter</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">AbsoluteTolerance</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">RelativeTolerance</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">divergence</span><span class="p">)</span>  
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Error: solver failed&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Error: Solver should be &#39;&#39;GPU&#39;&#39; or &#39;&#39;CPU&#39;&#39;&#39;</span><span class="p">)</span>
+        
+    <span class="k">return</span> <span class="n">phi</span><span class="p">,</span> <span class="n">utils</span><span class="o">.</span><span class="n">ConvergenceInfo</span><span class="p">(</span><span class="n">info</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_field_TRFL">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.math.get_field_TRFL.html#nirfasterff.math.get_field_TRFL">[docs]</a>
+<span class="k">def</span> <span class="nf">get_field_TRFL</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">csrV</span><span class="p">,</span> <span class="n">phix</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">max_step</span><span class="p">,</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">(),</span> <span class="n">solver</span><span class="o">=</span><span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">()):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Call the Preconditioned Conjugate Gradient solver with FSAI preconditioner. Calculates the TPSFs of fluorescence emission given the TPSFs of excitation</span>
+<span class="sd">    </span>
+<span class="sd">    If calculation fails on GPU (if chosen), it will generate a warning and automatically switch to CPU.</span>
+<span class="sd">    </span>
+<span class="sd">    On both GPU and CPU, the algorithm solves the sources one by one</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    csrI : int32 NumPy vector, zero-based</span>
+<span class="sd">        I indices of the MASS matrices at emission wavelength, in CSR format.</span>
+<span class="sd">    csrJ : int32 NumPy vector, zero-based</span>
+<span class="sd">        J indices of the MASS matrices at emission wavelength, in CSR format.</span>
+<span class="sd">    csrV : complex double NumPy vector</span>
+<span class="sd">        values of the MASS matrices at emission wavelength, in CSR format. </span>
+<span class="sd">        </span>
+<span class="sd">        This is calculated using gen_mass_matrix with omega=1.</span>
+<span class="sd">    phix : double NumPy array</span>
+<span class="sd">        TPSF of the excitation. Size (NNodes, NSources*NTime), structured as,</span>
+<span class="sd">        </span>
+<span class="sd">        [src0_step0, src1_step0,...,src0_step1, src1_step1,...]</span>
+<span class="sd">    dt : double </span>
+<span class="sd">        time step size, in seconds.</span>
+<span class="sd">    max_step : int32</span>
+<span class="sd">        total number of time steps. It should match exactly with the number of steps in the excitation data</span>
+<span class="sd">    solver : str, optional</span>
+<span class="sd">        Choose between &#39;CPU&#39; or &#39;GPU&#39; solver (case insensitive). Automatically determined (GPU prioritized) if not specified</span>
+<span class="sd">    opt : nirfasterff.utils.SolverOptions, optional</span>
+<span class="sd">        Solver options. Uses default parameters if not specified, and they should suffice in most cases. </span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.SolverOptions` for details</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        if csrV is not complex, or if phix is not real, or if solver is not &#39;CPU&#39; or &#39;GPU&#39;.</span>
+<span class="sd">    RuntimeError</span>
+<span class="sd">        if both GPU and CPU solvers fail.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    phi: double NumPy array</span>
+<span class="sd">        Calculated TPSF at each source of fluorescence emission. Size (NNodes, Nsources*max_step), structured as,</span>
+<span class="sd">        </span>
+<span class="sd">        [src0_step0, src1_step0,...,src0_step1, src1_step1,...]</span>
+<span class="sd">    info: nirfasterff.utils.ConvergenceInfo </span>
+<span class="sd">        convergence information of the solver.</span>
+<span class="sd">        </span>
+<span class="sd">        Only the convergence info of the last time step is returned.</span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.ConvergenceInfo` for details</span>
+<span class="sd">    </span>
+<span class="sd">    See Also</span>
+<span class="sd">    -------</span>
+<span class="sd">    :func:`~nirfasterff.math.gen_mass_matrix()`, :func:`~nirfasterff.math.get_field_TR()`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">iscomplex</span><span class="p">(</span><span class="n">csrV</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Missing M matrix&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isrealobj</span><span class="p">(</span><span class="n">phix</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;phix must be real&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">solver</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">==</span><span class="s1">&#39;gpu&#39;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">utils</span><span class="o">.</span><span class="n">isCUDA</span><span class="p">():</span>
+        <span class="n">solver</span> <span class="o">=</span> <span class="s1">&#39;CPU&#39;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: No capable CUDA device found. using CPU instead&#39;</span><span class="p">)</span>
+        
+    <span class="n">Sr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">csrV</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+    <span class="n">Si</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">csrV</span><span class="o">.</span><span class="n">imag</span><span class="p">)</span>
+    <span class="c1"># MASS matrix calculated with w=1, therefore real part of csrV corresponds to K+C, and imag part corresponds to -M</span>
+    <span class="k">if</span> <span class="n">solver</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">==</span><span class="s1">&#39;gpu&#39;</span> <span class="ow">and</span> <span class="n">utils</span><span class="o">.</span><span class="n">isCUDA</span><span class="p">():</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="p">[</span><span class="n">phi</span><span class="p">,</span> <span class="n">info</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">cudalib</span><span class="o">.</span><span class="n">get_field_TRFL</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">Sr</span><span class="o">-</span><span class="n">Si</span><span class="o">/</span><span class="n">dt</span><span class="p">,</span> <span class="o">-</span><span class="p">(</span><span class="mf">0.5</span><span class="o">*</span><span class="n">Sr</span><span class="o">+</span><span class="n">Si</span><span class="o">/</span><span class="n">dt</span><span class="p">),</span> <span class="n">phix</span><span class="p">,</span> <span class="n">max_step</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_iter</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">AbsoluteTolerance</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">RelativeTolerance</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">divergence</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">GPU</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: GPU solver failed. Rolling back to CPU solver&#39;</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="p">[</span><span class="n">phi</span><span class="p">,</span> <span class="n">info</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">cpulib</span><span class="o">.</span><span class="n">get_field_TRFL</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">Sr</span><span class="o">-</span><span class="n">Si</span><span class="o">/</span><span class="n">dt</span><span class="p">,</span> <span class="o">-</span><span class="p">(</span><span class="mf">0.5</span><span class="o">*</span><span class="n">Sr</span><span class="o">+</span><span class="n">Si</span><span class="o">/</span><span class="n">dt</span><span class="p">),</span> <span class="n">phix</span><span class="p">,</span> <span class="n">max_step</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_iter</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">AbsoluteTolerance</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">RelativeTolerance</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">divergence</span><span class="p">)</span>  
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Error: solver failed&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">solver</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">==</span><span class="s1">&#39;cpu&#39;</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="p">[</span><span class="n">phi</span><span class="p">,</span> <span class="n">info</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">cpulib</span><span class="o">.</span><span class="n">get_field_TRFL</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">Sr</span><span class="o">-</span><span class="n">Si</span><span class="o">/</span><span class="n">dt</span><span class="p">,</span> <span class="o">-</span><span class="p">(</span><span class="mf">0.5</span><span class="o">*</span><span class="n">Sr</span><span class="o">+</span><span class="n">Si</span><span class="o">/</span><span class="n">dt</span><span class="p">),</span> <span class="n">phix</span><span class="p">,</span> <span class="n">max_step</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_iter</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">AbsoluteTolerance</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">RelativeTolerance</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">divergence</span><span class="p">)</span>  
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Error: solver failed&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Error: Solver should be &#39;&#39;GPU&#39;&#39; or &#39;&#39;CPU&#39;&#39;&#39;</span><span class="p">)</span>
+        
+    <span class="k">return</span> <span class="n">phi</span><span class="p">,</span> <span class="n">utils</span><span class="o">.</span><span class="n">ConvergenceInfo</span><span class="p">(</span><span class="n">info</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_field_TRFLmoments">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.math.get_field_TRFLmoments.html#nirfasterff.math.get_field_TRFLmoments">[docs]</a>
+<span class="k">def</span> <span class="nf">get_field_TRFLmoments</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">csrV</span><span class="p">,</span> <span class="n">mx</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">max_moment</span><span class="p">,</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">(),</span> <span class="n">solver</span><span class="o">=</span><span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">()):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Call the Preconditioned Conjugate Gradient solver with FSAI preconditioner. Directly calculates moments of re-emission using Mellin transform, given the moments of excitation</span>
+
+<span class="sd">    If calculation fails on GPU (if chosen), it will generate a warning and automatically switch to CPU.</span>
+<span class="sd">    </span>
+<span class="sd">    On both GPU and CPU, the algorithm solves the sources one by one</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    csrI : int32 NumPy vector, zero-based</span>
+<span class="sd">        I indices of the MASS matrices at emission wavelength, in CSR format.</span>
+<span class="sd">    csrJ : int32 NumPy vector, zero-based</span>
+<span class="sd">        J indices of the MASS matrices at emission wavelength, in CSR format.</span>
+<span class="sd">    csrV : complex double NumPy vector</span>
+<span class="sd">        values of the MASS matrices at emission wavelength, in CSR format. </span>
+<span class="sd">        </span>
+<span class="sd">        This is calculated using gen_mass_matrix with omega=1.</span>
+<span class="sd">    mx : double NumPy array</span>
+<span class="sd">        moments of the excitation. Size (NNodes, Nsources*(max_moment+1)), structured as,</span>
+<span class="sd">        </span>
+<span class="sd">        [src0_m0, src1_m0,...,src0_m1, src1_m1,...]</span>
+<span class="sd">    alpha : double NumPy array</span>
+<span class="sd">        defined as mesh.eta*mesh.muaf.</span>
+<span class="sd">    tau : double NumPy array</span>
+<span class="sd">        decay factor, as defined in mesh.tau.</span>
+<span class="sd">    max_moment : int32</span>
+<span class="sd">        max order of moments to calculate. That is, 0th, 1st, 2nd, .., max_moments-th will be calculated.</span>
+<span class="sd">        </span>
+<span class="sd">        This should match exact with the max_moment of the excitation</span>
+<span class="sd">    solver : str, optional</span>
+<span class="sd">        Choose between &#39;CPU&#39; or &#39;GPU&#39; solver (case insensitive). Automatically determined (GPU prioritized) if not specified</span>
+<span class="sd">    opt : nirfasterff.utils.SolverOptions, optional</span>
+<span class="sd">        Solver options. Uses default parameters if not specified, and they should suffice in most cases. </span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.SolverOptions` for details</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        if csrV is not complex, or if mx is not real, or if solver is not &#39;CPU&#39; or &#39;GPU&#39;.</span>
+<span class="sd">    RuntimeError</span>
+<span class="sd">        if both GPU and CPU solvers fail.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    phi: double NumPy array</span>
+<span class="sd">        Calculated Mellin transform of fluorecence emission at each source. Size (NNodes, Nsources*(max_moment+1)), structured as,</span>
+<span class="sd">        </span>
+<span class="sd">        [src0_m0, src1_m0,...,src0_m1, src1_m1,...]</span>
+<span class="sd">        </span>
+<span class="sd">    info: nirfasterff.utils.ConvergenceInfo </span>
+<span class="sd">        convergence information of the solver.</span>
+<span class="sd">        </span>
+<span class="sd">        Only the convergence info of the highest order moments is returned.</span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`~nirfasterff.utils.ConvergenceInfo` for details</span>
+<span class="sd">    </span>
+<span class="sd">    See Also</span>
+<span class="sd">    -------</span>
+<span class="sd">    :func:`~nirfasterff.math.gen_mass_matrix()`, :func:`~nirfasterff.math.get_field_TRmoments()`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">iscomplex</span><span class="p">(</span><span class="n">csrV</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Missing B matrix&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isrealobj</span><span class="p">(</span><span class="n">mx</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;mx must be real&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">solver</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">==</span><span class="s1">&#39;gpu&#39;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">utils</span><span class="o">.</span><span class="n">isCUDA</span><span class="p">():</span>
+        <span class="n">solver</span> <span class="o">=</span> <span class="s1">&#39;CPU&#39;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: No capable CUDA device found. using CPU instead&#39;</span><span class="p">)</span>
+        
+    <span class="n">Sr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">csrV</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+    <span class="n">Si</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">csrV</span><span class="o">.</span><span class="n">imag</span><span class="p">)</span>
+    <span class="c1"># MASS matrix calculated with w=1, therefore real part of csrV corresponds to K+C, and imag part corresponds to -M</span>
+    <span class="k">if</span> <span class="n">solver</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">==</span><span class="s1">&#39;gpu&#39;</span> <span class="ow">and</span> <span class="n">utils</span><span class="o">.</span><span class="n">isCUDA</span><span class="p">():</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="p">[</span><span class="n">phi</span><span class="p">,</span> <span class="n">info</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">cudalib</span><span class="o">.</span><span class="n">get_field_TRFL_moments</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">Sr</span><span class="p">,</span> <span class="o">-</span><span class="n">Si</span><span class="p">,</span> <span class="n">mx</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">max_moment</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_iter</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">AbsoluteTolerance</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">RelativeTolerance</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">divergence</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">GPU</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: GPU solver failed. Rolling back to CPU solver&#39;</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="p">[</span><span class="n">phi</span><span class="p">,</span> <span class="n">info</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">cpulib</span><span class="o">.</span><span class="n">get_field_TRFL_moments</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span>  <span class="n">Sr</span><span class="p">,</span> <span class="o">-</span><span class="n">Si</span><span class="p">,</span> <span class="n">mx</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">max_moment</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_iter</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">AbsoluteTolerance</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">RelativeTolerance</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">divergence</span><span class="p">)</span>  
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Error: solver failed&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">solver</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">==</span><span class="s1">&#39;cpu&#39;</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="p">[</span><span class="n">phi</span><span class="p">,</span> <span class="n">info</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">cpulib</span><span class="o">.</span><span class="n">get_field_TRFL_moments</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span>  <span class="n">Sr</span><span class="p">,</span> <span class="o">-</span><span class="n">Si</span><span class="p">,</span> <span class="n">mx</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">max_moment</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_iter</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">AbsoluteTolerance</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">RelativeTolerance</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">divergence</span><span class="p">)</span>  
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Error: solver failed&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Error: Solver should be &#39;&#39;GPU&#39;&#39; or &#39;&#39;CPU&#39;&#39;&#39;</span><span class="p">)</span>
+        
+    <span class="k">return</span> <span class="n">phi</span><span class="p">,</span> <span class="n">utils</span><span class="o">.</span><span class="n">ConvergenceInfo</span><span class="p">(</span><span class="n">info</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="gen_sources">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.math.gen_sources.html#nirfasterff.math.gen_sources">[docs]</a>
+<span class="k">def</span> <span class="nf">gen_sources</span><span class="p">(</span><span class="n">mesh</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate the source vectors (point source only) for the sources in mesh.source field</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mesh : NIRFASTer mesh type</span>
+<span class="sd">        mesh used to calculate the source vectors. Source information is also defined here.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    qvec : complex double NumPy array</span>
+<span class="sd">        source vectors, where each column corresponds to one source. Size (NNodes, Nsources).</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">link</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="p">)</span>
+    <span class="n">active</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">link</span><span class="p">[</span><span class="n">link</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">qvec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">mesh</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">active</span><span class="o">.</span><span class="n">size</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">int_func</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="p">[</span><span class="n">ind</span><span class="p">,</span> <span class="n">int_func</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">pointLocation</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">coord</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;int function calculated&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">int_func</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span> <span class="c1"># to zero-indexing</span>
+        <span class="n">int_func</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">int_func</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">active</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+        <span class="n">src</span> <span class="o">=</span> <span class="n">active</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">qvec</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="n">ind</span><span class="p">[</span><span class="n">src</span><span class="p">],:]</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">int_func</span><span class="p">[</span><span class="n">src</span><span class="p">,:]</span>
+    <span class="k">return</span> <span class="n">sparse</span><span class="o">.</span><span class="n">csc_matrix</span><span class="p">(</span><span class="n">qvec</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="gen_sources_fl">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.math.gen_sources_fl.html#nirfasterff.math.gen_sources_fl">[docs]</a>
+<span class="k">def</span> <span class="nf">gen_sources_fl</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">phix</span><span class="p">,</span> <span class="n">frequency</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">GPU</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates FEM sources vector for re-emission.</span>
+<span class="sd">    </span>
+<span class="sd">    If calculation fails on GPU (if chosen), it will generate a warning and automatically switch to CPU.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mesh : nirfasterff.base.fluormesh</span>
+<span class="sd">        mesh used to calcualte the source vectors. Source information is also defined here.</span>
+<span class="sd">    phix : double NumPy array</span>
+<span class="sd">        excitation fluence calculated at each node for each source. Size (NNodes, NSources)</span>
+<span class="sd">    frequency : double, optional</span>
+<span class="sd">        modulation frequency, in Hz. The default is 0..</span>
+<span class="sd">    solver : str, optional</span>
+<span class="sd">        Choose between &#39;CPU&#39; or &#39;GPU&#39; solver (case insensitive). Automatically determined (GPU prioritized) if not specified</span>
+<span class="sd">    GPU : int, optional</span>
+<span class="sd">        GPU selection. -1 for automatic, 0, 1, ... for manual selection on multi-GPU systems. The default is -1.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    RuntimeError</span>
+<span class="sd">        if both CUDA and CPU versions fail.</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        if &#39;solver&#39; is not &#39;CPU&#39; or &#39;GPU&#39;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    qvec : double or complex double NumPy array</span>
+<span class="sd">        calculated fluence emission source vectors. Size (NNodes, NSources)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">link</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="p">)</span>
+    <span class="n">active</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">link</span><span class="p">[</span><span class="n">link</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">nsource</span> <span class="o">=</span> <span class="n">active</span><span class="o">.</span><span class="n">size</span>
+    
+    <span class="n">omega</span> <span class="o">=</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">frequency</span>
+    <span class="n">gamma</span> <span class="o">=</span> <span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">eta</span> <span class="o">*</span> <span class="n">mesh</span><span class="o">.</span><span class="n">muaf</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">+</span> <span class="p">(</span><span class="n">omega</span> <span class="o">*</span> <span class="n">mesh</span><span class="o">.</span><span class="n">tau</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">frequency</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">beta</span> <span class="o">=</span> <span class="n">gamma</span>
+        <span class="n">beta</span><span class="p">[</span><span class="n">beta</span><span class="o">==</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e-20</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">beta</span> <span class="o">=</span> <span class="n">gamma</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">omega</span> <span class="o">*</span> <span class="n">mesh</span><span class="o">.</span><span class="n">tau</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span><span class="p">))</span>
+        <span class="n">beta</span><span class="p">[</span><span class="n">beta</span><span class="o">==</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e-20</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="mf">1e-20</span>
+        
+    <span class="k">if</span> <span class="n">solver</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">==</span><span class="s1">&#39;gpu&#39;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">utils</span><span class="o">.</span><span class="n">isCUDA</span><span class="p">():</span>
+        <span class="n">solver</span> <span class="o">=</span> <span class="s1">&#39;CPU&#39;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: No capable CUDA device found. using CPU instead&#39;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">solver</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">==</span><span class="s1">&#39;gpu&#39;</span> <span class="ow">and</span> <span class="n">utils</span><span class="o">.</span><span class="n">isCUDA</span><span class="p">():</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">qvec</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">cudalib</span><span class="o">.</span><span class="n">gen_source_fl</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">elements</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">beta</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">nsource</span><span class="p">)</span><span class="o">*</span><span class="n">phix</span><span class="p">,</span> <span class="n">GPU</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: GPU solver failed. Rolling back to CPU solver&#39;</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">qvec</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">cpulib</span><span class="o">.</span><span class="n">gen_source_fl</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">elements</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">beta</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">nsource</span><span class="p">)</span><span class="o">*</span><span class="n">phix</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;gen_source_fl failed&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">solver</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">==</span><span class="s1">&#39;cpu&#39;</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">qvec</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">cpulib</span><span class="o">.</span><span class="n">gen_source_fl</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">elements</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">beta</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">nsource</span><span class="p">)</span><span class="o">*</span><span class="n">phix</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;gen_source_fl failed&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Solver should be &#39;&#39;GPU&#39;&#39; or &#39;&#39;CPU&#39;&#39;&#39;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">frequency</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">qvec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">qvec</span><span class="p">))</span> <span class="c1"># should already be real, but just to be safe</span>
+    
+    <span class="k">return</span> <span class="n">qvec</span></div>
+
+
+<div class="viewcode-block" id="get_boundary_data">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.math.get_boundary_data.html#nirfasterff.math.get_boundary_data">[docs]</a>
+<span class="k">def</span> <span class="nf">get_boundary_data</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">phi</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates boundary data given the field data in mesh</span>
+<span class="sd">    </span>
+<span class="sd">    The field data can be any of the supported type: fluence, TPSF, or moments</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mesh : nirfasterff mesh type</span>
+<span class="sd">        the mesh whose boundary and detectors are used for the calculation.</span>
+<span class="sd">    phi : double or complex double NumPy array</span>
+<span class="sd">        field data as calculated by one of the &#39;get_field_*&#39; solvers. Size (NNodes, NSources)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    data : double or complex double NumPy array</span>
+<span class="sd">        measured boundary data at each channel. Size (NChannels,).</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+   
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">meas</span><span class="o">.</span><span class="n">int_func</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Calculating missing detectors integration functions.&#39;</span><span class="p">)</span>
+        <span class="n">ind</span><span class="p">,</span> <span class="n">int_func</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">pointLocation</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">meas</span><span class="o">.</span><span class="n">coord</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">meas</span><span class="o">.</span><span class="n">int_func</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">int_func</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">meas</span><span class="o">.</span><span class="n">int_func</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]</span>
+    
+    <span class="n">link</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">link</span><span class="p">)</span>
+    <span class="n">link</span><span class="p">[:,:</span><span class="mi">2</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>  <span class="c1"># to zero-indexing</span>
+    <span class="n">active_src</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">link</span><span class="p">[</span><span class="n">link</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="n">bnd</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">bndvtx</span><span class="o">&gt;</span><span class="mi">0</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">link</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">phi</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">link</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="n">link</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+            <span class="k">continue</span>
+        <span class="n">tri</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="n">ind</span><span class="p">[</span><span class="n">link</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">]],</span> <span class="p">:]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">int_func_tmp</span> <span class="o">=</span> <span class="n">int_func</span><span class="p">[</span><span class="n">link</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">],:]</span> <span class="o">*</span> <span class="n">bnd</span><span class="p">[</span><span class="n">tri</span><span class="p">]</span>
+        <span class="n">int_func_tmp</span> <span class="o">/=</span> <span class="n">int_func_tmp</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">int_func_tmp</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">phi</span><span class="p">[</span><span class="n">tri</span><span class="p">,</span> <span class="n">active_src</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">link</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">])])</span>
+    
+    <span class="k">return</span> <span class="n">data</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Jiaming Cao, MILAB@UoB.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

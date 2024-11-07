@@ -1,0 +1,844 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nirfasterff.utils &mdash; NIRFASTerFF 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            NIRFASTerFF
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/nirfasterff.html">nirfasterff</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">NIRFASTerFF</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">nirfasterff.utils</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for nirfasterff.utils</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Utility functions and auxiliary classes frequently used in the package.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">sparse</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">spatial</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">integrate</span>
+<span class="kn">from</span> <span class="nn">nirfasterff.lib</span> <span class="kn">import</span> <span class="n">nirfasterff_cpu</span> <span class="k">as</span> <span class="n">cpulib</span>
+<span class="k">if</span> <span class="n">cpulib</span><span class="o">.</span><span class="n">isCUDA</span><span class="p">():</span>
+    <span class="kn">from</span> <span class="nn">nirfasterff.lib</span> <span class="kn">import</span> <span class="n">nirfasterff_cuda</span> <span class="k">as</span> <span class="n">cudalib</span>
+
+<div class="viewcode-block" id="SolverOptions">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.SolverOptions.html#nirfasterff.utils.SolverOptions">[docs]</a>
+<span class="k">class</span> <span class="nc">SolverOptions</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameters used by the FEM solvers, Equivalent to &#39;solver_options&#39; in the Matlab version</span>
+<span class="sd">    </span>
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    max_iter: int</span>
+<span class="sd">        maximum number of iterations allowed. Default: 1000</span>
+<span class="sd">    AbsoluteTolerance: double</span>
+<span class="sd">        Absolute tolerance for convergence. Default: 1e-12</span>
+<span class="sd">    RelativeTolerance: double</span>
+<span class="sd">        Relative (to the initial residual norm) tolerance for convergence. Default: 1e-12</span>
+<span class="sd">    divergence: double</span>
+<span class="sd">        Stop the solver when residual norm greater than this value. Default: 1e8</span>
+<span class="sd">    GPU: int</span>
+<span class="sd">        GPU selection. -1 for automatic, 0, 1, ... for manual selection on multi-GPU systems. Default: -1</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="SolverOptions.__init__">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.SolverOptions.html#nirfasterff.utils.SolverOptions.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_iter</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">AbsoluteTolerance</span> <span class="o">=</span> <span class="mf">1e-12</span><span class="p">,</span> <span class="n">RelativeTolerance</span> <span class="o">=</span> <span class="mf">1e-12</span><span class="p">,</span> <span class="n">divergence</span> <span class="o">=</span> <span class="mf">1e8</span><span class="p">,</span> <span class="n">GPU</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span> <span class="o">=</span> <span class="n">max_iter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AbsoluteTolerance</span> <span class="o">=</span> <span class="n">AbsoluteTolerance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">RelativeTolerance</span> <span class="o">=</span> <span class="n">RelativeTolerance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">divergence</span> <span class="o">=</span> <span class="n">divergence</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">GPU</span> <span class="o">=</span> <span class="n">GPU</span></div>
+</div>
+
+        
+<div class="viewcode-block" id="ConvergenceInfo">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.ConvergenceInfo.html#nirfasterff.utils.ConvergenceInfo">[docs]</a>
+<span class="k">class</span> <span class="nc">ConvergenceInfo</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convergence information of the FEM solvers. Only used internally as a return type of functions nirfasterff.math.get_field_*</span>
+<span class="sd">    </span>
+<span class="sd">    Constructed using the output of the internal C++ functions</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">        isConverged: bool array</span>
+<span class="sd">            if solver converged to relative tolerance, for each rhs</span>
+<span class="sd">        isConvergedToAbsoluteTolerance: bool array</span>
+<span class="sd">            if solver converged to absolute tolerance, for each rhs</span>
+<span class="sd">        iteration: int array</span>
+<span class="sd">            iterations taken to converge, for each rhs</span>
+<span class="sd">        residual: double array</span>
+<span class="sd">            final residual, for each rhs</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ConvergenceInfo.__init__">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.ConvergenceInfo.html#nirfasterff.utils.ConvergenceInfo.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">isConverged</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">isConvergedToAbsoluteTolerance</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iteration</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">residual</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">info</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">info</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">isConverged</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">isConverged</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">isConvergedToAbsoluteTolerance</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">isConvergedToAbsoluteTolerance</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">iteration</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">iteration</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">residual</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">residual</span><span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="MeshingParams">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.MeshingParams.html#nirfasterff.utils.MeshingParams">[docs]</a>
+<span class="k">class</span> <span class="nc">MeshingParams</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameters to be used by the CGAL mesher. Note: they should all be double</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">        xPixelSpacing: double</span>
+<span class="sd">            voxel distance in x direction. Default: 1.0</span>
+<span class="sd">        yPixelSpacing: double</span>
+<span class="sd">            voxel distance in y direction. Default: 1.0</span>
+<span class="sd">        SliceThickness: double</span>
+<span class="sd">            voxel distance in z direction. Default: 1.0</span>
+<span class="sd">        facet_angle:double</span>
+<span class="sd">            lower bound for the angle (in degrees) of surface facets. Default: 25.0</span>
+<span class="sd">        facet_size:double</span>
+<span class="sd">            upper bound for the radii of surface Delaunay balls circumscribing the facets. Default: 3.0</span>
+<span class="sd">        facet_distance:double</span>
+<span class="sd">            upper bound for the distance between the circumcenter of a surface facet and the center of its surface Delaunay ball. Default: 2.0</span>
+<span class="sd">        cell_radius_edge:double</span>
+<span class="sd">            upper bound for the ratio between the circumradius of a mesh tetrahedron and its shortest edge. Default: 3.0</span>
+<span class="sd">        general_cell_size:double</span>
+<span class="sd">            upper bound on the circumradii of the mesh tetrahedra, when no region-specific parameters (see below) are provided. Default: 3.0</span>
+<span class="sd">        subdomain: double Numpy array</span>
+<span class="sd">            Specify cell size for each region, in format::</span>
+<span class="sd">                </span>
+<span class="sd">                [region_label1, cell_size1]</span>
+<span class="sd">                [region_label2, cell_size2]</span>
+<span class="sd">                    ...</span>
+<span class="sd">                                                </span>
+<span class="sd">            If a region is not specified, value in &quot;general_cell_size&quot; will be used.  Default: np.array([0., 0.])</span>
+<span class="sd">        lloyd_smooth: bool</span>
+<span class="sd">            Switch for Lloyd smoother before local optimization. This can take up to 120s (hard limit set) but improves mesh quality. Default: True</span>
+<span class="sd">        offset: double Numpy array</span>
+<span class="sd">            offset value to be added to the nodes after meshing. Size (3,). Defualt: None</span>
+<span class="sd">    </span>
+<span class="sd">    Notes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Refer to CGAL documentation for details of the meshing algorithm as well as its parameters</span>
+<span class="sd">    </span>
+<span class="sd">    https://doc.cgal.org/latest/Mesh_3/index.html#Chapter_3D_Mesh_Generation</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="MeshingParams.__init__">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.MeshingParams.html#nirfasterff.utils.MeshingParams.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xPixelSpacing</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">yPixelSpacing</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">SliceThickness</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
+                             <span class="n">facet_angle</span> <span class="o">=</span> <span class="mf">25.</span><span class="p">,</span> <span class="n">facet_size</span> <span class="o">=</span> <span class="mf">3.</span><span class="p">,</span> <span class="n">facet_distance</span> <span class="o">=</span> <span class="mf">2.</span><span class="p">,</span>
+                             <span class="n">cell_radius_edge</span> <span class="o">=</span> <span class="mf">3.</span><span class="p">,</span> <span class="n">general_cell_size</span> <span class="o">=</span> <span class="mf">3.</span><span class="p">,</span> <span class="n">subdomain</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">]),</span>
+                             <span class="n">lloyd_smooth</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xPixelSpacing</span> <span class="o">=</span> <span class="n">xPixelSpacing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">yPixelSpacing</span> <span class="o">=</span> <span class="n">yPixelSpacing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SliceThickness</span> <span class="o">=</span> <span class="n">SliceThickness</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">facet_angle</span> <span class="o">=</span> <span class="n">facet_angle</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">facet_size</span> <span class="o">=</span> <span class="n">facet_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">facet_distance</span> <span class="o">=</span> <span class="n">facet_distance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cell_radius_edge</span> <span class="o">=</span> <span class="n">cell_radius_edge</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">general_cell_size</span> <span class="o">=</span> <span class="n">general_cell_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subdomain</span> <span class="o">=</span> <span class="n">subdomain</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">smooth</span> <span class="o">=</span> <span class="n">lloyd_smooth</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">=</span> <span class="n">offset</span></div>
+</div>
+
+
+<div class="viewcode-block" id="isCUDA">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.isCUDA.html#nirfasterff.utils.isCUDA">[docs]</a>
+<span class="k">def</span> <span class="nf">isCUDA</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Checks if system has a CUDA device with compute capability &gt;=5.2</span>
+<span class="sd">    </span>
+<span class="sd">    On a Mac machine, it automatically returns False without checking</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bool</span>
+<span class="sd">        True if a CUDA device with compute capability &gt;=5.2 exists, False if not.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">cpulib</span><span class="o">.</span><span class="n">isCUDA</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="get_solver">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.get_solver.html#nirfasterff.utils.get_solver">[docs]</a>
+<span class="k">def</span> <span class="nf">get_solver</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the default solver.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        If isCUDA is true, returns &#39;GPU&#39;, otherwise &#39;CPU&#39;.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">isCUDA</span><span class="p">():</span>
+        <span class="n">solver</span> <span class="o">=</span> <span class="s1">&#39;GPU&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">solver</span> <span class="o">=</span> <span class="s1">&#39;CPU&#39;</span>     
+    <span class="k">return</span> <span class="n">solver</span>            </div>
+
+
+<div class="viewcode-block" id="pointLocation">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.pointLocation.html#nirfasterff.utils.pointLocation">[docs]</a>
+<span class="k">def</span> <span class="nf">pointLocation</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">pointlist</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Similar to Matlab&#39;s pointLocation function, queries which elements in mesh the points belong to, and also calculate the barycentric coordinates.</span>
+<span class="sd">    </span>
+<span class="sd">    This is a wrapper of the C++ function pointLocation, which implememnts an AABB tree based on Darren Engwirda&#39;s findtria package</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mesh : NIRFASTer mesh</span>
+<span class="sd">        Can be any of the NIRFASTer mesh types (stnd, fluor, dcs). 2D or 3D.</span>
+<span class="sd">    pointlist : NumPy array</span>
+<span class="sd">        A list of points to query. Shape (N, dim), where N is number of points.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ind : double NumPy array</span>
+<span class="sd">        i-th queried point is in element `ind[i`] of mesh (zero-based). If not in mesh, `ind[i]=-1`. Size: (N,).</span>
+<span class="sd">    int_func : double NumPy array</span>
+<span class="sd">        i-th row is the barycentric coordinates of i-th queried point. If not in mesh, corresponding row is all zero. Size: (N, dim+1).</span>
+<span class="sd">        </span>
+<span class="sd">    References</span>
+<span class="sd">    -------</span>
+<span class="sd">    https://github.com/dengwirda/find-tria</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">ind</span><span class="p">,</span> <span class="n">int_func</span> <span class="o">=</span> <span class="n">cpulib</span><span class="o">.</span><span class="n">pointLocation</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">elements</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">pointlist</span><span class="o">*</span><span class="mf">1.0</span><span class="p">))</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: pointLocation failed. Returning zero results&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">ind</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">int_func</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">return</span> <span class="n">ind</span><span class="p">,</span> <span class="n">int_func</span></div>
+
+
+<div class="viewcode-block" id="check_element_orientation_2d">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.check_element_orientation_2d.html#nirfasterff.utils.check_element_orientation_2d">[docs]</a>
+<span class="k">def</span> <span class="nf">check_element_orientation_2d</span><span class="p">(</span><span class="n">ele</span><span class="p">,</span> <span class="n">nodes</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Make sure the 2D triangular elements are oriented counter clock wise.</span>
+<span class="sd">    </span>
+<span class="sd">    This is a direct translation from the Matlab version.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ele : NumPy array</span>
+<span class="sd">        Elements in a 2D mesh. One-based. Size: (NNodes, 3).</span>
+<span class="sd">    nodes : NumPy array</span>
+<span class="sd">        Node locations in a 2D mesh. Size: (NNodes, 2).</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        If ele does not have three rows, i.e. not a 2D triangular mesh.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ele : NumPy array</span>
+<span class="sd">        Re-oriented element list.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">ele</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;check_element_orientation_2d expects a 2D triangular mesh!&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">nodes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">nodes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">nodes</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nodes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+    <span class="n">v1</span> <span class="o">=</span> <span class="n">nodes</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">ele</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">),:]</span> <span class="o">-</span> <span class="n">nodes</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">ele</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">),:]</span>
+    <span class="n">v2</span> <span class="o">=</span> <span class="n">nodes</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">ele</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">),:]</span> <span class="o">-</span> <span class="n">nodes</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">ele</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">),:]</span>
+    
+    <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">)</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">z</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span><span class="o">&lt;</span><span class="mi">0</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">idx</span><span class="p">):</span>
+        <span class="n">ele</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])]</span> <span class="o">=</span> <span class="n">ele</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])]</span>
+    <span class="k">return</span> <span class="n">ele</span></div>
+
+
+<div class="viewcode-block" id="pointLineDistance">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.pointLineDistance.html#nirfasterff.utils.pointLineDistance">[docs]</a>
+<span class="k">def</span> <span class="nf">pointLineDistance</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate the distance between a point and a line (defined by two points), and find the projection point</span>
+<span class="sd">    </span>
+<span class="sd">    This is a direct translation  from the Matlab version</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    A : NumPy array</span>
+<span class="sd">        first point on the line. Size (2,) or (3,)</span>
+<span class="sd">    B : NumPy array</span>
+<span class="sd">        second point on the line. Size (2,) or (3,)</span>
+<span class="sd">    p : NumPy array</span>
+<span class="sd">        point of query. Size (2,) or (3,)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dist : double</span>
+<span class="sd">        point-line distance.</span>
+<span class="sd">    point : NumPy array</span>
+<span class="sd">        projection point on the line.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">p</span><span class="o">-</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="o">-</span><span class="n">A</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">B</span><span class="o">-</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="o">-</span><span class="n">A</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">t</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">elif</span> <span class="n">t</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="mi">1</span>
+    
+    <span class="n">point</span> <span class="o">=</span> <span class="n">A</span> <span class="o">+</span> <span class="p">(</span><span class="n">B</span><span class="o">-</span><span class="n">A</span><span class="p">)</span><span class="o">*</span><span class="n">t</span>
+    <span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">p</span> <span class="o">-</span> <span class="n">point</span><span class="p">)</span>     
+    <span class="k">return</span> <span class="n">dist</span><span class="p">,</span> <span class="n">point</span></div>
+
+
+<div class="viewcode-block" id="pointTriangleDistance">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.pointTriangleDistance.html#nirfasterff.utils.pointTriangleDistance">[docs]</a>
+<span class="k">def</span> <span class="nf">pointTriangleDistance</span><span class="p">(</span><span class="n">TRI</span><span class="p">,</span> <span class="n">P</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate the distance between a point and a triangle (defined by three points), and find the projection point</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    TRI : Numpy array</span>
+<span class="sd">        The three points (per row) defining the triangle. Size: (3,3)</span>
+<span class="sd">    P : Numpy array</span>
+<span class="sd">        point of query. Size (3,).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dist : double</span>
+<span class="sd">        point-triangle distance.</span>
+<span class="sd">    PP0 : NumPy array</span>
+<span class="sd">        projection point on the triangular face.</span>
+<span class="sd">        </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This is modified from Joshua Shaffer&#39;s code, available at: https://gist.github.com/joshuashaffer/99d58e4ccbd37ca5d96e</span>
+<span class="sd">    </span>
+<span class="sd">    which is based on Gwendolyn Fischer&#39;s Matlab code: https://uk.mathworks.com/matlabcentral/fileexchange/22857-distance-between-a-point-and-a-triangle-in-3d</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">B</span> <span class="o">=</span> <span class="n">TRI</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">E0</span> <span class="o">=</span> <span class="n">TRI</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">-</span> <span class="n">B</span>
+    <span class="c1"># E0 = E0/sqrt(sum(E0.^2)); %normalize vector</span>
+    <span class="n">E1</span> <span class="o">=</span> <span class="n">TRI</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span> <span class="o">-</span> <span class="n">B</span>
+    <span class="c1"># E1 = E1/sqrt(sum(E1.^2)); %normalize vector</span>
+    <span class="n">D</span> <span class="o">=</span> <span class="n">B</span> <span class="o">-</span> <span class="n">P</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">E0</span><span class="p">,</span> <span class="n">E0</span><span class="p">)</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">E0</span><span class="p">,</span> <span class="n">E1</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">E1</span><span class="p">,</span> <span class="n">E1</span><span class="p">)</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">E0</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>
+    <span class="n">e</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">E1</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>
+
+    <span class="c1">#print &quot;{0} {1} {2} &quot;.format(B,E1,E0)</span>
+    <span class="n">det</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="n">c</span> <span class="o">-</span> <span class="n">b</span> <span class="o">*</span> <span class="n">b</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">b</span> <span class="o">*</span> <span class="n">e</span> <span class="o">-</span> <span class="n">c</span> <span class="o">*</span> <span class="n">d</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">b</span> <span class="o">*</span> <span class="n">d</span> <span class="o">-</span> <span class="n">a</span> <span class="o">*</span> <span class="n">e</span>
+
+    <span class="c1"># Terible tree of conditionals to determine in which region of the diagram</span>
+    <span class="c1"># shown above the projection of the point into the triangle-plane lies.</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">s</span> <span class="o">+</span> <span class="n">t</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">det</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">s</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">:</span>
+                <span class="c1"># region4</span>
+                <span class="k">if</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">t</span> <span class="o">=</span> <span class="mf">0.0</span>
+                    <span class="k">if</span> <span class="o">-</span><span class="n">d</span> <span class="o">&gt;=</span> <span class="n">a</span><span class="p">:</span>
+                        <span class="n">s</span> <span class="o">=</span> <span class="mf">1.0</span>
+                        <span class="n">sqrdistance</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">d</span> <span class="o">+</span> <span class="n">f</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">s</span> <span class="o">=</span> <span class="o">-</span><span class="n">d</span> <span class="o">/</span> <span class="n">a</span>
+                        <span class="n">sqrdistance</span> <span class="o">=</span> <span class="n">d</span> <span class="o">*</span> <span class="n">s</span> <span class="o">+</span> <span class="n">f</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">s</span> <span class="o">=</span> <span class="mf">0.0</span>
+                    <span class="k">if</span> <span class="n">e</span> <span class="o">&gt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+                        <span class="n">t</span> <span class="o">=</span> <span class="mf">0.0</span>
+                        <span class="n">sqrdistance</span> <span class="o">=</span> <span class="n">f</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="o">-</span><span class="n">e</span> <span class="o">&gt;=</span> <span class="n">c</span><span class="p">:</span>
+                            <span class="n">t</span> <span class="o">=</span> <span class="mf">1.0</span>
+                            <span class="n">sqrdistance</span> <span class="o">=</span> <span class="n">c</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">e</span> <span class="o">+</span> <span class="n">f</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">t</span> <span class="o">=</span> <span class="o">-</span><span class="n">e</span> <span class="o">/</span> <span class="n">c</span>
+                            <span class="n">sqrdistance</span> <span class="o">=</span> <span class="n">e</span> <span class="o">*</span> <span class="n">t</span> <span class="o">+</span> <span class="n">f</span>
+
+                            <span class="c1"># of region 4</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># region 3</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">if</span> <span class="n">e</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="n">sqrdistance</span> <span class="o">=</span> <span class="n">f</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="o">-</span><span class="n">e</span> <span class="o">&gt;=</span> <span class="n">c</span><span class="p">:</span>
+                        <span class="n">t</span> <span class="o">=</span> <span class="mi">1</span>
+                        <span class="n">sqrdistance</span> <span class="o">=</span> <span class="n">c</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">e</span> <span class="o">+</span> <span class="n">f</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">t</span> <span class="o">=</span> <span class="o">-</span><span class="n">e</span> <span class="o">/</span> <span class="n">c</span>
+                        <span class="n">sqrdistance</span> <span class="o">=</span> <span class="n">e</span> <span class="o">*</span> <span class="n">t</span> <span class="o">+</span> <span class="n">f</span>
+                        <span class="c1"># of region 3</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># region 5</span>
+                <span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">if</span> <span class="n">d</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">s</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="n">sqrdistance</span> <span class="o">=</span> <span class="n">f</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="o">-</span><span class="n">d</span> <span class="o">&gt;=</span> <span class="n">a</span><span class="p">:</span>
+                        <span class="n">s</span> <span class="o">=</span> <span class="mi">1</span>
+                        <span class="n">sqrdistance</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">d</span> <span class="o">+</span> <span class="n">f</span><span class="p">;</span>  <span class="c1"># GF 20101013 fixed typo d*s -&gt;2*d</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">s</span> <span class="o">=</span> <span class="o">-</span><span class="n">d</span> <span class="o">/</span> <span class="n">a</span>
+                        <span class="n">sqrdistance</span> <span class="o">=</span> <span class="n">d</span> <span class="o">*</span> <span class="n">s</span> <span class="o">+</span> <span class="n">f</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># region 0</span>
+                <span class="n">invDet</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">det</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="n">s</span> <span class="o">*</span> <span class="n">invDet</span>
+                <span class="n">t</span> <span class="o">=</span> <span class="n">t</span> <span class="o">*</span> <span class="n">invDet</span>
+                <span class="n">sqrdistance</span> <span class="o">=</span> <span class="n">s</span> <span class="o">*</span> <span class="p">(</span><span class="n">a</span> <span class="o">*</span> <span class="n">s</span> <span class="o">+</span> <span class="n">b</span> <span class="o">*</span> <span class="n">t</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">d</span><span class="p">)</span> <span class="o">+</span> <span class="n">t</span> <span class="o">*</span> <span class="p">(</span><span class="n">b</span> <span class="o">*</span> <span class="n">s</span> <span class="o">+</span> <span class="n">c</span> <span class="o">*</span> <span class="n">t</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">e</span><span class="p">)</span> <span class="o">+</span> <span class="n">f</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">s</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="c1"># region 2</span>
+            <span class="n">tmp0</span> <span class="o">=</span> <span class="n">b</span> <span class="o">+</span> <span class="n">d</span>
+            <span class="n">tmp1</span> <span class="o">=</span> <span class="n">c</span> <span class="o">+</span> <span class="n">e</span>
+            <span class="k">if</span> <span class="n">tmp1</span> <span class="o">&gt;</span> <span class="n">tmp0</span><span class="p">:</span>  <span class="c1"># minimum on edge s+t=1</span>
+                <span class="n">numer</span> <span class="o">=</span> <span class="n">tmp1</span> <span class="o">-</span> <span class="n">tmp0</span>
+                <span class="n">denom</span> <span class="o">=</span> <span class="n">a</span> <span class="o">-</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">b</span> <span class="o">+</span> <span class="n">c</span>
+                <span class="k">if</span> <span class="n">numer</span> <span class="o">&gt;=</span> <span class="n">denom</span><span class="p">:</span>
+                    <span class="n">s</span> <span class="o">=</span> <span class="mf">1.0</span>
+                    <span class="n">t</span> <span class="o">=</span> <span class="mf">0.0</span>
+                    <span class="n">sqrdistance</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">d</span> <span class="o">+</span> <span class="n">f</span><span class="p">;</span>  <span class="c1"># GF 20101014 fixed typo 2*b -&gt; 2*d</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">s</span> <span class="o">=</span> <span class="n">numer</span> <span class="o">/</span> <span class="n">denom</span>
+                    <span class="n">t</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">s</span>
+                    <span class="n">sqrdistance</span> <span class="o">=</span> <span class="n">s</span> <span class="o">*</span> <span class="p">(</span><span class="n">a</span> <span class="o">*</span> <span class="n">s</span> <span class="o">+</span> <span class="n">b</span> <span class="o">*</span> <span class="n">t</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">d</span><span class="p">)</span> <span class="o">+</span> <span class="n">t</span> <span class="o">*</span> <span class="p">(</span><span class="n">b</span> <span class="o">*</span> <span class="n">s</span> <span class="o">+</span> <span class="n">c</span> <span class="o">*</span> <span class="n">t</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">e</span><span class="p">)</span> <span class="o">+</span> <span class="n">f</span>
+
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># minimum on edge s=0</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="mf">0.0</span>
+                <span class="k">if</span> <span class="n">tmp1</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+                    <span class="n">t</span> <span class="o">=</span> <span class="mi">1</span>
+                    <span class="n">sqrdistance</span> <span class="o">=</span> <span class="n">c</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">e</span> <span class="o">+</span> <span class="n">f</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">e</span> <span class="o">&gt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+                        <span class="n">t</span> <span class="o">=</span> <span class="mf">0.0</span>
+                        <span class="n">sqrdistance</span> <span class="o">=</span> <span class="n">f</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">t</span> <span class="o">=</span> <span class="o">-</span><span class="n">e</span> <span class="o">/</span> <span class="n">c</span>
+                        <span class="n">sqrdistance</span> <span class="o">=</span> <span class="n">e</span> <span class="o">*</span> <span class="n">t</span> <span class="o">+</span> <span class="n">f</span>
+                        <span class="c1"># of region 2</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">:</span>
+                <span class="c1"># region6</span>
+                <span class="n">tmp0</span> <span class="o">=</span> <span class="n">b</span> <span class="o">+</span> <span class="n">e</span>
+                <span class="n">tmp1</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="n">d</span>
+                <span class="k">if</span> <span class="n">tmp1</span> <span class="o">&gt;</span> <span class="n">tmp0</span><span class="p">:</span>
+                    <span class="n">numer</span> <span class="o">=</span> <span class="n">tmp1</span> <span class="o">-</span> <span class="n">tmp0</span>
+                    <span class="n">denom</span> <span class="o">=</span> <span class="n">a</span> <span class="o">-</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">b</span> <span class="o">+</span> <span class="n">c</span>
+                    <span class="k">if</span> <span class="n">numer</span> <span class="o">&gt;=</span> <span class="n">denom</span><span class="p">:</span>
+                        <span class="n">t</span> <span class="o">=</span> <span class="mf">1.0</span>
+                        <span class="n">s</span> <span class="o">=</span> <span class="mi">0</span>
+                        <span class="n">sqrdistance</span> <span class="o">=</span> <span class="n">c</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">e</span> <span class="o">+</span> <span class="n">f</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">t</span> <span class="o">=</span> <span class="n">numer</span> <span class="o">/</span> <span class="n">denom</span>
+                        <span class="n">s</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">t</span>
+                        <span class="n">sqrdistance</span> <span class="o">=</span> <span class="n">s</span> <span class="o">*</span> <span class="p">(</span><span class="n">a</span> <span class="o">*</span> <span class="n">s</span> <span class="o">+</span> <span class="n">b</span> <span class="o">*</span> <span class="n">t</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">d</span><span class="p">)</span> <span class="o">+</span> <span class="n">t</span> <span class="o">*</span> <span class="p">(</span><span class="n">b</span> <span class="o">*</span> <span class="n">s</span> <span class="o">+</span> <span class="n">c</span> <span class="o">*</span> <span class="n">t</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">e</span><span class="p">)</span> <span class="o">+</span> <span class="n">f</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">t</span> <span class="o">=</span> <span class="mf">0.0</span>
+                    <span class="k">if</span> <span class="n">tmp1</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+                        <span class="n">s</span> <span class="o">=</span> <span class="mi">1</span>
+                        <span class="n">sqrdistance</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">d</span> <span class="o">+</span> <span class="n">f</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">d</span> <span class="o">&gt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+                            <span class="n">s</span> <span class="o">=</span> <span class="mf">0.0</span>
+                            <span class="n">sqrdistance</span> <span class="o">=</span> <span class="n">f</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">s</span> <span class="o">=</span> <span class="o">-</span><span class="n">d</span> <span class="o">/</span> <span class="n">a</span>
+                            <span class="n">sqrdistance</span> <span class="o">=</span> <span class="n">d</span> <span class="o">*</span> <span class="n">s</span> <span class="o">+</span> <span class="n">f</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># region 1</span>
+                <span class="n">numer</span> <span class="o">=</span> <span class="n">c</span> <span class="o">+</span> <span class="n">e</span> <span class="o">-</span> <span class="n">b</span> <span class="o">-</span> <span class="n">d</span>
+                <span class="k">if</span> <span class="n">numer</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">s</span> <span class="o">=</span> <span class="mf">0.0</span>
+                    <span class="n">t</span> <span class="o">=</span> <span class="mf">1.0</span>
+                    <span class="n">sqrdistance</span> <span class="o">=</span> <span class="n">c</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">e</span> <span class="o">+</span> <span class="n">f</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">denom</span> <span class="o">=</span> <span class="n">a</span> <span class="o">-</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">b</span> <span class="o">+</span> <span class="n">c</span>
+                    <span class="k">if</span> <span class="n">numer</span> <span class="o">&gt;=</span> <span class="n">denom</span><span class="p">:</span>
+                        <span class="n">s</span> <span class="o">=</span> <span class="mf">1.0</span>
+                        <span class="n">t</span> <span class="o">=</span> <span class="mf">0.0</span>
+                        <span class="n">sqrdistance</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">d</span> <span class="o">+</span> <span class="n">f</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">s</span> <span class="o">=</span> <span class="n">numer</span> <span class="o">/</span> <span class="n">denom</span>
+                        <span class="n">t</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">s</span>
+                        <span class="n">sqrdistance</span> <span class="o">=</span> <span class="n">s</span> <span class="o">*</span> <span class="p">(</span><span class="n">a</span> <span class="o">*</span> <span class="n">s</span> <span class="o">+</span> <span class="n">b</span> <span class="o">*</span> <span class="n">t</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">d</span><span class="p">)</span> <span class="o">+</span> <span class="n">t</span> <span class="o">*</span> <span class="p">(</span><span class="n">b</span> <span class="o">*</span> <span class="n">s</span> <span class="o">+</span> <span class="n">c</span> <span class="o">*</span> <span class="n">t</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">e</span><span class="p">)</span> <span class="o">+</span> <span class="n">f</span>
+
+    <span class="c1"># account for numerical round-off error</span>
+    <span class="k">if</span> <span class="n">sqrdistance</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">sqrdistance</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sqrdistance</span><span class="p">)</span>
+
+    <span class="n">PP0</span> <span class="o">=</span> <span class="n">B</span> <span class="o">+</span> <span class="n">s</span> <span class="o">*</span> <span class="n">E0</span> <span class="o">+</span> <span class="n">t</span> <span class="o">*</span> <span class="n">E1</span>
+    <span class="k">return</span> <span class="n">dist</span><span class="p">,</span> <span class="n">PP0</span></div>
+
+
+<div class="viewcode-block" id="gen_intmat_impl">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.gen_intmat_impl.html#nirfasterff.utils.gen_intmat_impl">[docs]</a>
+<span class="k">def</span> <span class="nf">gen_intmat_impl</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">xgrid</span><span class="p">,</span> <span class="n">ygrid</span><span class="p">,</span> <span class="n">zgrid</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    YOU SHOULD NOT USE THIS FUNCTION DIRECTLY. USE MESH.GEN_INTMAT INSTEAD.</span>
+<span class="sd">    </span>
+<span class="sd">    Heart of the gen_intmat function, which calculates the necessary information for converting between mesh and grid space</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mesh : nirfasterff.base.stndmesh or nirfasterff.base.fluormesh</span>
+<span class="sd">        The original mesh with with FEM data is calculated.</span>
+<span class="sd">    xgrid : float64 NumPy 1-D array</span>
+<span class="sd">        x grid in mm. Must be regular.</span>
+<span class="sd">    ygrid : float64 NumPy 1-D array</span>
+<span class="sd">        y grid in mm. Must be regular.</span>
+<span class="sd">    zgrid : float64 NumPy 1-D array, or [] if 2D mesh</span>
+<span class="sd">        z grid in mm. Must be regular.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    gridinmesh: int32 NumPy array</span>
+<span class="sd">        Col 0: indices of grid points that are in the mesh; Col 1: indeces of the elements the grid point is in. Flattened in &#39;F&#39; order, one-based.</span>
+<span class="sd">    meshingrid: int32 NumPy array</span>
+<span class="sd">        Indices of mesh nodes that are in the grid. One-based.</span>
+<span class="sd">    int_mat_mesh2grid : CSC sparse matrix, float64</span>
+<span class="sd">        Sparse matrix converting data from mesh space to grid space. Size (NGrid, NNodes).</span>
+<span class="sd">    int_mat_mesh2grid : CSC sparse matrix, float64</span>
+<span class="sd">        Sparse matrix converting data from grid space to mesh space. Size (NNodes, NGrid).</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">zgrid</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">xgrid</span><span class="p">,</span> <span class="n">ygrid</span><span class="p">)</span>
+        <span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">X</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">),</span> <span class="n">Y</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">)]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">xgrid</span><span class="p">,</span> <span class="n">ygrid</span><span class="p">,</span> <span class="n">zgrid</span><span class="p">)</span>
+        <span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">X</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">),</span> <span class="n">Y</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">),</span> <span class="n">Z</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">)]</span>
+        
+    <span class="n">ind</span><span class="p">,</span> <span class="n">int_func</span> <span class="o">=</span> <span class="n">cpulib</span><span class="o">.</span><span class="n">pointLocation</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">elements</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">coords</span><span class="o">*</span><span class="mf">1.0</span><span class="p">))</span>
+    <span class="n">gridinmesh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">ind</span><span class="o">&gt;-</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># This is zero-based</span>
+    <span class="n">int_func_inside</span> <span class="o">=</span> <span class="n">int_func</span><span class="p">[</span><span class="n">gridinmesh</span><span class="p">,</span> <span class="p">:]</span>
+
+    <span class="n">nodes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="n">ind</span><span class="p">[</span><span class="n">gridinmesh</span><span class="p">],:]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">int_mat_mesh2grid</span> <span class="o">=</span> <span class="n">sparse</span><span class="o">.</span><span class="n">csc_matrix</span><span class="p">((</span><span class="n">int_func_inside</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">),</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">gridinmesh</span><span class="p">,</span> <span class="n">int_func</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">nodes</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">))),</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">ind</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    
+    <span class="c1"># Now calculate the transformation from grid to mesh</span>
+    <span class="c1"># We can cheat a little bit because of the regular grid: we can triangularize one voxel and replicate</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">zgrid</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">xgrid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">xgrid</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ygrid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">ygrid</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">zgrid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">zgrid</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">xgrid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">xgrid</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ygrid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">ygrid</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+        
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">zgrid</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">xgrid</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ygrid</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">zgrid</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+        <span class="n">nodes0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">],</span> 
+                           <span class="p">[</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="mi">0</span><span class="p">],</span> 
+                           <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">res</span><span class="p">[</span><span class="mi">2</span><span class="p">]],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">res</span><span class="p">[</span><span class="mi">2</span><span class="p">]],</span> 
+                           <span class="p">[</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="mi">2</span><span class="p">]],</span> <span class="p">[</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">res</span><span class="p">[</span><span class="mi">2</span><span class="p">]]])</span>
+        <span class="c1"># hard-coded element list</span>
+        <span class="n">ele0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>
+                         <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>
+                         <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span>
+                         <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span>
+                         <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span>
+                         <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">4</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+        <span class="c1"># Calculate integration function within the small cube</span>
+        <span class="n">loweridx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">((</span><span class="n">mesh</span><span class="o">.</span><span class="n">nodes</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">/</span> <span class="n">res</span><span class="p">)</span>
+        <span class="n">pos_in_cube</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">nodes</span> <span class="o">-</span> <span class="p">(</span><span class="n">loweridx</span> <span class="o">*</span> <span class="n">res</span> <span class="o">+</span> <span class="n">start</span><span class="p">)</span>
+        <span class="n">ind0</span><span class="p">,</span> <span class="n">int_func0</span> <span class="o">=</span> <span class="n">cpulib</span><span class="o">.</span><span class="n">pointLocation</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">ele0</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="mf">1.0</span><span class="o">*</span><span class="n">nodes0</span><span class="p">,</span> <span class="n">pos_in_cube</span><span class="p">)</span>
+        <span class="c1"># Convert back to the node numbering of the full grid</span>
+        <span class="n">raw_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">mesh</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">4</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">cube_coord</span> <span class="o">=</span> <span class="n">nodes0</span> <span class="o">+</span> <span class="p">(</span><span class="n">loweridx</span><span class="p">[</span><span class="n">i</span><span class="p">,:]</span> <span class="o">*</span> <span class="n">res</span> <span class="o">+</span> <span class="n">start</span><span class="p">)</span>
+            <span class="n">tet_vtx</span> <span class="o">=</span> <span class="n">cube_coord</span><span class="p">[</span><span class="n">ele0</span><span class="p">[</span><span class="n">ind0</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="p">:],</span> <span class="p">:]</span>
+            <span class="n">rel_idx</span> <span class="o">=</span> <span class="p">(</span><span class="n">tet_vtx</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">/</span> <span class="n">res</span>
+            <span class="n">raw_idx</span><span class="p">[</span><span class="n">i</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">rel_idx</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">xgrid</span><span class="p">)</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">ygrid</span><span class="p">)</span> <span class="o">+</span> <span class="n">rel_idx</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">xgrid</span><span class="p">)</span> <span class="o">+</span> <span class="n">rel_idx</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># zero-based</span>
+        
+        <span class="n">outvec</span> <span class="o">=</span> <span class="p">(</span><span class="n">loweridx</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">loweridx</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">loweridx</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">meshingrid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="o">~</span><span class="n">outvec</span><span class="p">)</span>
+        <span class="c1"># if any of the queried nodes was not asigned a value in the previous step,</span>
+        <span class="c1"># treat it as an outside node and extrapolate. Otherwise the boundary elements will have smaller values than they should</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">raw_idx</span><span class="p">[</span><span class="n">meshingrid</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">tmp2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">gridinmesh</span><span class="p">)</span>
+        <span class="n">outside</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">outvec</span><span class="p">),</span> <span class="n">meshingrid</span><span class="p">[</span><span class="n">tmp2</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">&lt;</span><span class="n">tmp2</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]]]</span>
+        <span class="n">meshingrid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">meshingrid</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">outside</span><span class="p">)))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">xgrid</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ygrid</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+        <span class="n">nodes0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> 
+                           <span class="p">[</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">]]])</span>
+        <span class="c1"># hard-coded element list</span>
+        <span class="n">ele0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                         <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+        <span class="c1"># Calculate integration function within the small cube</span>
+        <span class="n">loweridx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">((</span><span class="n">mesh</span><span class="o">.</span><span class="n">nodes</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">/</span> <span class="n">res</span><span class="p">)</span>
+        <span class="n">pos_in_cube</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">nodes</span> <span class="o">-</span> <span class="p">(</span><span class="n">loweridx</span> <span class="o">*</span> <span class="n">res</span> <span class="o">+</span> <span class="n">start</span><span class="p">)</span>
+        <span class="n">ind0</span><span class="p">,</span> <span class="n">int_func0</span> <span class="o">=</span> <span class="n">cpulib</span><span class="o">.</span><span class="n">pointLocation</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">ele0</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="mf">1.0</span><span class="o">*</span><span class="n">nodes0</span><span class="p">,</span> <span class="n">pos_in_cube</span><span class="p">)</span>
+        <span class="c1"># Convert back to the node numbering of the full grid</span>
+        <span class="n">raw_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">mesh</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">3</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">cube_coord</span> <span class="o">=</span> <span class="n">nodes0</span> <span class="o">+</span> <span class="p">(</span><span class="n">loweridx</span><span class="p">[</span><span class="n">i</span><span class="p">,:]</span> <span class="o">*</span> <span class="n">res</span> <span class="o">+</span> <span class="n">start</span><span class="p">)</span>
+            <span class="n">tet_vtx</span> <span class="o">=</span> <span class="n">cube_coord</span><span class="p">[</span><span class="n">ele0</span><span class="p">[</span><span class="n">ind0</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="p">:],</span> <span class="p">:]</span>
+            <span class="n">rel_idx</span> <span class="o">=</span> <span class="p">(</span><span class="n">tet_vtx</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">/</span> <span class="n">res</span>
+            <span class="n">raw_idx</span><span class="p">[</span><span class="n">i</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">rel_idx</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">ygrid</span><span class="p">)</span> <span class="o">+</span> <span class="n">rel_idx</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># zero-based</span>
+        
+        <span class="n">outvec</span> <span class="o">=</span> <span class="p">(</span><span class="n">loweridx</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">loweridx</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">meshingrid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="o">~</span><span class="n">outvec</span><span class="p">)</span>
+        <span class="c1"># if any of the queried nodes was not asigned a value in the previous step,</span>
+        <span class="c1"># treat it as an outside node and extrapolate. Otherwise the boundary elements will have smaller values than they should</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">raw_idx</span><span class="p">[</span><span class="n">meshingrid</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">tmp2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">gridinmesh</span><span class="p">)</span>
+        <span class="n">outside</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">outvec</span><span class="p">),</span> <span class="n">meshingrid</span><span class="p">[</span><span class="n">tmp2</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">&lt;</span><span class="n">tmp2</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]]]</span>
+        <span class="n">meshingrid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">meshingrid</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">outside</span><span class="p">)))</span>
+    
+    <span class="n">gridTree</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">KDTree</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="n">gridinmesh</span><span class="p">,</span> <span class="p">:])</span>
+    <span class="n">_</span><span class="p">,</span><span class="n">nn</span> <span class="o">=</span> <span class="n">gridTree</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">outside</span><span class="p">,:])</span>
+    <span class="n">int_func_inside</span> <span class="o">=</span> <span class="n">int_func0</span><span class="p">[</span><span class="n">meshingrid</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">nodes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">(</span><span class="n">raw_idx</span><span class="p">[</span><span class="n">meshingrid</span><span class="p">,:])</span>
+    <span class="n">int_mat_grid2mesh</span> <span class="o">=</span> <span class="n">sparse</span><span class="o">.</span><span class="n">csc_matrix</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="n">int_func_inside</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">size</span><span class="p">)],</span> 
+                                 <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">meshingrid</span><span class="p">,</span> <span class="n">int_func</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">outside</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="n">nodes</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">),</span> <span class="n">gridinmesh</span><span class="p">[</span><span class="n">nn</span><span class="p">]])),</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">ind0</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">coords</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">gridinmesh</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">ind</span><span class="p">[</span><span class="n">gridinmesh</span><span class="p">]],</span> <span class="n">meshingrid</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">int_mat_mesh2grid</span><span class="p">,</span> <span class="n">int_mat_grid2mesh</span> <span class="c1"># convert to one-based</span></div>
+
+    
+
+<div class="viewcode-block" id="compress_coo">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.compress_coo.html#nirfasterff.utils.compress_coo">[docs]</a>
+<span class="k">def</span> <span class="nf">compress_coo</span><span class="p">(</span><span class="n">coo_idx</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert COO indices to compressed. </span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    coo_idx : int NumPy array</span>
+<span class="sd">        Input indices in COO format, zero-based.</span>
+<span class="sd">    N : int</span>
+<span class="sd">        Number of rows in the sparse matrix.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    int NumPy array</span>
+<span class="sd">        Output indices in compressed format, zero-based. Size (N+1,)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cnt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">coo_idx</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+        <span class="n">cnt</span><span class="p">[</span><span class="n">coo_idx</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">cnt</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="uncompress_coo">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.uncompress_coo.html#nirfasterff.utils.uncompress_coo">[docs]</a>
+<span class="k">def</span> <span class="nf">uncompress_coo</span><span class="p">(</span><span class="n">compressed_idx</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert compressed indices to COO.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    compressed_idx : int NumPy array</span>
+<span class="sd">        Input indices in compressed format, zero-based.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    coo_idx : int NumPy array</span>
+<span class="sd">        Output indices in COO format, zero-based.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">coo_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">compressed_idx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">compressed_idx</span><span class="o">.</span><span class="n">size</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">compressed_idx</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">compressed_idx</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="n">coo_idx</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
+    <span class="k">return</span> <span class="n">coo_idx</span></div>
+
+
+
+<div class="viewcode-block" id="boundary_attenuation">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.boundary_attenuation.html#nirfasterff.utils.boundary_attenuation">[docs]</a>
+<span class="k">def</span> <span class="nf">boundary_attenuation</span><span class="p">(</span><span class="n">n_incidence</span><span class="p">,</span> <span class="n">n_transmission</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;robin&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate the boundary attenuation factor between two media. </span>
+<span class="sd">    </span>
+<span class="sd">    If vectors are used as inputs, they must have the same size and calculation is done for each pair</span>
+<span class="sd">    </span>
+<span class="sd">    If n_incidence is a vector but n_transmission is a scalar, code assumes n_transmission to be the same for each value in n_incidence</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_incidence : double Numpy vector or scalar</span>
+<span class="sd">        refractive index of the medium within the boundary, e.g. a tissue.</span>
+<span class="sd">    n_transmission : double Numpy vector or scalar, optional</span>
+<span class="sd">        refractive index of the medium outside of the boundary, e.g. air. The default is 1.0.</span>
+<span class="sd">    method : str, optional</span>
+<span class="sd">        boundary type, which can be,</span>
+<span class="sd">        </span>
+<span class="sd">        &#39;robin&#39;  - internal reflectance derived from Fresnel&#39;s law</span>
+<span class="sd">        </span>
+<span class="sd">        &#39;approx&#39; - Groenhuis internal reflectance approximation :math:`(1.440n^{-2} + 0.710n^{-1} + 0.668 + 0.00636n)`</span>
+<span class="sd">        </span>
+<span class="sd">        &#39;exact&#39;  - exact internal reflectance (integrals of polarised reflectances, etc.) </span>
+<span class="sd">        </span>
+<span class="sd">        The default is &#39;robin&#39;.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        if n_incidence and n_transmission are both vectors and have difference sizes, or if method is not of a recognized kind</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    A : double Numpy vector or scalar</span>
+<span class="sd">        calculated boundary attenuation factor.</span>
+<span class="sd">        </span>
+<span class="sd">    References</span>
+<span class="sd">    -------</span>
+<span class="sd">    Durduran et al, 2010, Rep. Prog. Phys. doi:10.1088/0034-4885/73/7/076701</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">n_incidence</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">n_transmission</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">n_transmission</span> <span class="o">=</span> <span class="n">n_transmission</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">n_incidence</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">n_incidence</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">n_incidence</span><span class="p">)</span><span class="o">!=</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">n_transmission</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;n_incidence and n_transmission size mismatch&#39;</span><span class="p">)</span>
+    <span class="n">n_incidence</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">n_incidence</span><span class="p">)</span>
+    <span class="n">n_transmission</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">n_transmission</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">fresnel</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span> <span class="n">n_incid</span><span class="p">,</span> <span class="n">n_transmit</span><span class="p">):</span> 
+        <span class="n">n</span> <span class="o">=</span> <span class="n">n_incid</span><span class="o">/</span><span class="n">n_transmit</span>
+        <span class="c1"># S-polarized</span>
+        <span class="n">Rs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">((</span><span class="n">n_incid</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span> <span class="o">-</span> <span class="n">n_transmit</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">emath</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_incid</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span> <span class="o">+</span> <span class="n">n_transmit</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">emath</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span><span class="p">)))</span><span class="o">**</span><span class="mi">2</span>
+        <span class="c1"># P-polarized</span>
+        <span class="n">Rp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">((</span><span class="n">n_incid</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">emath</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="n">n_transmit</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_incid</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">emath</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">n_transmit</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">)))</span><span class="o">**</span><span class="mi">2</span>
+        <span class="c1"># return unpolarized</span>
+        <span class="k">return</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">Rs</span><span class="o">+</span><span class="n">Rp</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;robin&#39;</span><span class="p">:</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">n_incidence</span><span class="o">/</span><span class="n">n_transmission</span>
+        <span class="n">R0</span> <span class="o">=</span> <span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">((</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+        <span class="c1"># critical angle</span>
+        <span class="n">theta_incidence</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.0</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">R0</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta_incidence</span><span class="p">))</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta_incidence</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>    
+    <span class="k">elif</span> <span class="n">method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;approx&#39;</span><span class="p">:</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">n_incidence</span><span class="o">/</span><span class="n">n_transmission</span>
+        <span class="n">Reff</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.44</span><span class="o">*</span><span class="n">n</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.71</span><span class="o">*</span><span class="n">n</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.668</span> <span class="o">+</span> <span class="mf">0.0636</span><span class="o">*</span><span class="n">n</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">+</span> <span class="n">Reff</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="n">Reff</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;exact&#39;</span><span class="p">:</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">n_incidence</span><span class="p">))</span>
+        <span class="c1"># reflectance fluence rate at tissue-something boundary (from n_incidence to n_transmission)</span>
+        <span class="n">fun_fi</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">ni</span><span class="p">,</span> <span class="n">nt</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="n">fresnel</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ni</span><span class="p">,</span> <span class="n">nt</span><span class="p">)</span>
+        <span class="c1"># reflectance current density at tissue-something boundary (from n_incidence to n_transmission)</span>
+        <span class="n">fun_j</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">ni</span><span class="p">,</span> <span class="n">nt</span><span class="p">:</span> <span class="mf">3.</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="n">fresnel</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ni</span><span class="p">,</span> <span class="n">nt</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">n_incidence</span><span class="p">)):</span>
+            <span class="n">Rfi</span><span class="p">,</span><span class="n">_</span> <span class="o">=</span> <span class="n">integrate</span><span class="o">.</span><span class="n">quad</span><span class="p">(</span><span class="n">fun_fi</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">n_incidence</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">n_transmission</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+            <span class="n">Rj</span><span class="p">,</span><span class="n">_</span> <span class="o">=</span> <span class="n">integrate</span><span class="o">.</span><span class="n">quad</span><span class="p">(</span><span class="n">fun_j</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">n_incidence</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">n_transmission</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+            <span class="c1"># reflectance at boundary</span>
+            <span class="n">Reff</span> <span class="o">=</span> <span class="p">(</span><span class="n">Rfi</span> <span class="o">+</span> <span class="n">Rj</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">-</span> <span class="n">Rfi</span> <span class="o">+</span> <span class="n">Rj</span><span class="p">)</span>
+            <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">+</span> <span class="n">Reff</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="n">Reff</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown boundary type&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">A</span></div>
+
+        
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Jiaming Cao, MILAB@UoB.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,186 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nirfasterff.utils &mdash; NIRFASTerFF 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="nirfasterff.utils.boundary_attenuation" href="nirfasterff.utils.boundary_attenuation.html" />
+    <link rel="prev" title="nirfasterff.meshing.meshutils.checkmesh3d_surface" href="nirfasterff.meshing.meshutils.checkmesh3d_surface.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            NIRFASTerFF
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="nirfasterff.html">nirfasterff</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.base.html">nirfasterff.base</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.forward.html">nirfasterff.forward</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.inverse.html">nirfasterff.inverse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.io.html">nirfasterff.io</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.lib.html">nirfasterff.lib</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.math.html">nirfasterff.math</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.meshing.html">nirfasterff.meshing</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">nirfasterff.utils</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.utils.boundary_attenuation.html">nirfasterff.utils.boundary_attenuation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.utils.check_element_orientation_2d.html">nirfasterff.utils.check_element_orientation_2d</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.utils.compress_coo.html">nirfasterff.utils.compress_coo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.utils.gen_intmat_impl.html">nirfasterff.utils.gen_intmat_impl</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.utils.get_solver.html">nirfasterff.utils.get_solver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.utils.isCUDA.html">nirfasterff.utils.isCUDA</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.utils.pointLineDistance.html">nirfasterff.utils.pointLineDistance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.utils.pointLocation.html">nirfasterff.utils.pointLocation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.utils.pointTriangleDistance.html">nirfasterff.utils.pointTriangleDistance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.utils.uncompress_coo.html">nirfasterff.utils.uncompress_coo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.utils.ConvergenceInfo.html">nirfasterff.utils.ConvergenceInfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.utils.MeshingParams.html">nirfasterff.utils.MeshingParams</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.utils.SolverOptions.html">nirfasterff.utils.SolverOptions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.visualize.html">nirfasterff.visualize</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">NIRFASTerFF</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="nirfasterff.html">nirfasterff</a></li>
+      <li class="breadcrumb-item active">nirfasterff.utils</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/_autosummary/nirfasterff.utils.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-nirfasterff.utils">
+<span id="nirfasterff-utils"></span><h1>nirfasterff.utils<a class="headerlink" href="#module-nirfasterff.utils" title="Link to this heading"></a></h1>
+<p>Utility functions and auxiliary classes frequently used in the package.</p>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="nirfasterff.utils.boundary_attenuation.html#nirfasterff.utils.boundary_attenuation" title="nirfasterff.utils.boundary_attenuation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">boundary_attenuation</span></code></a>(n_incidence[, ...])</p></td>
+<td><p>Calculate the boundary attenuation factor between two media.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="nirfasterff.utils.check_element_orientation_2d.html#nirfasterff.utils.check_element_orientation_2d" title="nirfasterff.utils.check_element_orientation_2d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_element_orientation_2d</span></code></a>(ele, nodes)</p></td>
+<td><p>Make sure the 2D triangular elements are oriented counter clock wise.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="nirfasterff.utils.compress_coo.html#nirfasterff.utils.compress_coo" title="nirfasterff.utils.compress_coo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compress_coo</span></code></a>(coo_idx, N)</p></td>
+<td><p>Convert COO indices to compressed.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="nirfasterff.utils.gen_intmat_impl.html#nirfasterff.utils.gen_intmat_impl" title="nirfasterff.utils.gen_intmat_impl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gen_intmat_impl</span></code></a>(mesh, xgrid, ygrid, zgrid)</p></td>
+<td><p>YOU SHOULD NOT USE THIS FUNCTION DIRECTLY.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="nirfasterff.utils.get_solver.html#nirfasterff.utils.get_solver" title="nirfasterff.utils.get_solver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_solver</span></code></a>()</p></td>
+<td><p>Get the default solver.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="nirfasterff.utils.isCUDA.html#nirfasterff.utils.isCUDA" title="nirfasterff.utils.isCUDA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isCUDA</span></code></a>()</p></td>
+<td><p>Checks if system has a CUDA device with compute capability &gt;=5.2</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="nirfasterff.utils.pointLineDistance.html#nirfasterff.utils.pointLineDistance" title="nirfasterff.utils.pointLineDistance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pointLineDistance</span></code></a>(A, B, p)</p></td>
+<td><p>Calculate the distance between a point and a line (defined by two points), and find the projection point</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="nirfasterff.utils.pointLocation.html#nirfasterff.utils.pointLocation" title="nirfasterff.utils.pointLocation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pointLocation</span></code></a>(mesh, pointlist)</p></td>
+<td><p>Similar to Matlab's pointLocation function, queries which elements in mesh the points belong to, and also calculate the barycentric coordinates.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="nirfasterff.utils.pointTriangleDistance.html#nirfasterff.utils.pointTriangleDistance" title="nirfasterff.utils.pointTriangleDistance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pointTriangleDistance</span></code></a>(TRI, P)</p></td>
+<td><p>Calculate the distance between a point and a triangle (defined by three points), and find the projection point</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="nirfasterff.utils.uncompress_coo.html#nirfasterff.utils.uncompress_coo" title="nirfasterff.utils.uncompress_coo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">uncompress_coo</span></code></a>(compressed_idx)</p></td>
+<td><p>Convert compressed indices to COO.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="nirfasterff.utils.ConvergenceInfo.html#nirfasterff.utils.ConvergenceInfo" title="nirfasterff.utils.ConvergenceInfo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConvergenceInfo</span></code></a>([info])</p></td>
+<td><p>Convergence information of the FEM solvers.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="nirfasterff.utils.MeshingParams.html#nirfasterff.utils.MeshingParams" title="nirfasterff.utils.MeshingParams"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MeshingParams</span></code></a>([xPixelSpacing, ...])</p></td>
+<td><p>Parameters to be used by the CGAL mesher.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="nirfasterff.utils.SolverOptions.html#nirfasterff.utils.SolverOptions" title="nirfasterff.utils.SolverOptions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SolverOptions</span></code></a>([max_iter, AbsoluteTolerance, ...])</p></td>
+<td><p>Parameters used by the FEM solvers, Equivalent to 'solver_options' in the Matlab version</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="nirfasterff.meshing.meshutils.checkmesh3d_surface.html" class="btn btn-neutral float-left" title="nirfasterff.meshing.meshutils.checkmesh3d_surface" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="nirfasterff.utils.boundary_attenuation.html" class="btn btn-neutral float-right" title="nirfasterff.utils.boundary_attenuation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Jiaming Cao, MILAB@UoB.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

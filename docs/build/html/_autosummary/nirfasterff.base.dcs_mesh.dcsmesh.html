@@ -1,0 +1,720 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nirfasterff.base.dcs_mesh.dcsmesh &mdash; NIRFASTerFF 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="nirfasterff.base.fluor_mesh" href="nirfasterff.base.fluor_mesh.html" />
+    <link rel="prev" title="nirfasterff.base.dcs_mesh" href="nirfasterff.base.dcs_mesh.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            NIRFASTerFF
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="nirfasterff.html">nirfasterff</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="nirfasterff.base.html">nirfasterff.base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.base.data.html">nirfasterff.base.data</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="nirfasterff.base.dcs_mesh.html">nirfasterff.base.dcs_mesh</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">nirfasterff.base.dcs_mesh.dcsmesh</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.base.fluor_mesh.html">nirfasterff.base.fluor_mesh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.base.optodes.html">nirfasterff.base.optodes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.base.stnd_mesh.html">nirfasterff.base.stnd_mesh</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.forward.html">nirfasterff.forward</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.inverse.html">nirfasterff.inverse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.io.html">nirfasterff.io</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.lib.html">nirfasterff.lib</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.math.html">nirfasterff.math</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.meshing.html">nirfasterff.meshing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.utils.html">nirfasterff.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nirfasterff.visualize.html">nirfasterff.visualize</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">NIRFASTerFF</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="nirfasterff.html">nirfasterff</a></li>
+          <li class="breadcrumb-item"><a href="nirfasterff.base.html">nirfasterff.base</a></li>
+          <li class="breadcrumb-item"><a href="nirfasterff.base.dcs_mesh.html">nirfasterff.base.dcs_mesh</a></li>
+      <li class="breadcrumb-item active">nirfasterff.base.dcs_mesh.dcsmesh</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/_autosummary/nirfasterff.base.dcs_mesh.dcsmesh.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="nirfasterff-base-dcs-mesh-dcsmesh">
+<h1>nirfasterff.base.dcs_mesh.dcsmesh<a class="headerlink" href="#nirfasterff-base-dcs-mesh-dcsmesh" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="nirfasterff.base.dcs_mesh.dcsmesh">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nirfasterff.base.dcs_mesh.</span></span><span class="sig-name descname"><span class="pre">dcsmesh</span></span><a class="reference internal" href="../_modules/nirfasterff/base/dcs_mesh.html#dcsmesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.dcs_mesh.dcsmesh" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Main class for standard mesh. The methods should cover most of the commonly-used functionalities</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nirfasterff.base.dcs_mesh.dcsmesh.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#nirfasterff.base.dcs_mesh.dcsmesh.name" title="Link to this definition"></a></dt>
+<dd><p>name of the mesh. Default: ‘EmptyMesh’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nirfasterff.base.dcs_mesh.dcsmesh.nodes">
+<span class="sig-name descname"><span class="pre">nodes</span></span><a class="headerlink" href="#nirfasterff.base.dcs_mesh.dcsmesh.nodes" title="Link to this definition"></a></dt>
+<dd><p>locations of nodes in the mesh. Unit: mm. Size (NNodes, dim)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>double NumPy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nirfasterff.base.dcs_mesh.dcsmesh.bndvtx">
+<span class="sig-name descname"><span class="pre">bndvtx</span></span><a class="headerlink" href="#nirfasterff.base.dcs_mesh.dcsmesh.bndvtx" title="Link to this definition"></a></dt>
+<dd><p>indicator of whether a node is at boundary (1) or internal (0). Size (NNodes,)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>double NumPy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nirfasterff.base.dcs_mesh.dcsmesh.type">
+<span class="sig-name descname"><span class="pre">type</span></span><a class="headerlink" href="#nirfasterff.base.dcs_mesh.dcsmesh.type" title="Link to this definition"></a></dt>
+<dd><p>type of the mesh. It is always ‘dcs’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nirfasterff.base.dcs_mesh.dcsmesh.mua">
+<span class="sig-name descname"><span class="pre">mua</span></span><a class="headerlink" href="#nirfasterff.base.dcs_mesh.dcsmesh.mua" title="Link to this definition"></a></dt>
+<dd><p>absorption coefficient (mm^-1) at each node. Size (NNodes,)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>double NumPy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nirfasterff.base.dcs_mesh.dcsmesh.kappa">
+<span class="sig-name descname"><span class="pre">kappa</span></span><a class="headerlink" href="#nirfasterff.base.dcs_mesh.dcsmesh.kappa" title="Link to this definition"></a></dt>
+<dd><p>diffusion coefficient (mm) at each node. Size (NNodes,). Defined as 1/(3*(mua + mus))</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>double NumPy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nirfasterff.base.dcs_mesh.dcsmesh.ri">
+<span class="sig-name descname"><span class="pre">ri</span></span><a class="headerlink" href="#nirfasterff.base.dcs_mesh.dcsmesh.ri" title="Link to this definition"></a></dt>
+<dd><p>refractive index at each node. Size (NNodes,)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>double NumPy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nirfasterff.base.dcs_mesh.dcsmesh.mus">
+<span class="sig-name descname"><span class="pre">mus</span></span><a class="headerlink" href="#nirfasterff.base.dcs_mesh.dcsmesh.mus" title="Link to this definition"></a></dt>
+<dd><p>reduced scattering coefficient (mm^-1) at each node. Size (NNodes,)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(double NumPy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nirfasterff.base.dcs_mesh.dcsmesh.wv_DCS">
+<span class="sig-name descname"><span class="pre">wv_DCS</span></span><a class="headerlink" href="#nirfasterff.base.dcs_mesh.dcsmesh.wv_DCS" title="Link to this definition"></a></dt>
+<dd><p>wavelength used (nm)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>double</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nirfasterff.base.dcs_mesh.dcsmesh.alpha">
+<span class="sig-name descname"><span class="pre">alpha</span></span><a class="headerlink" href="#nirfasterff.base.dcs_mesh.dcsmesh.alpha" title="Link to this definition"></a></dt>
+<dd><p>fraction of photon scattering events that occur from moving particles in the medium (a.u.). Size (NNodes, NFlow)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>double NumPy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nirfasterff.base.dcs_mesh.dcsmesh.Db">
+<span class="sig-name descname"><span class="pre">Db</span></span><a class="headerlink" href="#nirfasterff.base.dcs_mesh.dcsmesh.Db" title="Link to this definition"></a></dt>
+<dd><p>effective diffusion coefficient in Brownian motion (mm^2/s). Size (NNodes, NFlow)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>double NumPy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nirfasterff.base.dcs_mesh.dcsmesh.aDb">
+<span class="sig-name descname"><span class="pre">aDb</span></span><a class="headerlink" href="#nirfasterff.base.dcs_mesh.dcsmesh.aDb" title="Link to this definition"></a></dt>
+<dd><p>Defined as np.sum(a*Db,axis=1). This lumped parameter (mm^2/s) is what is actually used in data genreation. Size (NNodes,)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>double NumPy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nirfasterff.base.dcs_mesh.dcsmesh.elements">
+<span class="sig-name descname"><span class="pre">elements</span></span><a class="headerlink" href="#nirfasterff.base.dcs_mesh.dcsmesh.elements" title="Link to this definition"></a></dt>
+<dd><p>triangulation (tetrahedrons or triangles) of the mesh, Size (NElements, dim+1)</p>
+<p>Row i contains the indices of the nodes that form tetrahedron/triangle i</p>
+<p>One-based indexing for direct interoperatability with the Matlab version</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>double NumPy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nirfasterff.base.dcs_mesh.dcsmesh.region">
+<span class="sig-name descname"><span class="pre">region</span></span><a class="headerlink" href="#nirfasterff.base.dcs_mesh.dcsmesh.region" title="Link to this definition"></a></dt>
+<dd><p>region labeling of each node. Starting from 1. Size (NNodes,)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>double NumPy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nirfasterff.base.dcs_mesh.dcsmesh.source">
+<span class="sig-name descname"><span class="pre">source</span></span><a class="headerlink" href="#nirfasterff.base.dcs_mesh.dcsmesh.source" title="Link to this definition"></a></dt>
+<dd><p>information about the sources</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>nirfasterff.base.optode</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nirfasterff.base.dcs_mesh.dcsmesh.meas">
+<span class="sig-name descname"><span class="pre">meas</span></span><a class="headerlink" href="#nirfasterff.base.dcs_mesh.dcsmesh.meas" title="Link to this definition"></a></dt>
+<dd><p>information about the the detectors</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>nirfasterff.base.optode</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nirfasterff.base.dcs_mesh.dcsmesh.link">
+<span class="sig-name descname"><span class="pre">link</span></span><a class="headerlink" href="#nirfasterff.base.dcs_mesh.dcsmesh.link" title="Link to this definition"></a></dt>
+<dd><p>list of source-detector pairs, i.e. channels. Size (NChannels,3)</p>
+<p>First column: source; Second column: detector; Third column: active (1) or not (0)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int32 NumPy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nirfasterff.base.dcs_mesh.dcsmesh.c">
+<span class="sig-name descname"><span class="pre">c</span></span><a class="headerlink" href="#nirfasterff.base.dcs_mesh.dcsmesh.c" title="Link to this definition"></a></dt>
+<dd><p>light speed (mm/sec) at each node.  Size (NNodes,). Defined as c0/ri, where c0 is the light speed in vacuum</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>double NumPy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nirfasterff.base.dcs_mesh.dcsmesh.ksi">
+<span class="sig-name descname"><span class="pre">ksi</span></span><a class="headerlink" href="#nirfasterff.base.dcs_mesh.dcsmesh.ksi" title="Link to this definition"></a></dt>
+<dd><p>photon fluence rate scale factor on the mesh-outside_mesh boundary as derived from Fresenel’s law. Size (NNodes,)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>double NumPy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nirfasterff.base.dcs_mesh.dcsmesh.element_area">
+<span class="sig-name descname"><span class="pre">element_area</span></span><a class="headerlink" href="#nirfasterff.base.dcs_mesh.dcsmesh.element_area" title="Link to this definition"></a></dt>
+<dd><p>volume/area (mm^3 or mm^2) of each element. Size (NElements,)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>double NumPy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nirfasterff.base.dcs_mesh.dcsmesh.support">
+<span class="sig-name descname"><span class="pre">support</span></span><a class="headerlink" href="#nirfasterff.base.dcs_mesh.dcsmesh.support" title="Link to this definition"></a></dt>
+<dd><p>total volume/area of all the elements each node belongs to. Size (NNodes,)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>double NumPy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nirfasterff.base.dcs_mesh.dcsmesh.vol">
+<span class="sig-name descname"><span class="pre">vol</span></span><a class="headerlink" href="#nirfasterff.base.dcs_mesh.dcsmesh.vol" title="Link to this definition"></a></dt>
+<dd><p>object holding information for converting between mesh and volumetric space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>nirfasterff.base.meshvol</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nirfasterff.base.dcs_mesh.dcsmesh.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/dcs_mesh.html#dcsmesh.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.dcs_mesh.dcsmesh.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nirfasterff.base.dcs_mesh.dcsmesh.__init__" title="nirfasterff.base.dcs_mesh.dcsmesh.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#nirfasterff.base.dcs_mesh.dcsmesh.change_prop" title="nirfasterff.base.dcs_mesh.dcsmesh.change_prop"><code class="xref py py-obj docutils literal notranslate"><span class="pre">change_prop</span></code></a>(idx, prop)</p></td>
+<td><p>Change optical properties (mua, musp, ri, alpha and Db) at nodes specified in idx, and automatically change fields kappa, c, and ksi as well</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nirfasterff.base.dcs_mesh.dcsmesh.femdata" title="nirfasterff.base.dcs_mesh.dcsmesh.femdata"><code class="xref py py-obj docutils literal notranslate"><span class="pre">femdata</span></code></a>(tvec[, solver, opt])</p></td>
+<td><p>Calculates steady-state fluences and G1/g1 curves for each source using a FEM solver, and then the boudary measurables for each channel</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#nirfasterff.base.dcs_mesh.dcsmesh.from_copy" title="nirfasterff.base.dcs_mesh.dcsmesh.from_copy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_copy</span></code></a>(mesh)</p></td>
+<td><p>Deep copy all fields from another mesh.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nirfasterff.base.dcs_mesh.dcsmesh.from_file" title="nirfasterff.base.dcs_mesh.dcsmesh.from_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_file</span></code></a>(file)</p></td>
+<td><p>Read from classic NIRFAST mesh (ASCII) format, not checking the correctness of the loaded integration functions.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#nirfasterff.base.dcs_mesh.dcsmesh.from_mat" title="nirfasterff.base.dcs_mesh.dcsmesh.from_mat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_mat</span></code></a>(matfile[, varname])</p></td>
+<td><p>Read from Matlab .mat file that contains a NIRFASTer mesh struct.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nirfasterff.base.dcs_mesh.dcsmesh.from_solid" title="nirfasterff.base.dcs_mesh.dcsmesh.from_solid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_solid</span></code></a>(ele, nodes[, prop, src, det, link])</p></td>
+<td><p>Construct a NIRFASTer mesh from a 3D solid mesh generated by a mesher.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#nirfasterff.base.dcs_mesh.dcsmesh.from_volume" title="nirfasterff.base.dcs_mesh.dcsmesh.from_volume"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_volume</span></code></a>(vol[, param, prop, src, det, link])</p></td>
+<td><p>Construct mesh from a segmented 3D volume using the built-in CGAL mesher.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nirfasterff.base.dcs_mesh.dcsmesh.gen_intmat" title="nirfasterff.base.dcs_mesh.dcsmesh.gen_intmat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gen_intmat</span></code></a>(xgrid, ygrid[, zgrid])</p></td>
+<td><p>Calculate the information needed to convert data between mesh and volumetric space, specified by x, y, z (if 3D) grids.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#nirfasterff.base.dcs_mesh.dcsmesh.isvol" title="nirfasterff.base.dcs_mesh.dcsmesh.isvol"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isvol</span></code></a>()</p></td>
+<td><p>Check if convertion matrices between mesh and volumetric spaces are calculated</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nirfasterff.base.dcs_mesh.dcsmesh.jacobian" title="nirfasterff.base.dcs_mesh.dcsmesh.jacobian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jacobian</span></code></a>(tvec[, normalize, solver, opt])</p></td>
+<td><p>Calculates the Jacobian matrix</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#nirfasterff.base.dcs_mesh.dcsmesh.save_nirfast" title="nirfasterff.base.dcs_mesh.dcsmesh.save_nirfast"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_nirfast</span></code></a>(filename)</p></td>
+<td><p>Save mesh in the classic NIRFASTer ASCII format, which is directly compatible with the Matlab version</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nirfasterff.base.dcs_mesh.dcsmesh.set_prop" title="nirfasterff.base.dcs_mesh.dcsmesh.set_prop"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_prop</span></code></a>(prop)</p></td>
+<td><p>Set optical properties of the whole mesh, using information provided in prop.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#nirfasterff.base.dcs_mesh.dcsmesh.touch_optodes" title="nirfasterff.base.dcs_mesh.dcsmesh.touch_optodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">touch_optodes</span></code></a>()</p></td>
+<td><p>Moves all optodes (if non fixed) and recalculate the integration functions (i.e. barycentric coordinates).</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="nirfasterff.base.dcs_mesh.dcsmesh.change_prop">
+<span class="sig-name descname"><span class="pre">change_prop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/dcs_mesh.html#dcsmesh.change_prop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.dcs_mesh.dcsmesh.change_prop" title="Link to this definition"></a></dt>
+<dd><p>Change optical properties (mua, musp, ri, alpha and Db) at nodes specified in idx, and automatically change fields kappa, c, and ksi as well</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>idx</strong> (<em>list</em><em> or </em><em>NumPy array</em><em> or </em><em>-1</em>) – zero-based indices of nodes to change. If <cite>idx==-1</cite>, function changes all the nodes</p></li>
+<li><p><strong>prop</strong> (<em>list</em><em> or </em><em>NumPy array</em><em> of </em><em>length 6</em>) – new optical properties to be assigned to the specified nodes. [region mua(mm-1) musp(mm-1) ri alpha Db].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nirfasterff.base.dcs_mesh.dcsmesh.femdata">
+<span class="sig-name descname"><span class="pre">femdata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tvec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">utils.get_solver()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">utils.SolverOptions()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/dcs_mesh.html#dcsmesh.femdata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.dcs_mesh.dcsmesh.femdata" title="Link to this definition"></a></dt>
+<dd><p>Calculates steady-state fluences and G1/g1 curves for each source using a FEM solver, and then the boudary measurables for each channel</p>
+<p>Assumes Brownian motion, that is, <span class="math notranslate nohighlight">\(\langle\Delta r^2\rangle=6*\alpha Db*\tau\)</span></p>
+<p>If <cite>mesh.vol</cite> is set, fluence and G1 data will be represented in volumetric space</p>
+<p>See <a class="reference internal" href="nirfasterff.forward.femdata.femdata_DCS.html#nirfasterff.forward.femdata.femdata_DCS" title="nirfasterff.forward.femdata.femdata_DCS"><code class="xref py py-func docutils literal notranslate"><span class="pre">femdata_DCS()</span></code></a> and <a class="reference internal" href="nirfasterff.forward.femdata.femdata_stnd_CW.html#nirfasterff.forward.femdata.femdata_stnd_CW" title="nirfasterff.forward.femdata.femdata_stnd_CW"><code class="xref py py-func docutils literal notranslate"><span class="pre">femdata_stnd_CW()</span></code></a> for details</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tvec</strong> (<em>double NumPy array</em>) – time vector (i.e. :math:`   au`) for the G1 curve, in seconds. It is usually a good idea to use log scale</p></li>
+<li><p><strong>solver</strong> (<em>str</em><em>, </em><em>optional</em>) – Choose between ‘CPU’ or ‘GPU’ solver (case insensitive). Automatically determined (GPU prioritized) if not specified</p></li>
+<li><p><strong>opt</strong> (<a class="reference internal" href="nirfasterff.utils.SolverOptions.html#nirfasterff.utils.SolverOptions" title="nirfasterff.utils.SolverOptions"><em>nirfasterff.utils.SolverOptions</em></a><em>, </em><em>optional</em>) – <p>Solver options. Uses default parameters if not specified, and they should suffice in most cases.</p>
+<p>See <a class="reference internal" href="nirfasterff.utils.SolverOptions.html#nirfasterff.utils.SolverOptions" title="nirfasterff.utils.SolverOptions"><code class="xref py py-func docutils literal notranslate"><span class="pre">SolverOptions()</span></code></a> for details</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul>
+<li><p><strong>data</strong> (<em>nirfasterff.base.DCSdata</em>) – contains fluence, G1 curve, and g1 curve calculated at each spatial location, and also the boundary data.</p>
+<p>See <a class="reference internal" href="nirfasterff.base.data.DCSdata.html#nirfasterff.base.data.DCSdata" title="nirfasterff.base.data.DCSdata"><code class="xref py py-func docutils literal notranslate"><span class="pre">DCSdata()</span></code></a> for details.</p>
+</li>
+<li><p><strong>info</strong> (<em>nirfasterff.utils.ConvergenceInfo</em>) – convergence information of the solver when calculating the fluence field.</p>
+<p>See <a class="reference internal" href="nirfasterff.utils.ConvergenceInfo.html#nirfasterff.utils.ConvergenceInfo" title="nirfasterff.utils.ConvergenceInfo"><code class="xref py py-func docutils literal notranslate"><span class="pre">ConvergenceInfo()</span></code></a> for details</p>
+</li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nirfasterff.base.dcs_mesh.dcsmesh.from_copy">
+<span class="sig-name descname"><span class="pre">from_copy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/dcs_mesh.html#dcsmesh.from_copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.dcs_mesh.dcsmesh.from_copy" title="Link to this definition"></a></dt>
+<dd><p>Deep copy all fields from another mesh.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mesh</strong> (<em>nirfasterff.base.stndmesh</em>) – the mesh to copy from.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nirfasterff.base.dcs_mesh.dcsmesh.from_file">
+<span class="sig-name descname"><span class="pre">from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/dcs_mesh.html#dcsmesh.from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.dcs_mesh.dcsmesh.from_file" title="Link to this definition"></a></dt>
+<dd><p>Read from classic NIRFAST mesh (ASCII) format, not checking the correctness of the loaded integration functions.</p>
+<p>All fields after loading should be directly compatible with Matlab version.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file</strong> (<em>str</em>) – name of the mesh. Any extension will be ignored.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mesh</span> <span class="o">=</span> <span class="n">nirfasterff</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">dcsmesh</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mesh</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s1">&#39;meshname&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nirfasterff.base.dcs_mesh.dcsmesh.from_mat">
+<span class="sig-name descname"><span class="pre">from_mat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">varname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/dcs_mesh.html#dcsmesh.from_mat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.dcs_mesh.dcsmesh.from_mat" title="Link to this definition"></a></dt>
+<dd><p>Read from Matlab .mat file that contains a NIRFASTer mesh struct. All fields copied as is without error checking.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>matfile</strong> (<em>str</em>) – name of the .mat file to load. Use of extension is optional.</p></li>
+<li><p><strong>varname</strong> (<em>str</em><em>, </em><em>optional</em>) – <p>if your .mat file contains multiple variables, use this argument to specify which one to load. The default is None.</p>
+<p>When <cite>varname==None</cite>, <cite>matfile</cite> should contain exatly one structure, which is a NIRFASTer mesh, or the function will do nothing</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nirfasterff.base.dcs_mesh.dcsmesh.from_solid">
+<span class="sig-name descname"><span class="pre">from_solid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ele</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">det</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/dcs_mesh.html#dcsmesh.from_solid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.dcs_mesh.dcsmesh.from_solid" title="Link to this definition"></a></dt>
+<dd><p>Construct a NIRFASTer mesh from a 3D solid mesh generated by a mesher. Similar to the solidmesh2nirfast function in Matlab version.</p>
+<p>Can also set the optical properties and optodes if supplied</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ele</strong> (<em>int/double NumPy array</em>) – <p>element list in one-based indexing. If four columns, all nodes will be labeled as region 1</p>
+<p>If five columns, the last column will be used for region labeling.</p>
+</p></li>
+<li><p><strong>nodes</strong> (<em>double NumPy array</em>) – node locations in the mesh. Unit: mm. Size (NNodes,3).</p></li>
+<li><p><strong>prop</strong> (<em>double NumPy array</em><em>, </em><em>optional</em>) – <p>If not <cite>None</cite>, calls <cite>dcsmesh.set_prop()</cite> and sets the optical properties in the mesh. The default is None.</p>
+<p>See <a class="reference internal" href="#nirfasterff.base.dcs_mesh.dcsmesh.set_prop" title="nirfasterff.base.dcs_mesh.dcsmesh.set_prop"><code class="xref py py-func docutils literal notranslate"><span class="pre">set_prop()</span></code></a> for details.</p>
+</p></li>
+<li><p><strong>src</strong> (<em>nirfasterff.base.optode</em><em>, </em><em>optional</em>) – <p>If not <cite>None</cite>, sets the sources and moves them to the appropriate locations. The default is None.</p>
+<p>See <a class="reference internal" href="nirfasterff.base.optodes.optode.html#nirfasterff.base.optodes.optode.touch_sources" title="nirfasterff.base.optodes.optode.touch_sources"><code class="xref py py-func docutils literal notranslate"><span class="pre">touch_sources()</span></code></a> for details.</p>
+</p></li>
+<li><p><strong>det</strong> (<em>nirfasterff.base.optode</em><em>, </em><em>optional</em>) – <p>If not <cite>None</cite>, sets the detectors and moves them to the appropriate locations. The default is None.</p>
+<p>See <a class="reference internal" href="nirfasterff.base.optodes.optode.html#nirfasterff.base.optodes.optode.touch_detectors" title="nirfasterff.base.optodes.optode.touch_detectors"><code class="xref py py-func docutils literal notranslate"><span class="pre">touch_detectors()</span></code></a> for details.</p>
+</p></li>
+<li><p><strong>link</strong> (<em>int32 NumPy array</em><em>, </em><em>optional</em>) – <p>If not <cite>None</cite>, sets the channel information. Uses one-based indexing. The default is None.</p>
+<p>Each row represents a channel, in the form of <cite>[src, det, active]</cite>, where <cite>active</cite> is 0 or 1</p>
+<p>If <cite>link</cite> contains only two columns, all channels are considered active.</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nirfasterff.base.dcs_mesh.dcsmesh.from_volume">
+<span class="sig-name descname"><span class="pre">from_volume</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">utils.MeshingParams()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">det</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/dcs_mesh.html#dcsmesh.from_volume"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.dcs_mesh.dcsmesh.from_volume" title="Link to this definition"></a></dt>
+<dd><p>Construct mesh from a segmented 3D volume using the built-in CGAL mesher. Calls stndmesh.from_solid after meshing step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vol</strong> (<em>uint8 NumPy array</em>) – 3D segmented volume to be meshed. 0 is considered as outside. Regions labeled using unique integers.</p></li>
+<li><p><strong>param</strong> (<a class="reference internal" href="nirfasterff.utils.MeshingParams.html#nirfasterff.utils.MeshingParams" title="nirfasterff.utils.MeshingParams"><em>nirfasterff.utils.MeshingParams</em></a><em>, </em><em>optional</em>) – <p>parameters used in the CGAL mesher. If not specified, uses the default parameters defined in nirfasterff.utils.MeshingParams().</p>
+<p>Please modify fields xPixelSpacing, yPixelSpacing, and SliceThickness if your volume doesn’t have [1,1,1] resolution</p>
+<p>See <a class="reference internal" href="nirfasterff.utils.MeshingParams.html#nirfasterff.utils.MeshingParams" title="nirfasterff.utils.MeshingParams"><code class="xref py py-func docutils literal notranslate"><span class="pre">MeshingParams()</span></code></a> for details.</p>
+</p></li>
+<li><p><strong>prop</strong> (<em>double NumPy array</em><em>, </em><em>optional</em>) – <p>If not <cite>None</cite>, calls <cite>dcsmesh.set_prop()</cite> and sets the optical properties in the mesh. The default is None.</p>
+<p>See <a class="reference internal" href="#nirfasterff.base.dcs_mesh.dcsmesh.set_prop" title="nirfasterff.base.dcs_mesh.dcsmesh.set_prop"><code class="xref py py-func docutils literal notranslate"><span class="pre">set_prop()</span></code></a> for details.</p>
+</p></li>
+<li><p><strong>src</strong> (<em>nirfasterff.base.optode</em><em>, </em><em>optional</em>) – <p>If not <cite>None</cite>, sets the sources and moves them to the appropriate locations. The default is None.</p>
+<p>See <a class="reference internal" href="nirfasterff.base.optodes.optode.html#nirfasterff.base.optodes.optode.touch_sources" title="nirfasterff.base.optodes.optode.touch_sources"><code class="xref py py-func docutils literal notranslate"><span class="pre">touch_sources()</span></code></a> for details.</p>
+</p></li>
+<li><p><strong>det</strong> (<em>nirfasterff.base.optode</em><em>, </em><em>optional</em>) – <p>If not <cite>None</cite>, sets the detectors and moves them to the appropriate locations. The default is None.</p>
+<p>See <a class="reference internal" href="nirfasterff.base.optodes.optode.html#nirfasterff.base.optodes.optode.touch_detectors" title="nirfasterff.base.optodes.optode.touch_detectors"><code class="xref py py-func docutils literal notranslate"><span class="pre">touch_detectors()</span></code></a> for details.</p>
+</p></li>
+<li><p><strong>link</strong> (<em>int32 NumPy array</em><em>, </em><em>optional</em>) – <p>If not <cite>None</cite>, sets the channel information. Uses one-based indexing. The default is None.</p>
+<p>Each row represents a channel, in the form of <cite>[src, det, active]</cite>, where <cite>active</cite> is 0 or 1</p>
+<p>If <cite>link</cite> contains only two columns, all channels are considered active.</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nirfasterff.base.dcs_mesh.dcsmesh.gen_intmat">
+<span class="sig-name descname"><span class="pre">gen_intmat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xgrid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ygrid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zgrid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/dcs_mesh.html#dcsmesh.gen_intmat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.dcs_mesh.dcsmesh.gen_intmat" title="Link to this definition"></a></dt>
+<dd><p>Calculate the information needed to convert data between mesh and volumetric space, specified by x, y, z (if 3D) grids.</p>
+<p>All grids must be uniform. The results will from a nirfasterff.base.meshvol object stored in field .vol</p>
+<p>If field .vol already exists, it will be calculated again, and a warning will be thrown</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xgrid</strong> (<em>double NumPy array</em>) – x grid in mm.</p></li>
+<li><p><strong>ygrid</strong> (<em>double NumPy array</em>) – x grid in mm.</p></li>
+<li><p><strong>zgrid</strong> (<em>double NumPy array</em><em>, </em><em>optional</em>) – x grid in mm. Leave empty for 2D meshes. The default is [].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – if grids not uniform, or zgrid empty for 3D mesh</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nirfasterff.base.dcs_mesh.dcsmesh.isvol">
+<span class="sig-name descname"><span class="pre">isvol</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/dcs_mesh.html#dcsmesh.isvol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.dcs_mesh.dcsmesh.isvol" title="Link to this definition"></a></dt>
+<dd><p>Check if convertion matrices between mesh and volumetric spaces are calculated</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if attribute <cite>.vol</cite> is calculate, False if not.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nirfasterff.base.dcs_mesh.dcsmesh.jacobian">
+<span class="sig-name descname"><span class="pre">jacobian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tvec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">utils.get_solver()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">utils.SolverOptions()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/dcs_mesh.html#dcsmesh.jacobian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.dcs_mesh.dcsmesh.jacobian" title="Link to this definition"></a></dt>
+<dd><p>Calculates the Jacobian matrix</p>
+<p>Returns the Jacobian, direct field data, and the adjoint data</p>
+<p>One Jacobian is calcualted at each time point in tvec, and the derivative is taken with regard to aDb</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tvec</strong> (<em>double NumPy vector</em>) – time vector used.</p></li>
+<li><p><strong>normalize</strong> (<em>bool</em><em>, </em><em>optional</em>) – if True, Jacobbians are normalized to the measured boundary amplitude. The default is True.</p></li>
+<li><p><strong>solver</strong> (<em>str</em><em>, </em><em>optional</em>) – Choose between ‘CPU’ or ‘GPU’ solver (case insensitive). Automatically determined (GPU prioritized) if not specified</p></li>
+<li><p><strong>opt</strong> (<a class="reference internal" href="nirfasterff.utils.SolverOptions.html#nirfasterff.utils.SolverOptions" title="nirfasterff.utils.SolverOptions"><em>nirfasterff.utils.SolverOptions</em></a><em>, </em><em>optional</em>) – <p>Solver options. Uses default parameters if not specified, and they should suffice in most cases.</p>
+<p>See <a class="reference internal" href="nirfasterff.utils.SolverOptions.html#nirfasterff.utils.SolverOptions" title="nirfasterff.utils.SolverOptions"><code class="xref py py-func docutils literal notranslate"><span class="pre">SolverOptions()</span></code></a> for details</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>J</strong> (<em>double NumPy array</em>) – The Jacobian matrix. Size (NChannel, NVoxel, NTime)</p></li>
+<li><p><strong>data1</strong> (<em>nirfasterff.base.FLdata</em>) – The calculated direct field. The same as directly calling mesh.femdata(tvec)</p></li>
+<li><p><strong>data2</strong> (<em>nirfasterff.base.FLdata</em>) – The calculated adjoint field. The same as calling mesh.femdata(tvec) AFTER swapping the locations of sources and detectors</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="nirfasterff.inverse.jacobian_DCS.html#nirfasterff.inverse.jacobian_DCS" title="nirfasterff.inverse.jacobian_DCS"><code class="xref py py-func docutils literal notranslate"><span class="pre">jacobian_DCS()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nirfasterff.base.dcs_mesh.dcsmesh.save_nirfast">
+<span class="sig-name descname"><span class="pre">save_nirfast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/dcs_mesh.html#dcsmesh.save_nirfast"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.dcs_mesh.dcsmesh.save_nirfast" title="Link to this definition"></a></dt>
+<dd><p>Save mesh in the classic NIRFASTer ASCII format, which is directly compatible with the Matlab version</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – name of the file to be saved as. Should have no extensions.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nirfasterff.base.dcs_mesh.dcsmesh.set_prop">
+<span class="sig-name descname"><span class="pre">set_prop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prop</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/dcs_mesh.html#dcsmesh.set_prop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.dcs_mesh.dcsmesh.set_prop" title="Link to this definition"></a></dt>
+<dd><p>Set optical properties of the whole mesh, using information provided in prop.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>prop</strong> (<em>double NumPy array</em>) – <p>optical property info, similar to the MCX format:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">region</span> <span class="n">mua</span><span class="p">(</span><span class="n">mm</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="n">musp</span><span class="p">(</span><span class="n">mm</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="n">ri</span> <span class="n">alpha</span> <span class="n">Db</span><span class="p">]</span>
+<span class="p">[</span><span class="n">region</span> <span class="n">mua</span><span class="p">(</span><span class="n">mm</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="n">musp</span><span class="p">(</span><span class="n">mm</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="n">ri</span> <span class="n">alpha</span> <span class="n">Db</span><span class="p">]</span>
+<span class="p">[</span><span class="o">...</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>where ‘region’ is the region label, and they should match exactly with unique(mesh.region). The order doesn’t matter.</p>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nirfasterff.base.dcs_mesh.dcsmesh.touch_optodes">
+<span class="sig-name descname"><span class="pre">touch_optodes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/dcs_mesh.html#dcsmesh.touch_optodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.dcs_mesh.dcsmesh.touch_optodes" title="Link to this definition"></a></dt>
+<dd><p>Moves all optodes (if non fixed) and recalculate the integration functions (i.e. barycentric coordinates).</p>
+<p>See <a class="reference internal" href="nirfasterff.base.optodes.optode.html#nirfasterff.base.optodes.optode.touch_sources" title="nirfasterff.base.optodes.optode.touch_sources"><code class="xref py py-func docutils literal notranslate"><span class="pre">touch_sources()</span></code></a> and <a class="reference internal" href="nirfasterff.base.optodes.optode.html#nirfasterff.base.optodes.optode.touch_detectors" title="nirfasterff.base.optodes.optode.touch_detectors"><code class="xref py py-func docutils literal notranslate"><span class="pre">touch_detectors()</span></code></a> for details</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="nirfasterff.base.dcs_mesh.html" class="btn btn-neutral float-left" title="nirfasterff.base.dcs_mesh" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="nirfasterff.base.fluor_mesh.html" class="btn btn-neutral float-right" title="nirfasterff.base.fluor_mesh" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Jiaming Cao, MILAB@UoB.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
