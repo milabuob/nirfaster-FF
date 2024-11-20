@@ -1,4 +1,4 @@
-﻿nirfasterff.base
+nirfasterff.base
 ================
 
 .. automodule:: nirfasterff.base

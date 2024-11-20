@@ -1,4 +1,4 @@
-﻿nirfasterff.lib
+nirfasterff.lib
 ===============
 
 .. automodule:: nirfasterff.lib

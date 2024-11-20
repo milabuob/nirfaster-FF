@@ -7,10 +7,14 @@ from nirfasterff import io
 from . import auxiliary
 # from lib import nirfasteruff_cpu
 import os
+import platform
+import subprocess
 
 def RunCGALMeshGenerator(mask, opt = utils.MeshingParams()):
     """
-    Generate a tetrahedral mesh from a volume using CGAL 5.3.2 mesher, where different regions are labeled used a distinct integer.
+    Generate a tetrahedral mesh from a volume using CGAL 6.0.1 mesher, where different regions are labeled used a distinct integer.
+    
+    Internallly, the function makes a system call to the mesher binary, which can also be used standalone through the command line.
     
     Also runs a pruning steps after the mesh generation, where nodes not referred to in the element list are removed.
 
@@ -32,7 +36,7 @@ def RunCGALMeshGenerator(mask, opt = utils.MeshingParams()):
     
     References
     -------
-    https://doc.cgal.org/5.3.2/Mesh_3/index.html#Chapter_3D_Mesh_Generation,
+    https://doc.cgal.org/latest/Mesh_3/index.html#Chapter_3D_Mesh_Generation
 
     """
    
@@ -42,14 +46,42 @@ def RunCGALMeshGenerator(mask, opt = utils.MeshingParams()):
     
     tmpmeshfn = '._out.mesh'
     tmpinrfn = '._cgal_mesh.inr'
+    tmpcritfn = '._criteria.txt'
 
     # Save the tmp INRIA file
     io.saveinr(mask, tmpinrfn)
     
+    # save the tmp criteria file
+    fp = open(tmpcritfn, 'w')
+    fp.write(str(opt.facet_angle) + '\n')
+    fp.write(str(opt.facet_size) + '\n')
+    fp.write(str(opt.facet_distance) + '\n')
+    fp.write(str(opt.cell_radius_edge) + '\n')
+    fp.write(str(opt.general_cell_size) + '\n')
+    fp.write(str(int(opt.smooth)) + '\n')
+    if opt.subdomain.flatten()[0]==0:
+        fp.write('0\n')
+        fp.close()
+    else:
+        fp.write(str(opt.subdomain.shape[0]) + '\n')
+        for i in range(opt.subdomain.shape[0]):
+            fp.write(str(int(opt.subdomain[i,0])) + ' ' + str(opt.subdomain[i,1]) + '\n')
+        fp.close()
+    
     # call the mesher
-    utils.cpulib.cgal_mesher(tmpinrfn, tmpmeshfn, facet_angle=opt.facet_angle, facet_size=opt.facet_size,
-                                 facet_distance=opt.facet_distance, cell_radius_edge_ratio=opt.cell_radius_edge,
-                                 general_cell_size=opt.general_cell_size,subdomain=opt.subdomain, smooth=opt.smooth)
+    binpath = os.path.dirname(os.path.abspath(utils.cpulib.__file__))
+    if platform.system() == 'Darwin':
+        mesherbin = binpath + '/cgalmesherMAC'
+        status = subprocess.run([mesherbin, tmpinrfn, tmpmeshfn, tmpcritfn])
+    elif platform.system() == 'Linux':
+        mesherbin = binpath + '/cgalmesherLINUX'
+        status = subprocess.run([mesherbin, tmpinrfn, tmpmeshfn, tmpcritfn])
+    elif platform.system() == 'Windows':
+        mesherbin = binpath + '\\cgalmesher.exe'
+        status = subprocess.run([mesherbin, tmpinrfn, tmpmeshfn, tmpcritfn])
+    else:
+        raise TypeError('Unsupported operating system: '+platform.system())
+    status.check_returncode()
     # read result and cleanup
     ele_raw, nodes_raw, _, _ = io.readMEDIT(tmpmeshfn)
     if np.all(opt.offset != None):
@@ -65,6 +97,7 @@ def RunCGALMeshGenerator(mask, opt = utils.MeshingParams()):
     # remove the tmpfiles
     os.remove(tmpmeshfn)
     os.remove(tmpinrfn)
+    os.remove(tmpcritfn)
     return ele, nodes
 
 def boundfaces(nodes, elements, base=0, renumber=True):

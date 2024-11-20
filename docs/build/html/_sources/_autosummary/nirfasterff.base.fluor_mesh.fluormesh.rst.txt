@@ -1,4 +1,4 @@
-﻿nirfasterff.base.fluor\_mesh.fluormesh
+nirfasterff.base.fluor\_mesh.fluormesh
 ======================================
 
 .. currentmodule:: nirfasterff.base.fluor_mesh

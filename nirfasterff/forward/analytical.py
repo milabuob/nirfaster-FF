@@ -242,6 +242,7 @@ def semi_infinite_TR(mua, musp, n, rho, T, dt, z=0, boundary='EBC-Robin'):
     else:
         tvec = T
         dt = tvec[1]-tvec[0]
+        steps = np.size(T)
     
     z0 = 1./(mua + musp) # in mm
     c0 = 299792458000. # mm/s; light spead in vacuum

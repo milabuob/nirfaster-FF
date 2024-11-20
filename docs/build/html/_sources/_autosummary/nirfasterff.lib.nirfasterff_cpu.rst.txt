@@ -16,7 +16,6 @@ nirfasterff.lib.nirfasterff\_cpu
    
       IntGradGrid
       IntGrid
-      cgal_mesher
       ele_area
       gen_mass_matrix
       gen_source_fl

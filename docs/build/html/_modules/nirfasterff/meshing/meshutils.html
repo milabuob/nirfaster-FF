@@ -1,20 +1,22 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>nirfasterff.meshing.meshutils &mdash; NIRFASTerFF 1.0.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=92fd9be5" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
 
   
-      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=8d563738"></script>
-      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -77,12 +79,16 @@
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">auxiliary</span>
 <span class="c1"># from lib import nirfasteruff_cpu</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">platform</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
 
 <div class="viewcode-block" id="RunCGALMeshGenerator">
 <a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.meshutils.RunCGALMeshGenerator.html#nirfasterff.meshing.meshutils.RunCGALMeshGenerator">[docs]</a>
 <span class="k">def</span> <span class="nf">RunCGALMeshGenerator</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">MeshingParams</span><span class="p">()):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Generate a tetrahedral mesh from a volume using CGAL 5.3.2 mesher, where different regions are labeled used a distinct integer.</span>
+<span class="sd">    Generate a tetrahedral mesh from a volume using CGAL 6.0.1 mesher, where different regions are labeled used a distinct integer.</span>
+<span class="sd">    </span>
+<span class="sd">    Internallly, the function makes a system call to the mesher binary, which can also be used standalone through the command line.</span>
 <span class="sd">    </span>
 <span class="sd">    Also runs a pruning steps after the mesh generation, where nodes not referred to in the element list are removed.</span>
 
@@ -104,7 +110,7 @@
 <span class="sd">    </span>
 <span class="sd">    References</span>
 <span class="sd">    -------</span>
-<span class="sd">    https://doc.cgal.org/5.3.2/Mesh_3/index.html#Chapter_3D_Mesh_Generation,</span>
+<span class="sd">    https://doc.cgal.org/latest/Mesh_3/index.html#Chapter_3D_Mesh_Generation</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
    
@@ -114,14 +120,42 @@
     
     <span class="n">tmpmeshfn</span> <span class="o">=</span> <span class="s1">&#39;._out.mesh&#39;</span>
     <span class="n">tmpinrfn</span> <span class="o">=</span> <span class="s1">&#39;._cgal_mesh.inr&#39;</span>
+    <span class="n">tmpcritfn</span> <span class="o">=</span> <span class="s1">&#39;._criteria.txt&#39;</span>
 
     <span class="c1"># Save the tmp INRIA file</span>
     <span class="n">io</span><span class="o">.</span><span class="n">saveinr</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">tmpinrfn</span><span class="p">)</span>
     
+    <span class="c1"># save the tmp criteria file</span>
+    <span class="n">fp</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">tmpcritfn</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+    <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">facet_angle</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">facet_size</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">facet_distance</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">cell_radius_edge</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">general_cell_size</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">smooth</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">subdomain</span><span class="o">.</span><span class="n">flatten</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;0</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">fp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">subdomain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">subdomain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">subdomain</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">subdomain</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">fp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    
     <span class="c1"># call the mesher</span>
-    <span class="n">utils</span><span class="o">.</span><span class="n">cpulib</span><span class="o">.</span><span class="n">cgal_mesher</span><span class="p">(</span><span class="n">tmpinrfn</span><span class="p">,</span> <span class="n">tmpmeshfn</span><span class="p">,</span> <span class="n">facet_angle</span><span class="o">=</span><span class="n">opt</span><span class="o">.</span><span class="n">facet_angle</span><span class="p">,</span> <span class="n">facet_size</span><span class="o">=</span><span class="n">opt</span><span class="o">.</span><span class="n">facet_size</span><span class="p">,</span>
-                                 <span class="n">facet_distance</span><span class="o">=</span><span class="n">opt</span><span class="o">.</span><span class="n">facet_distance</span><span class="p">,</span> <span class="n">cell_radius_edge_ratio</span><span class="o">=</span><span class="n">opt</span><span class="o">.</span><span class="n">cell_radius_edge</span><span class="p">,</span>
-                                 <span class="n">general_cell_size</span><span class="o">=</span><span class="n">opt</span><span class="o">.</span><span class="n">general_cell_size</span><span class="p">,</span><span class="n">subdomain</span><span class="o">=</span><span class="n">opt</span><span class="o">.</span><span class="n">subdomain</span><span class="p">,</span> <span class="n">smooth</span><span class="o">=</span><span class="n">opt</span><span class="o">.</span><span class="n">smooth</span><span class="p">)</span>
+    <span class="n">binpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">cpulib</span><span class="o">.</span><span class="vm">__file__</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;Darwin&#39;</span><span class="p">:</span>
+        <span class="n">mesherbin</span> <span class="o">=</span> <span class="n">binpath</span> <span class="o">+</span> <span class="s1">&#39;/cgalmesherMAC&#39;</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">mesherbin</span><span class="p">,</span> <span class="n">tmpinrfn</span><span class="p">,</span> <span class="n">tmpmeshfn</span><span class="p">,</span> <span class="n">tmpcritfn</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;Linux&#39;</span><span class="p">:</span>
+        <span class="n">mesherbin</span> <span class="o">=</span> <span class="n">binpath</span> <span class="o">+</span> <span class="s1">&#39;/cgalmesherLINUX&#39;</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">mesherbin</span><span class="p">,</span> <span class="n">tmpinrfn</span><span class="p">,</span> <span class="n">tmpmeshfn</span><span class="p">,</span> <span class="n">tmpcritfn</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;Windows&#39;</span><span class="p">:</span>
+        <span class="n">mesherbin</span> <span class="o">=</span> <span class="n">binpath</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">cgalmesher.exe&#39;</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">mesherbin</span><span class="p">,</span> <span class="n">tmpinrfn</span><span class="p">,</span> <span class="n">tmpmeshfn</span><span class="p">,</span> <span class="n">tmpcritfn</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Unsupported operating system: &#39;</span><span class="o">+</span><span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">())</span>
+    <span class="n">status</span><span class="o">.</span><span class="n">check_returncode</span><span class="p">()</span>
     <span class="c1"># read result and cleanup</span>
     <span class="n">ele_raw</span><span class="p">,</span> <span class="n">nodes_raw</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">readMEDIT</span><span class="p">(</span><span class="n">tmpmeshfn</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">offset</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
@@ -137,6 +171,7 @@
     <span class="c1"># remove the tmpfiles</span>
     <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">tmpmeshfn</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">tmpinrfn</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">tmpcritfn</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">ele</span><span class="p">,</span> <span class="n">nodes</span></div>
 
 

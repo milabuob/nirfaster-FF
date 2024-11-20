@@ -63,8 +63,8 @@
 
 
 \title{NIRFASTerFF}
-\date{Nov 06, 2024}
-\release{1.0.0}
+\date{Nov 19, 2024}
+\release{1.0.1}
 \author{Jiaming Cao, MILAB@UoB}
 \newcommand{\sphinxlogo}{\vbox{}}
 \renewcommand{\releasename}{Release}
@@ -8907,13 +8907,6 @@ Overloaded function.
 \\
 \sphinxhline
 \sphinxAtStartPar
-{\hyperref[\detokenize{_autosummary/nirfasterff.lib.nirfasterff_cpu.cgal_mesher:nirfasterff.lib.nirfasterff_cpu.cgal_mesher}]{\sphinxcrossref{\sphinxcode{\sphinxupquote{cgal\_mesher}}}}}(arg0, arg1{[}, facet\_angle, ...{]})
-&
-\sphinxAtStartPar
-
-\\
-\sphinxhline
-\sphinxAtStartPar
 {\hyperref[\detokenize{_autosummary/nirfasterff.lib.nirfasterff_cpu.ele_area:nirfasterff.lib.nirfasterff_cpu.ele_area}]{\sphinxcrossref{\sphinxcode{\sphinxupquote{ele\_area}}}}}(arg0, arg1)
 &
 \sphinxAtStartPar
@@ -9068,20 +9061,6 @@ IntGrid(arg0: numpy.ndarray{[}numpy.float64{[}m, n{]}, flags.writeable, flags.c\
 
 \end{enumerate}
 
-\end{fulllineitems}
-
-
-\sphinxstepscope
-
-
-\paragraph{nirfasterff.lib.nirfasterff\_cpu.cgal\_mesher}
-\label{\detokenize{_autosummary/nirfasterff.lib.nirfasterff_cpu.cgal_mesher:nirfasterff-lib-nirfasterff-cpu-cgal-mesher}}\label{\detokenize{_autosummary/nirfasterff.lib.nirfasterff_cpu.cgal_mesher::doc}}\index{cgal\_mesher() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{cgal\_mesher()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}}
-
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{_autosummary/nirfasterff.lib.nirfasterff_cpu.cgal_mesher:nirfasterff.lib.nirfasterff_cpu.cgal_mesher}}
-\pysigstartsignatures
-\pysiglinewithargsret{\sphinxcode{\sphinxupquote{nirfasterff.lib.nirfasterff\_cpu.}}\sphinxbfcode{\sphinxupquote{cgal\_mesher}}}{\sphinxparam{\DUrole{n}{arg0}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{str}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg1}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{str}}\sphinxparamcomma \sphinxparam{\DUrole{n}{facet\_angle}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{25.0}}\sphinxparamcomma \sphinxparam{\DUrole{n}{facet\_size}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{3.0}}\sphinxparamcomma \sphinxparam{\DUrole{n}{facet\_distance}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{2.0}}\sphinxparamcomma \sphinxparam{\DUrole{n}{cell\_radius\_edge\_ratio}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{3.0}}\sphinxparamcomma \sphinxparam{\DUrole{n}{general\_cell\_size}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{2.0}}\sphinxparamcomma \sphinxparam{\DUrole{n}{subdomain}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.float64\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }n\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{,}\DUrole{w}{ }flags.c\_contiguous\DUrole{p}{{]}}}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{array({[}{[}0., 0.{]}{]})}}\sphinxparamcomma \sphinxparam{\DUrole{n}{smooth}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{bool}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{1}}}{{ $\rightarrow$ None}}
-\pysigstopsignatures
 \end{fulllineitems}
 
 
@@ -11233,7 +11212,7 @@ Main function that calculates and checks the quality of a 3D mesh, which can be 
 {\hyperref[\detokenize{_autosummary/nirfasterff.meshing.meshutils.RunCGALMeshGenerator:nirfasterff.meshing.meshutils.RunCGALMeshGenerator}]{\sphinxcrossref{\sphinxcode{\sphinxupquote{RunCGALMeshGenerator}}}}}(mask{[}, opt{]})
 &
 \sphinxAtStartPar
-Generate a tetrahedral mesh from a volume using CGAL 5.3.2 mesher, where different regions are labeled used a distinct integer.
+Generate a tetrahedral mesh from a volume using CGAL 6.0.1 mesher, where different regions are labeled used a distinct integer.
 \\
 \sphinxhline
 \sphinxAtStartPar
@@ -11426,7 +11405,10 @@ b1 set if edges shared by more than two triangles found; b2 set if dangling edge
 \pysiglinewithargsret{\sphinxcode{\sphinxupquote{nirfasterff.meshing.meshutils.}}\sphinxbfcode{\sphinxupquote{RunCGALMeshGenerator}}}{\sphinxparam{\DUrole{n}{mask}}\sphinxparamcomma \sphinxparam{\DUrole{n}{opt}\DUrole{o}{=}\DUrole{default_value}{utils.MeshingParams()}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
-Generate a tetrahedral mesh from a volume using CGAL 5.3.2 mesher, where different regions are labeled used a distinct integer.
+Generate a tetrahedral mesh from a volume using CGAL 6.0.1 mesher, where different regions are labeled used a distinct integer.
+
+\sphinxAtStartPar
+Internallly, the function makes a system call to the mesher binary, which can also be used standalone through the command line.
 
 \sphinxAtStartPar
 Also runs a pruning steps after the mesh generation, where nodes not referred to in the element list are removed.
@@ -11466,7 +11448,7 @@ See {\hyperref[\detokenize{_autosummary/nirfasterff.utils.MeshingParams:nirfaste
 \subsubsection*{References}
 
 \sphinxAtStartPar
-\sphinxurl{https://doc.cgal.org/5.3.2/Mesh\_3/index.html\#Chapter\_3D\_Mesh\_Generation},
+\sphinxurl{https://doc.cgal.org/latest/Mesh\_3/index.html\#Chapter\_3D\_Mesh\_Generation}
 
 \end{fulllineitems}
 

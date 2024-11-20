@@ -1,4 +1,4 @@
-﻿nirfasterff.base.stnd\_mesh.stndmesh
+nirfasterff.base.stnd\_mesh.stndmesh
 ====================================
 
 .. currentmodule:: nirfasterff.base.stnd_mesh

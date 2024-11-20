@@ -266,17 +266,16 @@
 \indexentry{nirfasterff.lib.nirfasterff\_cpu@\spxentry{nirfasterff.lib.nirfasterff\_cpu}!module@\spxentry{module}|hyperpage}{74}
 \indexentry{IntGradGrid() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{IntGradGrid()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{75}
 \indexentry{IntGrid() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{IntGrid()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{75}
-\indexentry{cgal\_mesher() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{cgal\_mesher()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{75}
-\indexentry{ele\_area() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{ele\_area()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{76}
+\indexentry{ele\_area() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{ele\_area()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{75}
 \indexentry{gen\_mass\_matrix() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{gen\_mass\_matrix()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{76}
 \indexentry{gen\_source\_fl() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{gen\_source\_fl()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{76}
 \indexentry{get\_field\_CW() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{get\_field\_CW()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{76}
 \indexentry{get\_field\_FD() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{get\_field\_FD()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{77}
 \indexentry{get\_field\_TR() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{get\_field\_TR()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{77}
-\indexentry{get\_field\_TRFL() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{get\_field\_TRFL()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{78}
+\indexentry{get\_field\_TRFL() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{get\_field\_TRFL()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{77}
 \indexentry{get\_field\_TRFL\_moments() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{get\_field\_TRFL\_moments()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{78}
 \indexentry{get\_field\_TR\_moments() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{get\_field\_TR\_moments()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{78}
-\indexentry{gradientIntfunc() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{gradientIntfunc()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{79}
+\indexentry{gradientIntfunc() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{gradientIntfunc()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{78}
 \indexentry{gradientIntfunc2() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{gradientIntfunc2()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{79}
 \indexentry{isCUDA() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{isCUDA()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{79}
 \indexentry{mesh\_support() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{mesh\_support()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{79}

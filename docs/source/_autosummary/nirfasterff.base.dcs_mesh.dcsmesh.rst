@@ -1,4 +1,4 @@
-﻿nirfasterff.base.dcs\_mesh.dcsmesh
+nirfasterff.base.dcs\_mesh.dcsmesh
 ==================================
 
 .. currentmodule:: nirfasterff.base.dcs_mesh

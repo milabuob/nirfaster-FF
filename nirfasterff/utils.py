@@ -521,7 +521,7 @@ def gen_intmat_impl(mesh, xgrid, ygrid, zgrid):
             cube_coord = nodes0 + (loweridx[i,:] * res + start)
             tet_vtx = cube_coord[ele0[ind0[i], :], :]
             rel_idx = (tet_vtx - start) / res
-            raw_idx[i,:] = rel_idx[:,2]*len(xgrid)*len(ygrid) + rel_idx[:,0]*len(xgrid) + rel_idx[:,1] # zero-based
+            raw_idx[i,:] = rel_idx[:,2]*len(xgrid)*len(ygrid) + rel_idx[:,0]*len(ygrid) + rel_idx[:,1] # zero-based
         
         outvec = (loweridx[:,0]<0) | (loweridx[:,1]<0) | (loweridx[:,2]<0)
         meshingrid = np.flatnonzero(~outvec)

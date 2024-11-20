@@ -59,8 +59,6 @@
   \item \spxentry{c}\spxextra{nirfasterff.base.stnd\_mesh.stndmesh attribute}, \hyperpage{46}
   \item \spxentry{cell\_radius\_edge}\spxextra{nirfasterff.utils.MeshingParams attribute}, 
 		\hyperpage{106}
-  \item \spxentry{cgal\_mesher()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}, 
-		\hyperpage{75}
   \item \spxentry{change\_prop()}\spxextra{nirfasterff.base.dcs\_mesh.dcsmesh method}, 
 		\hyperpage{27}
   \item \spxentry{change\_prop()}\spxextra{nirfasterff.base.fluor\_mesh.fluormesh method}, 
@@ -101,7 +99,7 @@
 
   \indexspace
   \bigletter E
-  \item \spxentry{ele\_area()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}, \hyperpage{76}
+  \item \spxentry{ele\_area()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}, \hyperpage{75}
   \item \spxentry{element\_area}\spxextra{nirfasterff.base.dcs\_mesh.dcsmesh attribute}, 
 		\hyperpage{26}
   \item \spxentry{element\_area}\spxextra{nirfasterff.base.fluor\_mesh.fluormesh attribute}, 
@@ -230,7 +228,7 @@
   \item \spxentry{get\_field\_TR\_moments()}\spxextra{in module nirfasterff.lib.nirfasterff\_cuda}, 
 		\hyperpage{83}
   \item \spxentry{get\_field\_TRFL()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}, 
-		\hyperpage{78}
+		\hyperpage{77}
   \item \spxentry{get\_field\_TRFL()}\spxextra{in module nirfasterff.lib.nirfasterff\_cuda}, 
 		\hyperpage{82}
   \item \spxentry{get\_field\_TRFL()}\spxextra{in module nirfasterff.math}, \hyperpage{90}
@@ -243,7 +241,7 @@
   \item \spxentry{get\_solver()}\spxextra{in module nirfasterff.utils}, \hyperpage{102}
   \item \spxentry{GPU}\spxextra{nirfasterff.utils.SolverOptions attribute}, \hyperpage{107}
   \item \spxentry{gradientIntfunc()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}, 
-		\hyperpage{79}
+		\hyperpage{78}
   \item \spxentry{gradientIntfunc2()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}, 
 		\hyperpage{79}
   \item \spxentry{grid2mesh}\spxextra{nirfasterff.base.data.meshvol attribute}, \hyperpage{23}
