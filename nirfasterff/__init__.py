@@ -1,4 +1,4 @@
-__version__ = '1.0.0'
+__version__ = '1.0.1'
 __author__ = 'J Cao, MILAB@UoB'
 
 from . import utils
