@@ -275,7 +275,7 @@
 \indexentry{get\_field\_TRFL() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{get\_field\_TRFL()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{77}
 \indexentry{get\_field\_TRFL\_moments() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{get\_field\_TRFL\_moments()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{78}
 \indexentry{get\_field\_TR\_moments() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{get\_field\_TR\_moments()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{78}
-\indexentry{gradientIntfunc() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{gradientIntfunc()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{78}
+\indexentry{gradientIntfunc() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{gradientIntfunc()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{79}
 \indexentry{gradientIntfunc2() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{gradientIntfunc2()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{79}
 \indexentry{isCUDA() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{isCUDA()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{79}
 \indexentry{mesh\_support() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{mesh\_support()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{79}
@@ -330,39 +330,40 @@
 \indexentry{check\_element\_orientation\_2d() (in module nirfasterff.utils)@\spxentry{check\_element\_orientation\_2d()}\spxextra{in module nirfasterff.utils}|hyperpage}{101}
 \indexentry{compress\_coo() (in module nirfasterff.utils)@\spxentry{compress\_coo()}\spxextra{in module nirfasterff.utils}|hyperpage}{102}
 \indexentry{gen\_intmat\_impl() (in module nirfasterff.utils)@\spxentry{gen\_intmat\_impl()}\spxextra{in module nirfasterff.utils}|hyperpage}{102}
-\indexentry{get\_solver() (in module nirfasterff.utils)@\spxentry{get\_solver()}\spxextra{in module nirfasterff.utils}|hyperpage}{102}
+\indexentry{get\_nthread() (in module nirfasterff.utils)@\spxentry{get\_nthread()}\spxextra{in module nirfasterff.utils}|hyperpage}{102}
+\indexentry{get\_solver() (in module nirfasterff.utils)@\spxentry{get\_solver()}\spxextra{in module nirfasterff.utils}|hyperpage}{103}
 \indexentry{isCUDA() (in module nirfasterff.utils)@\spxentry{isCUDA()}\spxextra{in module nirfasterff.utils}|hyperpage}{103}
 \indexentry{pointLineDistance() (in module nirfasterff.utils)@\spxentry{pointLineDistance()}\spxextra{in module nirfasterff.utils}|hyperpage}{103}
-\indexentry{pointLocation() (in module nirfasterff.utils)@\spxentry{pointLocation()}\spxextra{in module nirfasterff.utils}|hyperpage}{103}
+\indexentry{pointLocation() (in module nirfasterff.utils)@\spxentry{pointLocation()}\spxextra{in module nirfasterff.utils}|hyperpage}{104}
 \indexentry{pointTriangleDistance() (in module nirfasterff.utils)@\spxentry{pointTriangleDistance()}\spxextra{in module nirfasterff.utils}|hyperpage}{104}
-\indexentry{uncompress\_coo() (in module nirfasterff.utils)@\spxentry{uncompress\_coo()}\spxextra{in module nirfasterff.utils}|hyperpage}{104}
+\indexentry{uncompress\_coo() (in module nirfasterff.utils)@\spxentry{uncompress\_coo()}\spxextra{in module nirfasterff.utils}|hyperpage}{105}
 \indexentry{ConvergenceInfo (class in nirfasterff.utils)@\spxentry{ConvergenceInfo}\spxextra{class in nirfasterff.utils}|hyperpage}{105}
 \indexentry{isConverged (nirfasterff.utils.ConvergenceInfo attribute)@\spxentry{isConverged}\spxextra{nirfasterff.utils.ConvergenceInfo attribute}|hyperpage}{105}
 \indexentry{isConvergedToAbsoluteTolerance (nirfasterff.utils.ConvergenceInfo attribute)@\spxentry{isConvergedToAbsoluteTolerance}\spxextra{nirfasterff.utils.ConvergenceInfo attribute}|hyperpage}{105}
 \indexentry{iteration (nirfasterff.utils.ConvergenceInfo attribute)@\spxentry{iteration}\spxextra{nirfasterff.utils.ConvergenceInfo attribute}|hyperpage}{105}
 \indexentry{residual (nirfasterff.utils.ConvergenceInfo attribute)@\spxentry{residual}\spxextra{nirfasterff.utils.ConvergenceInfo attribute}|hyperpage}{105}
 \indexentry{\_\_init\_\_() (nirfasterff.utils.ConvergenceInfo method)@\spxentry{\_\_init\_\_()}\spxextra{nirfasterff.utils.ConvergenceInfo method}|hyperpage}{105}
-\indexentry{MeshingParams (class in nirfasterff.utils)@\spxentry{MeshingParams}\spxextra{class in nirfasterff.utils}|hyperpage}{105}
-\indexentry{xPixelSpacing (nirfasterff.utils.MeshingParams attribute)@\spxentry{xPixelSpacing}\spxextra{nirfasterff.utils.MeshingParams attribute}|hyperpage}{105}
-\indexentry{yPixelSpacing (nirfasterff.utils.MeshingParams attribute)@\spxentry{yPixelSpacing}\spxextra{nirfasterff.utils.MeshingParams attribute}|hyperpage}{105}
+\indexentry{MeshingParams (class in nirfasterff.utils)@\spxentry{MeshingParams}\spxextra{class in nirfasterff.utils}|hyperpage}{106}
+\indexentry{xPixelSpacing (nirfasterff.utils.MeshingParams attribute)@\spxentry{xPixelSpacing}\spxextra{nirfasterff.utils.MeshingParams attribute}|hyperpage}{106}
+\indexentry{yPixelSpacing (nirfasterff.utils.MeshingParams attribute)@\spxentry{yPixelSpacing}\spxextra{nirfasterff.utils.MeshingParams attribute}|hyperpage}{106}
 \indexentry{SliceThickness (nirfasterff.utils.MeshingParams attribute)@\spxentry{SliceThickness}\spxextra{nirfasterff.utils.MeshingParams attribute}|hyperpage}{106}
 \indexentry{facet\_angle (nirfasterff.utils.MeshingParams attribute)@\spxentry{facet\_angle}\spxextra{nirfasterff.utils.MeshingParams attribute}|hyperpage}{106}
 \indexentry{facet\_size (nirfasterff.utils.MeshingParams attribute)@\spxentry{facet\_size}\spxextra{nirfasterff.utils.MeshingParams attribute}|hyperpage}{106}
 \indexentry{facet\_distance (nirfasterff.utils.MeshingParams attribute)@\spxentry{facet\_distance}\spxextra{nirfasterff.utils.MeshingParams attribute}|hyperpage}{106}
 \indexentry{cell\_radius\_edge (nirfasterff.utils.MeshingParams attribute)@\spxentry{cell\_radius\_edge}\spxextra{nirfasterff.utils.MeshingParams attribute}|hyperpage}{106}
-\indexentry{general\_cell\_size (nirfasterff.utils.MeshingParams attribute)@\spxentry{general\_cell\_size}\spxextra{nirfasterff.utils.MeshingParams attribute}|hyperpage}{106}
-\indexentry{subdomain (nirfasterff.utils.MeshingParams attribute)@\spxentry{subdomain}\spxextra{nirfasterff.utils.MeshingParams attribute}|hyperpage}{106}
-\indexentry{lloyd\_smooth (nirfasterff.utils.MeshingParams attribute)@\spxentry{lloyd\_smooth}\spxextra{nirfasterff.utils.MeshingParams attribute}|hyperpage}{106}
+\indexentry{general\_cell\_size (nirfasterff.utils.MeshingParams attribute)@\spxentry{general\_cell\_size}\spxextra{nirfasterff.utils.MeshingParams attribute}|hyperpage}{107}
+\indexentry{subdomain (nirfasterff.utils.MeshingParams attribute)@\spxentry{subdomain}\spxextra{nirfasterff.utils.MeshingParams attribute}|hyperpage}{107}
+\indexentry{lloyd\_smooth (nirfasterff.utils.MeshingParams attribute)@\spxentry{lloyd\_smooth}\spxextra{nirfasterff.utils.MeshingParams attribute}|hyperpage}{107}
 \indexentry{offset (nirfasterff.utils.MeshingParams attribute)@\spxentry{offset}\spxextra{nirfasterff.utils.MeshingParams attribute}|hyperpage}{107}
 \indexentry{\_\_init\_\_() (nirfasterff.utils.MeshingParams method)@\spxentry{\_\_init\_\_()}\spxextra{nirfasterff.utils.MeshingParams method}|hyperpage}{107}
-\indexentry{SolverOptions (class in nirfasterff.utils)@\spxentry{SolverOptions}\spxextra{class in nirfasterff.utils}|hyperpage}{107}
-\indexentry{max\_iter (nirfasterff.utils.SolverOptions attribute)@\spxentry{max\_iter}\spxextra{nirfasterff.utils.SolverOptions attribute}|hyperpage}{107}
-\indexentry{AbsoluteTolerance (nirfasterff.utils.SolverOptions attribute)@\spxentry{AbsoluteTolerance}\spxextra{nirfasterff.utils.SolverOptions attribute}|hyperpage}{107}
-\indexentry{RelativeTolerance (nirfasterff.utils.SolverOptions attribute)@\spxentry{RelativeTolerance}\spxextra{nirfasterff.utils.SolverOptions attribute}|hyperpage}{107}
-\indexentry{divergence (nirfasterff.utils.SolverOptions attribute)@\spxentry{divergence}\spxextra{nirfasterff.utils.SolverOptions attribute}|hyperpage}{107}
-\indexentry{GPU (nirfasterff.utils.SolverOptions attribute)@\spxentry{GPU}\spxextra{nirfasterff.utils.SolverOptions attribute}|hyperpage}{107}
+\indexentry{SolverOptions (class in nirfasterff.utils)@\spxentry{SolverOptions}\spxextra{class in nirfasterff.utils}|hyperpage}{108}
+\indexentry{max\_iter (nirfasterff.utils.SolverOptions attribute)@\spxentry{max\_iter}\spxextra{nirfasterff.utils.SolverOptions attribute}|hyperpage}{108}
+\indexentry{AbsoluteTolerance (nirfasterff.utils.SolverOptions attribute)@\spxentry{AbsoluteTolerance}\spxextra{nirfasterff.utils.SolverOptions attribute}|hyperpage}{108}
+\indexentry{RelativeTolerance (nirfasterff.utils.SolverOptions attribute)@\spxentry{RelativeTolerance}\spxextra{nirfasterff.utils.SolverOptions attribute}|hyperpage}{108}
+\indexentry{divergence (nirfasterff.utils.SolverOptions attribute)@\spxentry{divergence}\spxextra{nirfasterff.utils.SolverOptions attribute}|hyperpage}{108}
+\indexentry{GPU (nirfasterff.utils.SolverOptions attribute)@\spxentry{GPU}\spxextra{nirfasterff.utils.SolverOptions attribute}|hyperpage}{108}
 \indexentry{\_\_init\_\_() (nirfasterff.utils.SolverOptions method)@\spxentry{\_\_init\_\_()}\spxextra{nirfasterff.utils.SolverOptions method}|hyperpage}{108}
 \indexentry{module@\spxentry{module}!nirfasterff.visualize@\spxentry{nirfasterff.visualize}|hyperpage}{108}
 \indexentry{nirfasterff.visualize@\spxentry{nirfasterff.visualize}!module@\spxentry{module}|hyperpage}{108}
-\indexentry{plot3dmesh() (in module nirfasterff.visualize)@\spxentry{plot3dmesh()}\spxextra{in module nirfasterff.visualize}|hyperpage}{108}
-\indexentry{plotimage() (in module nirfasterff.visualize)@\spxentry{plotimage()}\spxextra{in module nirfasterff.visualize}|hyperpage}{109}
+\indexentry{plot3dmesh() (in module nirfasterff.visualize)@\spxentry{plot3dmesh()}\spxextra{in module nirfasterff.visualize}|hyperpage}{109}
+\indexentry{plotimage() (in module nirfasterff.visualize)@\spxentry{plotimage()}\spxextra{in module nirfasterff.visualize}|hyperpage}{110}

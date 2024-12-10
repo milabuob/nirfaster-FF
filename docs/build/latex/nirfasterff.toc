@@ -61,7 +61,7 @@
 \contentsline {paragraph}{nirfasterff.lib.nirfasterff\_cpu.get\_field\_TRFL}{77}{paragraph*.298}%
 \contentsline {paragraph}{nirfasterff.lib.nirfasterff\_cpu.get\_field\_TRFL\_moments}{78}{paragraph*.300}%
 \contentsline {paragraph}{nirfasterff.lib.nirfasterff\_cpu.get\_field\_TR\_moments}{78}{paragraph*.302}%
-\contentsline {paragraph}{nirfasterff.lib.nirfasterff\_cpu.gradientIntfunc}{78}{paragraph*.304}%
+\contentsline {paragraph}{nirfasterff.lib.nirfasterff\_cpu.gradientIntfunc}{79}{paragraph*.304}%
 \contentsline {paragraph}{nirfasterff.lib.nirfasterff\_cpu.gradientIntfunc2}{79}{paragraph*.306}%
 \contentsline {paragraph}{nirfasterff.lib.nirfasterff\_cpu.isCUDA}{79}{paragraph*.308}%
 \contentsline {paragraph}{nirfasterff.lib.nirfasterff\_cpu.mesh\_support}{79}{paragraph*.310}%
@@ -108,17 +108,18 @@
 \contentsline {subsubsection}{nirfasterff.utils.check\_element\_orientation\_2d}{101}{subsubsection*.385}%
 \contentsline {subsubsection}{nirfasterff.utils.compress\_coo}{102}{subsubsection*.387}%
 \contentsline {subsubsection}{nirfasterff.utils.gen\_intmat\_impl}{102}{subsubsection*.389}%
-\contentsline {subsubsection}{nirfasterff.utils.get\_solver}{102}{subsubsection*.391}%
-\contentsline {subsubsection}{nirfasterff.utils.isCUDA}{103}{subsubsection*.393}%
-\contentsline {subsubsection}{nirfasterff.utils.pointLineDistance}{103}{subsubsection*.395}%
-\contentsline {subsubsection}{nirfasterff.utils.pointLocation}{103}{subsubsection*.397}%
-\contentsline {subsubsection}{nirfasterff.utils.pointTriangleDistance}{104}{subsubsection*.399}%
-\contentsline {subsubsection}{nirfasterff.utils.uncompress\_coo}{104}{subsubsection*.401}%
-\contentsline {subsubsection}{nirfasterff.utils.ConvergenceInfo}{105}{subsubsection*.403}%
-\contentsline {subsubsection}{nirfasterff.utils.MeshingParams}{105}{subsubsection*.410}%
-\contentsline {subsubsection}{nirfasterff.utils.SolverOptions}{107}{subsubsection*.424}%
+\contentsline {subsubsection}{nirfasterff.utils.get\_nthread}{102}{subsubsection*.391}%
+\contentsline {subsubsection}{nirfasterff.utils.get\_solver}{103}{subsubsection*.393}%
+\contentsline {subsubsection}{nirfasterff.utils.isCUDA}{103}{subsubsection*.395}%
+\contentsline {subsubsection}{nirfasterff.utils.pointLineDistance}{103}{subsubsection*.397}%
+\contentsline {subsubsection}{nirfasterff.utils.pointLocation}{104}{subsubsection*.399}%
+\contentsline {subsubsection}{nirfasterff.utils.pointTriangleDistance}{104}{subsubsection*.401}%
+\contentsline {subsubsection}{nirfasterff.utils.uncompress\_coo}{105}{subsubsection*.403}%
+\contentsline {subsubsection}{nirfasterff.utils.ConvergenceInfo}{105}{subsubsection*.405}%
+\contentsline {subsubsection}{nirfasterff.utils.MeshingParams}{106}{subsubsection*.412}%
+\contentsline {subsubsection}{nirfasterff.utils.SolverOptions}{108}{subsubsection*.426}%
 \contentsline {subsection}{\numberline {4.1.9}nirfasterff.visualize}{108}{subsection.4.1.9}%
-\contentsline {subsubsection}{nirfasterff.visualize.plot3dmesh}{108}{subsubsection*.432}%
-\contentsline {subsubsection}{nirfasterff.visualize.plotimage}{109}{subsubsection*.434}%
-\contentsline {chapter}{Python Module Index}{111}{section*.436}%
-\contentsline {chapter}{Index}{113}{section*.437}%
+\contentsline {subsubsection}{nirfasterff.visualize.plot3dmesh}{109}{subsubsection*.434}%
+\contentsline {subsubsection}{nirfasterff.visualize.plotimage}{110}{subsubsection*.436}%
+\contentsline {chapter}{Python Module Index}{111}{section*.438}%
+\contentsline {chapter}{Index}{113}{section*.439}%

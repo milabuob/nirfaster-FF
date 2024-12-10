@@ -8,7 +8,7 @@ from nirfasterff import utils
 import copy
 from scipy import sparse
 
-def gen_mass_matrix(mesh, freq, solver = utils.get_solver(), GPU = -1):
+def gen_mass_matrix(mesh, omega, solver = utils.get_solver(), GPU = -1):
     """
     Calculate the MASS matrix, and return the coordinates in CSR format.
     
@@ -20,8 +20,8 @@ def gen_mass_matrix(mesh, freq, solver = utils.get_solver(), GPU = -1):
     ----------
     mesh : nirfasterff.base.stndmesh
         the mesh used to calculate the MASS matrix.
-    freq : double
-        modulation frequency, in Hz.
+    omega : double
+        modulation frequency, in radian.
     solver : str, optional
         Choose between 'CPU' or 'GPU' solver (case insensitive). Automatically determined (GPU prioritized) if not specified
     GPU : int, optional
@@ -51,21 +51,21 @@ def gen_mass_matrix(mesh, freq, solver = utils.get_solver(), GPU = -1):
         
     if solver.lower()=='gpu' and utils.isCUDA():
         try:
-            [csrI, csrJ, csrV] = utils.cudalib.gen_mass_matrix(mesh.nodes, mesh.elements, mesh.bndvtx, mesh.mua, mesh.kappa, mesh.ksi, mesh.c, freq, GPU)
-            if freq==0:
+            [csrI, csrJ, csrV] = utils.cudalib.gen_mass_matrix(mesh.nodes, mesh.elements, mesh.bndvtx, mesh.mua, mesh.kappa, mesh.ksi, mesh.c, omega, GPU)
+            if omega==0:
                 csrV = np.real(csrV)
         except:
             print('Warning: GPU code failed. Rolling back to CPU code')
             try:
-                [csrI, csrJ, csrV] = utils.cpulib.gen_mass_matrix(mesh.nodes, mesh.elements, mesh.bndvtx, mesh.mua, mesh.kappa, mesh.ksi, mesh.c, freq)
-                if freq==0:
+                [csrI, csrJ, csrV] = utils.cpulib.gen_mass_matrix(mesh.nodes, mesh.elements, mesh.bndvtx, mesh.mua, mesh.kappa, mesh.ksi, mesh.c, omega)
+                if omega==0:
                     csrV = np.real(csrV)    
             except:
                 raise RuntimeError('Error: couldn''t generate mass matrix')
     elif solver.lower()=='cpu':
         try:
-            [csrI, csrJ, csrV] = utils.cpulib.gen_mass_matrix(mesh.nodes, mesh.elements, mesh.bndvtx, mesh.mua, mesh.kappa, mesh.ksi, mesh.c, freq)
-            if freq==0:
+            [csrI, csrJ, csrV] = utils.cpulib.gen_mass_matrix(mesh.nodes, mesh.elements, mesh.bndvtx, mesh.mua, mesh.kappa, mesh.ksi, mesh.c, omega)
+            if omega==0:
                 csrV = np.real(csrV) 
         except:
             raise RuntimeError('Error: couldn''t generate mass matrix')
@@ -141,12 +141,12 @@ def get_field_CW(csrI, csrJ, csrV, qvec, opt = utils.SolverOptions(), solver=uti
         except:
             print('Warning: GPU solver failed. Rolling back to CPU solver')
             try:
-                [phi, info] = utils.cpulib.get_field_CW(csrI, csrJ, csrV, qvec, opt.max_iter, opt.AbsoluteTolerance, opt.RelativeTolerance, opt.divergence)  
+                [phi, info] = utils.cpulib.get_field_CW(csrI, csrJ, csrV, qvec, opt.max_iter, opt.AbsoluteTolerance, opt.RelativeTolerance, opt.divergence, utils.get_nthread())  
             except:
                 raise RuntimeError('Error: solver failed')
     elif solver.lower()=='cpu':
         try:
-            [phi, info] = utils.cpulib.get_field_CW(csrI, csrJ, csrV, qvec, opt.max_iter, opt.AbsoluteTolerance, opt.RelativeTolerance, opt.divergence)  
+            [phi, info] = utils.cpulib.get_field_CW(csrI, csrJ, csrV, qvec, opt.max_iter, opt.AbsoluteTolerance, opt.RelativeTolerance, opt.divergence, utils.get_nthread())  
         except:
             raise RuntimeError('Error: solver failed')
     else:
@@ -223,12 +223,12 @@ def get_field_FD(csrI, csrJ, csrV, qvec, opt = utils.SolverOptions(), solver=uti
         except:
             print('Warning: GPU solver failed. Rolling back to CPU solver')
             try:
-                [phi, info] = utils.cpulib.get_field_FD(csrI, csrJ, csrV, qvec, opt.max_iter, opt.AbsoluteTolerance, opt.RelativeTolerance, opt.divergence)  
+                [phi, info] = utils.cpulib.get_field_FD(csrI, csrJ, csrV, qvec, opt.max_iter, opt.AbsoluteTolerance, opt.RelativeTolerance, opt.divergence, utils.get_nthread())  
             except:
                 raise RuntimeError('Error: solver failed')
     elif solver.lower()=='cpu':
         try:
-            [phi, info] = utils.cpulib.get_field_FD(csrI, csrJ, csrV, qvec, opt.max_iter, opt.AbsoluteTolerance, opt.RelativeTolerance, opt.divergence)  
+            [phi, info] = utils.cpulib.get_field_FD(csrI, csrJ, csrV, qvec, opt.max_iter, opt.AbsoluteTolerance, opt.RelativeTolerance, opt.divergence, utils.get_nthread())  
         except:
             raise RuntimeError('Error: solver failed')
     else:
@@ -320,12 +320,12 @@ def get_field_TR(csrI, csrJ, csrV, qvec, dt, max_step, opt = utils.SolverOptions
         except:
             print('Warning: GPU solver failed. Rolling back to CPU solver')
             try:
-                [phi, info] = utils.cpulib.get_field_TR(csrI, csrJ, 0.5*Sr-Si/dt, -(0.5*Sr+Si/dt), qvec, max_step, opt.max_iter, opt.AbsoluteTolerance, opt.RelativeTolerance, opt.divergence)  
+                [phi, info] = utils.cpulib.get_field_TR(csrI, csrJ, 0.5*Sr-Si/dt, -(0.5*Sr+Si/dt), qvec, max_step, opt.max_iter, opt.AbsoluteTolerance, opt.RelativeTolerance, opt.divergence, utils.get_nthread())  
             except:
                 raise RuntimeError('Error: solver failed')
     elif solver.lower()=='cpu':
         try:
-            [phi, info] = utils.cpulib.get_field_TR(csrI, csrJ, 0.5*Sr-Si/dt, -(0.5*Sr+Si/dt), qvec, max_step, opt.max_iter, opt.AbsoluteTolerance, opt.RelativeTolerance, opt.divergence)  
+            [phi, info] = utils.cpulib.get_field_TR(csrI, csrJ, 0.5*Sr-Si/dt, -(0.5*Sr+Si/dt), qvec, max_step, opt.max_iter, opt.AbsoluteTolerance, opt.RelativeTolerance, opt.divergence, utils.get_nthread())  
         except:
             raise RuntimeError('Error: solver failed')
     else:
@@ -414,12 +414,12 @@ def get_field_TRmoments(csrI, csrJ, csrV, qvec, max_moment, opt = utils.SolverOp
         except:
             print('Warning: GPU solver failed. Rolling back to CPU solver')
             try:
-                [phi, info] = utils.cpulib.get_field_TR_moments(csrI, csrJ,  Sr, -Si, qvec, max_moment, opt.max_iter, opt.AbsoluteTolerance, opt.RelativeTolerance, opt.divergence)  
+                [phi, info] = utils.cpulib.get_field_TR_moments(csrI, csrJ,  Sr, -Si, qvec, max_moment, opt.max_iter, opt.AbsoluteTolerance, opt.RelativeTolerance, opt.divergence, utils.get_nthread())  
             except:
                 raise RuntimeError('Error: solver failed')
     elif solver.lower()=='cpu':
         try:
-            [phi, info] = utils.cpulib.get_field_TR_moments(csrI, csrJ,  Sr, -Si, qvec, max_moment, opt.max_iter, opt.AbsoluteTolerance, opt.RelativeTolerance, opt.divergence)  
+            [phi, info] = utils.cpulib.get_field_TR_moments(csrI, csrJ,  Sr, -Si, qvec, max_moment, opt.max_iter, opt.AbsoluteTolerance, opt.RelativeTolerance, opt.divergence, utils.get_nthread())  
         except:
             raise RuntimeError('Error: solver failed')
     else:
@@ -427,7 +427,7 @@ def get_field_TRmoments(csrI, csrJ, csrV, qvec, max_moment, opt = utils.SolverOp
         
     return phi, utils.ConvergenceInfo(info)
 
-def get_field_TRFL(csrI, csrJ, csrV, phix, dt, max_step, opt = utils.SolverOptions(), solver=utils.get_solver()):
+def get_field_TRFL(csrI, csrJ, csrV, qvec_m, dt, max_step, opt = utils.SolverOptions(), solver=utils.get_solver()):
     """
     Call the Preconditioned Conjugate Gradient solver with FSAI preconditioner. Calculates the TPSFs of fluorescence emission given the TPSFs of excitation
     
@@ -445,8 +445,8 @@ def get_field_TRFL(csrI, csrJ, csrV, phix, dt, max_step, opt = utils.SolverOptio
         values of the MASS matrices at emission wavelength, in CSR format. 
         
         This is calculated using gen_mass_matrix with omega=1.
-    phix : double NumPy array
-        TPSF of the excitation. Size (NNodes, NSources*NTime), structured as,
+    qvec_m : double NumPy array
+        TPSF of the excitation convolved with decay, and multiplied by the FEM matrix. Size (NNodes, NSources*NTime), structured as,
         
         [src0_step0, src1_step0,...,src0_step1, src1_step1,...]
     dt : double 
@@ -488,8 +488,8 @@ def get_field_TRFL(csrI, csrJ, csrV, phix, dt, max_step, opt = utils.SolverOptio
 
     if not np.all(np.iscomplex(csrV).all()):
         raise TypeError('Missing M matrix')
-    if not np.isrealobj(phix):
-        raise TypeError('phix must be real')
+    if not np.isrealobj(qvec_m):
+        raise TypeError('qvec_m must be real')
     if solver.lower()=='gpu' and not utils.isCUDA():
         solver = 'CPU'
         print('Warning: No capable CUDA device found. using CPU instead')
@@ -499,16 +499,16 @@ def get_field_TRFL(csrI, csrJ, csrV, phix, dt, max_step, opt = utils.SolverOptio
     # MASS matrix calculated with w=1, therefore real part of csrV corresponds to K+C, and imag part corresponds to -M
     if solver.lower()=='gpu' and utils.isCUDA():
         try:
-            [phi, info] = utils.cudalib.get_field_TRFL(csrI, csrJ, 0.5*Sr-Si/dt, -(0.5*Sr+Si/dt), phix, max_step, opt.max_iter, opt.AbsoluteTolerance, opt.RelativeTolerance, opt.divergence, opt.GPU)
+            [phi, info] = utils.cudalib.get_field_TRFL(csrI, csrJ, 0.5*Sr-Si/dt, -(0.5*Sr+Si/dt), qvec_m, max_step, opt.max_iter, opt.AbsoluteTolerance, opt.RelativeTolerance, opt.divergence, opt.GPU)
         except:
             print('Warning: GPU solver failed. Rolling back to CPU solver')
             try:
-                [phi, info] = utils.cpulib.get_field_TRFL(csrI, csrJ, 0.5*Sr-Si/dt, -(0.5*Sr+Si/dt), phix, max_step, opt.max_iter, opt.AbsoluteTolerance, opt.RelativeTolerance, opt.divergence)  
+                [phi, info] = utils.cpulib.get_field_TRFL(csrI, csrJ, 0.5*Sr-Si/dt, -(0.5*Sr+Si/dt), qvec_m, max_step, opt.max_iter, opt.AbsoluteTolerance, opt.RelativeTolerance, opt.divergence, utils.get_nthread())  
             except:
                 raise RuntimeError('Error: solver failed')
     elif solver.lower()=='cpu':
         try:
-            [phi, info] = utils.cpulib.get_field_TRFL(csrI, csrJ, 0.5*Sr-Si/dt, -(0.5*Sr+Si/dt), phix, max_step, opt.max_iter, opt.AbsoluteTolerance, opt.RelativeTolerance, opt.divergence)  
+            [phi, info] = utils.cpulib.get_field_TRFL(csrI, csrJ, 0.5*Sr-Si/dt, -(0.5*Sr+Si/dt), qvec_m, max_step, opt.max_iter, opt.AbsoluteTolerance, opt.RelativeTolerance, opt.divergence, utils.get_nthread())  
         except:
             raise RuntimeError('Error: solver failed')
     else:
@@ -516,7 +516,7 @@ def get_field_TRFL(csrI, csrJ, csrV, phix, dt, max_step, opt = utils.SolverOptio
         
     return phi, utils.ConvergenceInfo(info)
 
-def get_field_TRFLmoments(csrI, csrJ, csrV, mx, alpha, tau, max_moment, opt = utils.SolverOptions(), solver=utils.get_solver()):
+def get_field_TRFLmoments(csrI, csrJ, csrV, csrV2, mx, gamma, tau, max_moment, opt = utils.SolverOptions(), solver=utils.get_solver()):
     """
     Call the Preconditioned Conjugate Gradient solver with FSAI preconditioner. Directly calculates moments of re-emission using Mellin transform, given the moments of excitation
 
@@ -534,11 +534,15 @@ def get_field_TRFLmoments(csrI, csrJ, csrV, mx, alpha, tau, max_moment, opt = ut
         values of the MASS matrices at emission wavelength, in CSR format. 
         
         This is calculated using gen_mass_matrix with omega=1.
+    csrV2 : double NumPy vector
+        values of the FEM integration matrix, in CSR format. 
+        
+        This is calculated using gen_mass_matrix with omega=0, mua=1, kappa=0, and no boundary nodes.
     mx : double NumPy array
         moments of the excitation. Size (NNodes, Nsources*(max_moment+1)), structured as,
         
         [src0_m0, src1_m0,...,src0_m1, src1_m1,...]
-    alpha : double NumPy array
+    gamma : double NumPy array
         defined as mesh.eta*mesh.muaf.
     tau : double NumPy array
         decay factor, as defined in mesh.tau.
@@ -593,16 +597,16 @@ def get_field_TRFLmoments(csrI, csrJ, csrV, mx, alpha, tau, max_moment, opt = ut
     # MASS matrix calculated with w=1, therefore real part of csrV corresponds to K+C, and imag part corresponds to -M
     if solver.lower()=='gpu' and utils.isCUDA():
         try:
-            [phi, info] = utils.cudalib.get_field_TRFL_moments(csrI, csrJ, Sr, -Si, mx, alpha, tau, max_moment, opt.max_iter, opt.AbsoluteTolerance, opt.RelativeTolerance, opt.divergence, opt.GPU)
+            [phi, info] = utils.cudalib.get_field_TRFL_moments(csrI, csrJ, Sr, -Si, csrV2, mx, gamma, tau, max_moment, opt.max_iter, opt.AbsoluteTolerance, opt.RelativeTolerance, opt.divergence, opt.GPU)
         except:
             print('Warning: GPU solver failed. Rolling back to CPU solver')
             try:
-                [phi, info] = utils.cpulib.get_field_TRFL_moments(csrI, csrJ,  Sr, -Si, mx, alpha, tau, max_moment, opt.max_iter, opt.AbsoluteTolerance, opt.RelativeTolerance, opt.divergence)  
+                [phi, info] = utils.cpulib.get_field_TRFL_moments(csrI, csrJ,  Sr, -Si, csrV2, mx, gamma, tau, max_moment, opt.max_iter, opt.AbsoluteTolerance, opt.RelativeTolerance, opt.divergence, utils.get_nthread())  
             except:
                 raise RuntimeError('Error: solver failed')
     elif solver.lower()=='cpu':
         try:
-            [phi, info] = utils.cpulib.get_field_TRFL_moments(csrI, csrJ,  Sr, -Si, mx, alpha, tau, max_moment, opt.max_iter, opt.AbsoluteTolerance, opt.RelativeTolerance, opt.divergence)  
+            [phi, info] = utils.cpulib.get_field_TRFL_moments(csrI, csrJ,  Sr, -Si, csrV2, mx, gamma, tau, max_moment, opt.max_iter, opt.AbsoluteTolerance, opt.RelativeTolerance, opt.divergence, utils.get_nthread())  
         except:
             raise RuntimeError('Error: solver failed')
     else:
@@ -635,10 +639,11 @@ def gen_sources(mesh):
     else:
         ind = np.int32(mesh.source.int_func[:, 0]) - 1 # to zero-indexing
         int_func = mesh.source.int_func[:, 1:]
-    for i in range(active.size):
-        src = active[i]
-        qvec[np.int32(mesh.elements[ind[src],:]-1), i] = int_func[src,:]
-    return sparse.csc_matrix(qvec)
+    
+    dim = mesh.dimension
+    qvec = sparse.csc_matrix((int_func[active,:].flatten(), (np.int32(mesh.elements[ind,:]-1).flatten(), np.repeat(np.arange(active.size),dim+1))),
+                             shape=(mesh.nodes.shape[0], active.size), dtype=np.complex128)
+    return qvec
 
 def gen_sources_fl(mesh, phix, frequency=0., solver=utils.get_solver(), GPU=-1):
     """

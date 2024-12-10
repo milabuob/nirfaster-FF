@@ -9,6 +9,8 @@ from scipy import integrate
 from nirfasterff.lib import nirfasterff_cpu as cpulib
 if cpulib.isCUDA():
     from nirfasterff.lib import nirfasterff_cuda as cudalib
+import os
+import psutil
 
 class SolverOptions:
     """
@@ -693,4 +695,31 @@ def boundary_attenuation(n_incidence, n_transmission=1.0, method='robin'):
     else:
         raise ValueError('Unknown boundary type')
     return A
+
+def get_nthread():
+    '''
+    Choose the number of OpenMP threads in CPU solvers
+    
+    On CPUs with no hyperthreading, all physical cores are used
+    Otherwise use min(physical_core, 8), i.e. no more than 8
+    
+    This is heuristically determined to avoid performance loss due to memory bottlenecking
+    
+    Advanced user can directly modify this function to choose the appropriate number of threads
+
+    Returns
+    -------
+    nthread : int
+        number of OpenMP threads to use in CPU solvers.
+
+    '''
+    logic_core = os.cpu_count()
+    physical_core = psutil.cpu_count(0)
+    if logic_core==physical_core:
+        # no hyperthreading, use all physical cores
+        nthread = physical_core
+    else:
+        # Use up to 8 threads to avoid memory bottleneck
+        nthread = np.min((physical_core, 8))
+    return nthread
         

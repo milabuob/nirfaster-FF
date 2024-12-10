@@ -1,23 +1,21 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nirfasterff.math.get_field_TRFLmoments &mdash; NIRFASTerFF 1.0.1 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+  <title>nirfasterff.math.get_field_TRFLmoments &mdash; NIRFASTerFF 1.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=292eb321"></script>
-        <script src="../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=fc837d61"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -104,7 +102,7 @@
 <h1>nirfasterff.math.get_field_TRFLmoments<a class="headerlink" href="#nirfasterff-math-get-field-trflmoments" title="Link to this heading"></a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="nirfasterff.math.get_field_TRFLmoments">
-<span class="sig-prename descclassname"><span class="pre">nirfasterff.math.</span></span><span class="sig-name descname"><span class="pre">get_field_TRFLmoments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csrI</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csrJ</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csrV</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_moment</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">utils.SolverOptions()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">utils.get_solver()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/math.html#get_field_TRFLmoments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.math.get_field_TRFLmoments" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">nirfasterff.math.</span></span><span class="sig-name descname"><span class="pre">get_field_TRFLmoments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csrI</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csrJ</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csrV</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csrV2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_moment</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">utils.SolverOptions()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">utils.get_solver()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/math.html#get_field_TRFLmoments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.math.get_field_TRFLmoments" title="Link to this definition"></a></dt>
 <dd><p>Call the Preconditioned Conjugate Gradient solver with FSAI preconditioner. Directly calculates moments of re-emission using Mellin transform, given the moments of excitation</p>
 <p>If calculation fails on GPU (if chosen), it will generate a warning and automatically switch to CPU.</p>
 <p>On both GPU and CPU, the algorithm solves the sources one by one</p>
@@ -116,10 +114,13 @@
 <li><p><strong>csrV</strong> (<em>complex double NumPy vector</em>) – <p>values of the MASS matrices at emission wavelength, in CSR format.</p>
 <p>This is calculated using gen_mass_matrix with omega=1.</p>
 </p></li>
+<li><p><strong>csrV2</strong> (<em>double NumPy vector</em>) – <p>values of the FEM integration matrix, in CSR format.</p>
+<p>This is calculated using gen_mass_matrix with omega=0, mua=1, kappa=0, and no boundary nodes.</p>
+</p></li>
 <li><p><strong>mx</strong> (<em>double NumPy array</em>) – <p>moments of the excitation. Size (NNodes, Nsources*(max_moment+1)), structured as,</p>
 <p>[src0_m0, src1_m0,…,src0_m1, src1_m1,…]</p>
 </p></li>
-<li><p><strong>alpha</strong> (<em>double NumPy array</em>) – defined as mesh.eta*mesh.muaf.</p></li>
+<li><p><strong>gamma</strong> (<em>double NumPy array</em>) – defined as mesh.eta*mesh.muaf.</p></li>
 <li><p><strong>tau</strong> (<em>double NumPy array</em>) – decay factor, as defined in mesh.tau.</p></li>
 <li><p><strong>max_moment</strong> (<em>int32</em>) – <p>max order of moments to calculate. That is, 0th, 1st, 2nd, .., max_moments-th will be calculated.</p>
 <p>This should match exact with the max_moment of the excitation</p>

@@ -1,23 +1,21 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nirfasterff.math.gen_mass_matrix &mdash; NIRFASTerFF 1.0.1 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+  <title>nirfasterff.math.gen_mass_matrix &mdash; NIRFASTerFF 1.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=292eb321"></script>
-        <script src="../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=fc837d61"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -104,7 +102,7 @@
 <h1>nirfasterff.math.gen_mass_matrix<a class="headerlink" href="#nirfasterff-math-gen-mass-matrix" title="Link to this heading"></a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="nirfasterff.math.gen_mass_matrix">
-<span class="sig-prename descclassname"><span class="pre">nirfasterff.math.</span></span><span class="sig-name descname"><span class="pre">gen_mass_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">utils.get_solver()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GPU</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/math.html#gen_mass_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.math.gen_mass_matrix" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">nirfasterff.math.</span></span><span class="sig-name descname"><span class="pre">gen_mass_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omega</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">utils.get_solver()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GPU</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/math.html#gen_mass_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.math.gen_mass_matrix" title="Link to this definition"></a></dt>
 <dd><p>Calculate the MASS matrix, and return the coordinates in CSR format.</p>
 <p>The current Matlab version outputs COO format, so the results are NOT directly compatible</p>
 <p>If calculation fails on GPU (if chosen), it will generate a warning and automatically switch to CPU</p>
@@ -112,7 +110,7 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>mesh</strong> (<em>nirfasterff.base.stndmesh</em>) – the mesh used to calculate the MASS matrix.</p></li>
-<li><p><strong>freq</strong> (<em>double</em>) – modulation frequency, in Hz.</p></li>
+<li><p><strong>omega</strong> (<em>double</em>) – modulation frequency, in radian.</p></li>
 <li><p><strong>solver</strong> (<em>str</em><em>, </em><em>optional</em>) – Choose between ‘CPU’ or ‘GPU’ solver (case insensitive). Automatically determined (GPU prioritized) if not specified</p></li>
 <li><p><strong>GPU</strong> (<em>int</em><em>, </em><em>optional</em>) – GPU selection. -1 for automatic, 0, 1, … for manual selection on multi-GPU systems. The default is -1.</p></li>
 </ul>

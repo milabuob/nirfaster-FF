@@ -2,9 +2,9 @@
 
 Public repository for the **Fast and Furious** version of NIRFASTer
 
-- Version: 1.0.1
+- Version: 1.1.0
 - Authors: Jiaming Cao, MILab@UoB
-- License: TBD
+- License: BSD
 
 This is the new NIRFASTer with Python interface, offering full functionality ranging from forward modeling, Jacobian calculating, analytical solutions, and simple visualization. The mesh format is fully compatible with the Matlab version.
 
@@ -12,12 +12,13 @@ This is the new NIRFASTer with Python interface, offering full functionality ran
 
 The toolbox can run on Linux, Mac, and Windows. To use GPU acceleration, you will need to have a NVIDIA card with compute capability between `sm_52` (i.e. the GTX9xx series) and `sm_90a`. Please be noted that GPU support is unavailable on Mac platforms for now.
 
-Only python versions 3.10 and 3.11 are supported for now.
+Only Python versions 3.10, 3.11, and 3.12 are supported for now.
 
 Packages required:
 
 - NumPy
 - Scipy
+- psutil
 - matplotlib
 
 If you are using a Anaconda (or its alike) Python, they should already be available.
@@ -89,7 +90,20 @@ You may still continue to use the old Matlab version, available [here](https://g
 
 ## Changelog
 
+1.1.0
+
+- Added support for Python 3.12
+
+- Fixed a bug in time-resolved fluorescence
+
+- Number of OMP threads in the CPU solvers can now be set using function nirfasterff.utils.get_nthread()
+
+- GPU solver performance improved
+
+- More efficient source vector calculation
+
 1.0.1
+
 - CGAL mesher separated from the CPU library as a standalone application
 - Fixed a bug in gen_intmat, which leads to incorrect data.tomesh() result when xgrid and ygrid have different resolutions
 

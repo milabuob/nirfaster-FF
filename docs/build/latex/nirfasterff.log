@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2024.2.19)  19 NOV 2024 21:06
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2024.2.19)  9 DEC 2024 00:23
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1115,18 +1115,6 @@ Underfull \hbox (badness 10000) in paragraph at lines 9143--9145
 .writeable, flags.c_contiguous],
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 9143--9145
-\T1/qtm/m/n/10 max_iter: int = 1000, Ab-so-lute-Tol-er-ance: float = 1e-12, Rel
--a-tive-Tol-er-ance: float =
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 9143--9145
-\T1/qtm/m/n/10 1e-12, di-ver-gence: float = 100000000.0) -> tu-ple[numpy.ndarra
-y[numpy.float64[m, n]],
- []
-
 [76]
 Underfull \hbox (badness 10000) in paragraph at lines 9167--9169
 []\T1/qtm/m/n/10 get_field_FD(arg0: numpy.ndarray[numpy.int32[m, 1], flags.writ
@@ -1140,18 +1128,6 @@ eable], arg1:
  []
 
 
-Underfull \hbox (badness 8113) in paragraph at lines 9171--9173
-\T1/qtm/m/n/10 max_iter: int = 1000, Ab-so-lute-Tol-er-ance: float = 1e-12, Rel
--a-tive-Tol-er-ance: float = 1e-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 9171--9173
-\T1/qtm/m/n/10 12, di-ver-gence: float = 100000000.0) -> tu-ple[numpy.ndarray[n
-umpy.complex128[m, n]],
- []
-
-
 Underfull \hbox (badness 10000) in paragraph at lines 9195--9197
 []\T1/qtm/m/n/10 get_field_TR(arg0: numpy.ndarray[numpy.int32[m, 1], flags.writ
 eable], arg1:
@@ -1170,18 +1146,6 @@ lags.writeable], arg4:
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 9195--9197
-\T1/qtm/m/n/10 scipy.sparse.csc_matrix[numpy.float64], arg5: int, max_iter: int
- = 1000, Ab-so-lute-Tol-er-ance:
- []
-
-
-Underfull \hbox (badness 6758) in paragraph at lines 9195--9197
-\T1/qtm/m/n/10 float = 1e-12, Rel-a-tive-Tol-er-ance: float = 1e-12, di-ver-gen
-ce: float = 100000000.0) -> tu-
- []
-
-
 Underfull \hbox (badness 10000) in paragraph at lines 9199--9201
 []\T1/qtm/m/n/10 get_field_TR(arg0: numpy.ndarray[numpy.int32[m, 1], flags.writ
 eable], arg1:
@@ -1197,6 +1161,18 @@ darray[numpy.float64[m,
 Underfull \hbox (badness 10000) in paragraph at lines 9199--9201
 \T1/qtm/m/n/10 1], flags.writeable], arg3: numpy.ndarray[numpy.float64[m, 1], f
 lags.writeable], arg4:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 9199--9201
+\T1/qtm/m/n/10 numpy.ndarray[numpy.float64[m, n], flags.writeable, flags.c_cont
+iguous], arg5: int, max_iter:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 9199--9201
+\T1/qtm/m/n/10 int = 1000, Ab-so-lute-Tol-er-ance: float = 1e-12, Rel-a-tive-To
+l-er-ance: float = 1e-12, di-ver-
  []
 
 
@@ -1230,18 +1206,6 @@ lags.writeable], arg4:
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 9251--9253
-\T1/qtm/m/n/10 scipy.sparse.csc_matrix[numpy.float64], arg5: int, max_iter: int
- = 1000, Ab-so-lute-Tol-er-ance:
- []
-
-
-Underfull \hbox (badness 6758) in paragraph at lines 9251--9253
-\T1/qtm/m/n/10 float = 1e-12, Rel-a-tive-Tol-er-ance: float = 1e-12, di-ver-gen
-ce: float = 100000000.0) -> tu-
- []
-
-
 Underfull \hbox (badness 10000) in paragraph at lines 9255--9257
 []\T1/qtm/m/n/10 get_field_TR_moments(arg0: numpy.ndarray[numpy.int32[m, 1], fl
 ags.writeable], arg1:
@@ -1257,6 +1221,18 @@ darray[numpy.float64[m,
 Underfull \hbox (badness 10000) in paragraph at lines 9255--9257
 \T1/qtm/m/n/10 1], flags.writeable], arg3: numpy.ndarray[numpy.float64[m, 1], f
 lags.writeable], arg4:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 9255--9257
+\T1/qtm/m/n/10 numpy.ndarray[numpy.float64[m, n], flags.writeable, flags.c_cont
+iguous], arg5: int, max_iter:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 9255--9257
+\T1/qtm/m/n/10 int = 1000, Ab-so-lute-Tol-er-ance: float = 1e-12, Rel-a-tive-To
+l-er-ance: float = 1e-12, di-ver-
  []
 
 [78] [79] [80]
@@ -1458,26 +1434,25 @@ rray, or Scipy CSC sparse matrix\T1/qtm/m/n/10 ) ^^U The
  []
 
 [88] [89] [90]
-Underfull \hbox (badness 10000) in paragraph at lines 10625--10629
+Underfull \hbox (badness 10000) in paragraph at lines 10635--10639
 []\T1/txtt/bx/n/10 mx \T1/qtm/m/n/10 (\T1/txtt/m/sl/10 double NumPy array\T1/qt
 m/m/n/10 ) ^^U mo-ments of the ex-ci-ta-tion. Size (NN-odes,
  []
 
 [91] [92] [93] [94] [95] [96] [97] [98] [99] [100] [101]
-Underfull \hbox (badness 10000) in paragraph at lines 11914--11916
+Underfull \hbox (badness 10000) in paragraph at lines 11931--11933
 []\T1/txtt/bx/n/10 mesh \T1/qtm/m/n/10 (\T1/txtt/m/sl/10 nirfasterff.base.stndm
 esh or nirfasterff.base.fluormesh\T1/qtm/m/n/10 ) ^^U The
  []
 
 [102] [103]
-Underfull \hbox (badness 10000) in paragraph at lines 12159--12161
+Underfull \hbox (badness 10000) in paragraph at lines 12213--12215
 \T1/qtm/m/n/10 This is mod-i-fied from Joshua Shaf-fer's code, avail-able at: [
 ][]$https : / / gist . github . com / joshuasha^^[er /
  []
 
-[104] [105] [106] [107] [108] [109] [110
+[104] [105] [106] [107] [108] [109] [110] [111
 
-] [111
 
 
 ] (./nirfasterff.ind [112
@@ -1955,262 +1930,262 @@ d-ule nir-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 243--245
+Underfull \hbox (badness 10000) in paragraph at lines 244--246
 []\T1/txtt/m/n/10 gradientIntfunc() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 in mod-ule 
 nir-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 245--247
+Underfull \hbox (badness 10000) in paragraph at lines 246--248
 []\T1/txtt/m/n/10 gradientIntfunc2() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 in mod-ule
  nir-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 253--255
+Underfull \hbox (badness 10000) in paragraph at lines 254--256
 []\T1/txtt/m/n/10 IntGradGrid() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 in mod-ule nir-
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 256--258
+Underfull \hbox (badness 10000) in paragraph at lines 257--259
 []\T1/txtt/m/n/10 isConverged \T1/qtm/m/n/10 (\T1/qtm/m/it/10 nir-fasterff.util
 s.ConvergenceInfo at-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 258--260
+Underfull \hbox (badness 10000) in paragraph at lines 259--261
 []\T1/txtt/m/n/10 isConvergedToAbsoluteTolerance \T1/qtm/m/n/10 (\T1/qtm/m/it/1
 0 nir-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 258--260
+Underfull \hbox (badness 10000) in paragraph at lines 259--261
 \T1/qtm/m/it/10 fasterff.utils.ConvergenceInfo at-tribute\T1/qtm/m/n/10 ),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 266--267
+Underfull \hbox (badness 10000) in paragraph at lines 267--268
 []\T1/txtt/m/n/10 isvol() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 nir-fasterff.base.dat
 a.flTRMomentsdata
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 276--277
+Underfull \hbox (badness 10000) in paragraph at lines 277--278
 []\T1/txtt/m/n/10 jacobian() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 nir-fasterff.base.
 dcs_mesh.dcsmesh
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 277--279
+Underfull \hbox (badness 10000) in paragraph at lines 278--280
 []\T1/txtt/m/n/10 jacobian() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 nir-fasterff.base.
 fluor_mesh.fluormesh
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 279--280
+Underfull \hbox (badness 10000) in paragraph at lines 280--281
 []\T1/txtt/m/n/10 jacobian() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 nir-fasterff.base.
 stnd_mesh.stndmesh
  []
 
 [115]
-Underfull \hbox (badness 10000) in paragraph at lines 310--312
+Underfull \hbox (badness 10000) in paragraph at lines 311--313
 []\T1/txtt/m/n/10 lloyd_smooth \T1/qtm/m/n/10 (\T1/qtm/m/it/10 nir-fasterff.uti
 ls.MeshingParams at-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 320--322
+Underfull \hbox (badness 10000) in paragraph at lines 321--323
 []\T1/txtt/m/n/10 mesh_support() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 in mod-ule nir
 -
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 347--348
+Underfull \hbox (badness 10000) in paragraph at lines 348--349
 []\T1/txtt/m/n/10 moments \T1/qtm/m/n/10 (\T1/qtm/m/it/10 nir-fasterff.base.dat
 a.TRMomentsdata at-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 350--352
+Underfull \hbox (badness 10000) in paragraph at lines 351--353
 []\T1/txtt/m/n/10 momentsx \T1/qtm/m/n/10 (\T1/qtm/m/it/10 nir-fasterff.base.da
 ta.flTRMomentsdata
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 352--354
+Underfull \hbox (badness 10000) in paragraph at lines 353--355
 []\T1/txtt/m/n/10 move_detectors() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 nir-fasterff
 .base.optodes.optode
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 354--355
+Underfull \hbox (badness 10000) in paragraph at lines 355--356
 []\T1/txtt/m/n/10 move_sources() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 nir-fasterff.b
 ase.optodes.optode
  []
 
 [116]
-Underfull \hbox (badness 10000) in paragraph at lines 443--445
+Underfull \hbox (badness 10000) in paragraph at lines 444--446
 []\T1/txtt/m/n/10 pointLocation() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 in mod-ule ni
 r-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 446--447
+Underfull \hbox (badness 10000) in paragraph at lines 447--448
 []\T1/txtt/m/n/10 pointTriangleDistance() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 in mo
 d-ule nir-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 450--452
+Underfull \hbox (badness 10000) in paragraph at lines 451--453
 []\T1/txtt/m/n/10 quality_triangle_radius() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 in 
 mod-ule nir-
  []
 
 
-Underfull \hbox (badness 5985) in paragraph at lines 463--464
+Underfull \hbox (badness 5985) in paragraph at lines 464--465
 []\T1/txtt/m/n/10 residual \T1/qtm/m/n/10 (\T1/qtm/m/it/10 nir-fasterff.utils.C
 onvergenceInfo at-tribute\T1/qtm/m/n/10 ),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 467--469
+Underfull \hbox (badness 10000) in paragraph at lines 468--470
 []\T1/txtt/m/n/10 RunCGALMeshGenerator() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 in mod
 -ule nir-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 472--474
+Underfull \hbox (badness 10000) in paragraph at lines 473--475
 []\T1/txtt/m/n/10 save_nirfast() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 nir-fasterff.b
 ase.dcs_mesh.dcsmesh
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 476--478
+Underfull \hbox (badness 10000) in paragraph at lines 477--479
 []\T1/txtt/m/n/10 save_nirfast() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 nir-fasterff.b
 ase.stnd_mesh.stndmesh
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 479--481
+Underfull \hbox (badness 10000) in paragraph at lines 480--482
 []\T1/txtt/m/n/10 semi_infinite_CW() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 in mod-ule
  nir-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 481--483
+Underfull \hbox (badness 10000) in paragraph at lines 482--484
 []\T1/txtt/m/n/10 semi_infinite_DCS() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 in mod-ul
 e nir-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 483--485
+Underfull \hbox (badness 10000) in paragraph at lines 484--486
 []\T1/txtt/m/n/10 semi_infinite_FD() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 in mod-ule
  nir-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 485--487
+Underfull \hbox (badness 10000) in paragraph at lines 486--488
 []\T1/txtt/m/n/10 semi_infinite_TR() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 in mod-ule
  nir-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 487--488
+Underfull \hbox (badness 10000) in paragraph at lines 488--489
 []\T1/txtt/m/n/10 set_prop() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 nir-fasterff.base.
 dcs_mesh.dcsmesh
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 488--490
+Underfull \hbox (badness 10000) in paragraph at lines 489--491
 []\T1/txtt/m/n/10 set_prop() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 nir-fasterff.base.
 fluor_mesh.fluormesh
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 490--492
+Underfull \hbox (badness 10000) in paragraph at lines 491--493
 []\T1/txtt/m/n/10 set_prop() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 nir-fasterff.base.
 stnd_mesh.stndmesh
  []
 
 
-Underfull \hbox (badness 7133) in paragraph at lines 493--495
+Underfull \hbox (badness 7133) in paragraph at lines 494--496
 []\T1/txtt/m/n/10 SliceThickness \T1/qtm/m/n/10 (\T1/qtm/m/it/10 nir-fasterff.u
 tils.MeshingParams at-
  []
 
 [117]
-Underfull \hbox (badness 10000) in paragraph at lines 503--505
+Underfull \hbox (badness 10000) in paragraph at lines 504--506
 []\T1/txtt/m/n/10 support \T1/qtm/m/n/10 (\T1/qtm/m/it/10 nir-fasterff.base.flu
 or_mesh.fluormesh at-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 518--519
+Underfull \hbox (badness 10000) in paragraph at lines 519--520
 []\T1/txtt/m/n/10 togrid() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 nir-fasterff.base.da
 ta.flTRMomentsdata
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 520--521
+Underfull \hbox (badness 10000) in paragraph at lines 521--522
 []\T1/txtt/m/n/10 togrid() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 nir-fasterff.base.da
 ta.TRMomentsdata
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 525--526
+Underfull \hbox (badness 10000) in paragraph at lines 526--527
 []\T1/txtt/m/n/10 tomesh() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 nir-fasterff.base.da
 ta.flTRMomentsdata
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 527--528
+Underfull \hbox (badness 10000) in paragraph at lines 528--529
 []\T1/txtt/m/n/10 tomesh() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 nir-fasterff.base.da
 ta.TRMomentsdata
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 528--530
+Underfull \hbox (badness 10000) in paragraph at lines 529--531
 []\T1/txtt/m/n/10 touch_detectors() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 nir-fasterf
 f.base.optodes.optode
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 530--532
+Underfull \hbox (badness 10000) in paragraph at lines 531--533
 []\T1/txtt/m/n/10 touch_optodes() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 nir-fasterff.
 base.dcs_mesh.dcsmesh
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 532--534
+Underfull \hbox (badness 10000) in paragraph at lines 533--535
 []\T1/txtt/m/n/10 touch_optodes() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 nir-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 532--534
+Underfull \hbox (badness 10000) in paragraph at lines 533--535
 \T1/qtm/m/it/10 fasterff.base.fluor_mesh.fluormesh method\T1/qtm/m/n/10 ),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 536--538
+Underfull \hbox (badness 10000) in paragraph at lines 537--539
 []\T1/txtt/m/n/10 touch_sources() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 nir-fasterff.
 base.optodes.optode
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 552--554
+Underfull \hbox (badness 10000) in paragraph at lines 553--555
 []\T1/txtt/m/n/10 vector_vector_angle() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 in mod-
 ule nir-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 572--574
+Underfull \hbox (badness 10000) in paragraph at lines 573--575
 []\T1/txtt/m/n/10 xPixelSpacing \T1/qtm/m/n/10 (\T1/qtm/m/it/10 nir-fasterff.ut
 ils.MeshingParams at-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 578--580
+Underfull \hbox (badness 10000) in paragraph at lines 579--581
 []\T1/txtt/m/n/10 yPixelSpacing \T1/qtm/m/n/10 (\T1/qtm/m/it/10 nir-fasterff.ut
 ils.MeshingParams at-
  []
@@ -2221,16 +2196,16 @@ LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-13>
  ***********
 Package rerunfilecheck Info: File `nirfasterff.out' has not changed.
-(rerunfilecheck)             Checksum: D2911901FAF587356BE21264F945B92F;30323.
+(rerunfilecheck)             Checksum: 57591265530066FF0DC2B049E48468FA;30541.
  ) 
 Here is how much of TeX's memory you used:
- 17630 strings out of 474141
- 327754 string characters out of 5744598
+ 17635 strings out of 474141
+ 327990 string characters out of 5744598
  1982995 words of memory out of 5000000
- 38984 multiletter control sequences out of 15000+600000
+ 38987 multiletter control sequences out of 15000+600000
  610054 words of font info for 79 fonts, out of 8000000 for 9000
  1142 hyphenation exceptions out of 8191
- 72i,12n,79p,3464b,854s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 72i,12n,79p,3717b,854s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb
 ></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb><
 /usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></u
@@ -2249,10 +2224,10 @@ type1/public/tex-gyre/qtmri.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1
 ic/txfonts/t1xtt.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/txf
 onts/t1xtt.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/txfonts/t
 cxtt.pfb>
-Output written on nirfasterff.pdf (122 pages, 523973 bytes).
+Output written on nirfasterff.pdf (122 pages, 524996 bytes).
 PDF statistics:
- 2613 PDF objects out of 2984 (max. 8388607)
- 2238 compressed objects within 23 object streams
- 597 named destinations out of 1000 (max. 500000)
- 1005 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 2621 PDF objects out of 2984 (max. 8388607)
+ 2245 compressed objects within 23 object streams
+ 599 named destinations out of 1000 (max. 500000)
+ 1013 words of extra memory for PDF output out of 10000 (max. 10000000)
 

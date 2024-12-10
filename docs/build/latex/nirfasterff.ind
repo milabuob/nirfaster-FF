@@ -34,7 +34,7 @@
   \indexspace
   \bigletter A
   \item \spxentry{AbsoluteTolerance}\spxextra{nirfasterff.utils.SolverOptions attribute}, 
-		\hyperpage{107}
+		\hyperpage{108}
   \item \spxentry{aDb}\spxextra{nirfasterff.base.dcs\_mesh.dcsmesh attribute}, \hyperpage{25}
   \item \spxentry{alpha}\spxextra{nirfasterff.base.dcs\_mesh.dcsmesh attribute}, \hyperpage{25}
   \item \spxentry{amplitude}\spxextra{nirfasterff.base.data.DCSdata attribute}, \hyperpage{10}
@@ -95,7 +95,7 @@
   \item \spxentry{Db}\spxextra{nirfasterff.base.dcs\_mesh.dcsmesh attribute}, \hyperpage{25}
   \item \spxentry{DCSdata}\spxextra{class in nirfasterff.base.data}, \hyperpage{10}
   \item \spxentry{dcsmesh}\spxextra{class in nirfasterff.base.dcs\_mesh}, \hyperpage{24}
-  \item \spxentry{divergence}\spxextra{nirfasterff.utils.SolverOptions attribute}, \hyperpage{107}
+  \item \spxentry{divergence}\spxextra{nirfasterff.utils.SolverOptions attribute}, \hyperpage{108}
 
   \indexspace
   \bigletter E
@@ -206,7 +206,7 @@
   \item \spxentry{gen\_sources()}\spxextra{in module nirfasterff.math}, \hyperpage{86}
   \item \spxentry{gen\_sources\_fl()}\spxextra{in module nirfasterff.math}, \hyperpage{86}
   \item \spxentry{general\_cell\_size}\spxextra{nirfasterff.utils.MeshingParams attribute}, 
-		\hyperpage{106}
+		\hyperpage{107}
   \item \spxentry{get\_boundary\_data()}\spxextra{in module nirfasterff.math}, \hyperpage{87}
   \item \spxentry{get\_field\_CW()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}, 
 		\hyperpage{76}
@@ -238,10 +238,11 @@
 		\hyperpage{83}
   \item \spxentry{get\_field\_TRFLmoments()}\spxextra{in module nirfasterff.math}, \hyperpage{91}
   \item \spxentry{get\_field\_TRmoments()}\spxextra{in module nirfasterff.math}, \hyperpage{92}
-  \item \spxentry{get\_solver()}\spxextra{in module nirfasterff.utils}, \hyperpage{102}
-  \item \spxentry{GPU}\spxextra{nirfasterff.utils.SolverOptions attribute}, \hyperpage{107}
+  \item \spxentry{get\_nthread()}\spxextra{in module nirfasterff.utils}, \hyperpage{102}
+  \item \spxentry{get\_solver()}\spxextra{in module nirfasterff.utils}, \hyperpage{103}
+  \item \spxentry{GPU}\spxextra{nirfasterff.utils.SolverOptions attribute}, \hyperpage{108}
   \item \spxentry{gradientIntfunc()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}, 
-		\hyperpage{78}
+		\hyperpage{79}
   \item \spxentry{gradientIntfunc2()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}, 
 		\hyperpage{79}
   \item \spxentry{grid2mesh}\spxextra{nirfasterff.base.data.meshvol attribute}, \hyperpage{23}
@@ -308,18 +309,18 @@
   \item \spxentry{link}\spxextra{nirfasterff.base.fluor\_mesh.fluormesh attribute}, \hyperpage{34}
   \item \spxentry{link}\spxextra{nirfasterff.base.stnd\_mesh.stndmesh attribute}, \hyperpage{46}
   \item \spxentry{lloyd\_smooth}\spxextra{nirfasterff.utils.MeshingParams attribute}, 
-		\hyperpage{106}
+		\hyperpage{107}
 
   \indexspace
   \bigletter M
-  \item \spxentry{max\_iter}\spxextra{nirfasterff.utils.SolverOptions attribute}, \hyperpage{107}
+  \item \spxentry{max\_iter}\spxextra{nirfasterff.utils.SolverOptions attribute}, \hyperpage{108}
   \item \spxentry{meas}\spxextra{nirfasterff.base.dcs\_mesh.dcsmesh attribute}, \hyperpage{26}
   \item \spxentry{meas}\spxextra{nirfasterff.base.fluor\_mesh.fluormesh attribute}, \hyperpage{34}
   \item \spxentry{meas}\spxextra{nirfasterff.base.stnd\_mesh.stndmesh attribute}, \hyperpage{45}
   \item \spxentry{mesh2grid}\spxextra{nirfasterff.base.data.meshvol attribute}, \hyperpage{23}
   \item \spxentry{mesh\_support()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}, 
 		\hyperpage{79}
-  \item \spxentry{MeshingParams}\spxextra{class in nirfasterff.utils}, \hyperpage{105}
+  \item \spxentry{MeshingParams}\spxextra{class in nirfasterff.utils}, \hyperpage{106}
   \item \spxentry{meshingrid}\spxextra{nirfasterff.base.data.meshvol attribute}, \hyperpage{23}
   \item \spxentry{meshvol}\spxextra{class in nirfasterff.base.data}, \hyperpage{23}
   \item \spxentry{module}
@@ -437,12 +438,12 @@
   \item \spxentry{phix}\spxextra{nirfasterff.base.data.FLdata attribute}, \hyperpage{14}
   \item \spxentry{phix}\spxextra{nirfasterff.base.data.flTPSFdata attribute}, \hyperpage{19}
   \item \spxentry{phix}\spxextra{nirfasterff.base.data.flTRMomentsdata attribute}, \hyperpage{21}
-  \item \spxentry{plot3dmesh()}\spxextra{in module nirfasterff.visualize}, \hyperpage{108}
-  \item \spxentry{plotimage()}\spxextra{in module nirfasterff.visualize}, \hyperpage{109}
+  \item \spxentry{plot3dmesh()}\spxextra{in module nirfasterff.visualize}, \hyperpage{109}
+  \item \spxentry{plotimage()}\spxextra{in module nirfasterff.visualize}, \hyperpage{110}
   \item \spxentry{pointLineDistance()}\spxextra{in module nirfasterff.utils}, \hyperpage{103}
   \item \spxentry{pointLocation()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}, 
 		\hyperpage{79}
-  \item \spxentry{pointLocation()}\spxextra{in module nirfasterff.utils}, \hyperpage{103}
+  \item \spxentry{pointLocation()}\spxextra{in module nirfasterff.utils}, \hyperpage{104}
   \item \spxentry{pointTriangleDistance()}\spxextra{in module nirfasterff.utils}, \hyperpage{104}
 
   \indexspace
@@ -458,7 +459,7 @@
 		\hyperpage{33}
   \item \spxentry{region}\spxextra{nirfasterff.base.stnd\_mesh.stndmesh attribute}, \hyperpage{45}
   \item \spxentry{RelativeTolerance}\spxextra{nirfasterff.utils.SolverOptions attribute}, 
-		\hyperpage{107}
+		\hyperpage{108}
   \item \spxentry{res}\spxextra{nirfasterff.base.data.meshvol attribute}, \hyperpage{23}
   \item \spxentry{residual}\spxextra{nirfasterff.utils.ConvergenceInfo attribute}, \hyperpage{105}
   \item \spxentry{ri}\spxextra{nirfasterff.base.dcs\_mesh.dcsmesh attribute}, \hyperpage{25}
@@ -492,13 +493,13 @@
   \item \spxentry{simpqual()}\spxextra{in module nirfasterff.meshing.auxiliary}, \hyperpage{95}
   \item \spxentry{SliceThickness}\spxextra{nirfasterff.utils.MeshingParams attribute}, 
 		\hyperpage{106}
-  \item \spxentry{SolverOptions}\spxextra{class in nirfasterff.utils}, \hyperpage{107}
+  \item \spxentry{SolverOptions}\spxextra{class in nirfasterff.utils}, \hyperpage{108}
   \item \spxentry{source}\spxextra{nirfasterff.base.dcs\_mesh.dcsmesh attribute}, \hyperpage{26}
   \item \spxentry{source}\spxextra{nirfasterff.base.fluor\_mesh.fluormesh attribute}, 
 		\hyperpage{33}
   \item \spxentry{source}\spxextra{nirfasterff.base.stnd\_mesh.stndmesh attribute}, \hyperpage{45}
   \item \spxentry{stndmesh}\spxextra{class in nirfasterff.base.stnd\_mesh}, \hyperpage{44}
-  \item \spxentry{subdomain}\spxextra{nirfasterff.utils.MeshingParams attribute}, \hyperpage{106}
+  \item \spxentry{subdomain}\spxextra{nirfasterff.utils.MeshingParams attribute}, \hyperpage{107}
   \item \spxentry{support}\spxextra{nirfasterff.base.dcs\_mesh.dcsmesh attribute}, \hyperpage{26}
   \item \spxentry{support}\spxextra{nirfasterff.base.fluor\_mesh.fluormesh attribute}, 
 		\hyperpage{34}
@@ -545,7 +546,7 @@
 
   \indexspace
   \bigletter U
-  \item \spxentry{uncompress\_coo()}\spxextra{in module nirfasterff.utils}, \hyperpage{104}
+  \item \spxentry{uncompress\_coo()}\spxextra{in module nirfasterff.utils}, \hyperpage{105}
 
   \indexspace
   \bigletter V
@@ -570,13 +571,13 @@
   \bigletter X
   \item \spxentry{xgrid}\spxextra{nirfasterff.base.data.meshvol attribute}, \hyperpage{23}
   \item \spxentry{xPixelSpacing}\spxextra{nirfasterff.utils.MeshingParams attribute}, 
-		\hyperpage{105}
+		\hyperpage{106}
 
   \indexspace
   \bigletter Y
   \item \spxentry{ygrid}\spxextra{nirfasterff.base.data.meshvol attribute}, \hyperpage{23}
   \item \spxentry{yPixelSpacing}\spxextra{nirfasterff.utils.MeshingParams attribute}, 
-		\hyperpage{105}
+		\hyperpage{106}
 
   \indexspace
   \bigletter Z

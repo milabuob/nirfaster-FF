@@ -63,8 +63,8 @@
 
 
 \title{NIRFASTerFF}
-\date{Nov 19, 2024}
-\release{1.0.1}
+\date{Dec 09, 2024}
+\release{1.1.0}
 \author{Jiaming Cao, MILAB@UoB}
 \newcommand{\sphinxlogo}{\vbox{}}
 \renewcommand{\releasename}{Release}
@@ -9137,11 +9137,11 @@ Overloaded function.
 \sphinxsetlistlabels{\arabic}{enumi}{enumii}{}{.}%
 \item {} 
 \sphinxAtStartPar
-get\_field\_CW(arg0: numpy.ndarray{[}numpy.int32{[}m, 1{]}, flags.writeable{]}, arg1: numpy.ndarray{[}numpy.int32{[}m, 1{]}, flags.writeable{]}, arg2: numpy.ndarray{[}numpy.float64{[}m, 1{]}, flags.writeable{]}, arg3: scipy.sparse.csc\_matrix{[}numpy.float64{]}, max\_iter: int = 1000, AbsoluteTolerance: float = 1e\sphinxhyphen{}12, RelativeTolerance: float = 1e\sphinxhyphen{}12, divergence: float = 100000000.0) \sphinxhyphen{}\textgreater{} tuple{[}numpy.ndarray{[}numpy.float64{[}m, n{]}{]}, list{[}nirfasterff.lib.nirfasterff\_cpu.ConvergenceInfoCPU{]}{]}
+get\_field\_CW(arg0: numpy.ndarray{[}numpy.int32{[}m, 1{]}, flags.writeable{]}, arg1: numpy.ndarray{[}numpy.int32{[}m, 1{]}, flags.writeable{]}, arg2: numpy.ndarray{[}numpy.float64{[}m, 1{]}, flags.writeable{]}, arg3: scipy.sparse.csc\_matrix{[}numpy.float64{]}, max\_iter: int = 1000, AbsoluteTolerance: float = 1e\sphinxhyphen{}12, RelativeTolerance: float = 1e\sphinxhyphen{}12, divergence: float = 100000000.0, nthread: int = 8) \sphinxhyphen{}\textgreater{} tuple{[}numpy.ndarray{[}numpy.float64{[}m, n{]}{]}, list{[}nirfasterff.lib.nirfasterff\_cpu.ConvergenceInfoCPU{]}{]}
 
 \item {} 
 \sphinxAtStartPar
-get\_field\_CW(arg0: numpy.ndarray{[}numpy.int32{[}m, 1{]}, flags.writeable{]}, arg1: numpy.ndarray{[}numpy.int32{[}m, 1{]}, flags.writeable{]}, arg2: numpy.ndarray{[}numpy.float64{[}m, 1{]}, flags.writeable{]}, arg3: numpy.ndarray{[}numpy.float64{[}m, n{]}, flags.writeable, flags.c\_contiguous{]}, max\_iter: int = 1000, AbsoluteTolerance: float = 1e\sphinxhyphen{}12, RelativeTolerance: float = 1e\sphinxhyphen{}12, divergence: float = 100000000.0) \sphinxhyphen{}\textgreater{} tuple{[}numpy.ndarray{[}numpy.float64{[}m, n{]}{]}, list{[}nirfasterff.lib.nirfasterff\_cpu.ConvergenceInfoCPU{]}{]}
+get\_field\_CW(arg0: numpy.ndarray{[}numpy.int32{[}m, 1{]}, flags.writeable{]}, arg1: numpy.ndarray{[}numpy.int32{[}m, 1{]}, flags.writeable{]}, arg2: numpy.ndarray{[}numpy.float64{[}m, 1{]}, flags.writeable{]}, arg3: numpy.ndarray{[}numpy.float64{[}m, n{]}, flags.writeable, flags.c\_contiguous{]}, max\_iter: int = 1000, AbsoluteTolerance: float = 1e\sphinxhyphen{}12, RelativeTolerance: float = 1e\sphinxhyphen{}12, divergence: float = 100000000.0, nthread: int = 8) \sphinxhyphen{}\textgreater{} tuple{[}numpy.ndarray{[}numpy.float64{[}m, n{]}{]}, list{[}nirfasterff.lib.nirfasterff\_cpu.ConvergenceInfoCPU{]}{]}
 
 \end{enumerate}
 
@@ -9165,11 +9165,11 @@ Overloaded function.
 \sphinxsetlistlabels{\arabic}{enumi}{enumii}{}{.}%
 \item {} 
 \sphinxAtStartPar
-get\_field\_FD(arg0: numpy.ndarray{[}numpy.int32{[}m, 1{]}, flags.writeable{]}, arg1: numpy.ndarray{[}numpy.int32{[}m, 1{]}, flags.writeable{]}, arg2: numpy.ndarray{[}numpy.complex128{[}m, 1{]}, flags.writeable{]}, arg3: scipy.sparse.csc\_matrix{[}numpy.complex128{]}, max\_iter: int = 1000, AbsoluteTolerance: float = 1e\sphinxhyphen{}12, RelativeTolerance: float = 1e\sphinxhyphen{}12, divergence: float = 100000000.0) \sphinxhyphen{}\textgreater{} tuple{[}numpy.ndarray{[}numpy.complex128{[}m, n{]}{]}, list{[}nirfasterff.lib.nirfasterff\_cpu.ConvergenceInfoCPU{]}{]}
+get\_field\_FD(arg0: numpy.ndarray{[}numpy.int32{[}m, 1{]}, flags.writeable{]}, arg1: numpy.ndarray{[}numpy.int32{[}m, 1{]}, flags.writeable{]}, arg2: numpy.ndarray{[}numpy.complex128{[}m, 1{]}, flags.writeable{]}, arg3: scipy.sparse.csc\_matrix{[}numpy.complex128{]}, max\_iter: int = 1000, AbsoluteTolerance: float = 1e\sphinxhyphen{}12, RelativeTolerance: float = 1e\sphinxhyphen{}12, divergence: float = 100000000.0, nthread: int = 8) \sphinxhyphen{}\textgreater{} tuple{[}numpy.ndarray{[}numpy.complex128{[}m, n{]}{]}, list{[}nirfasterff.lib.nirfasterff\_cpu.ConvergenceInfoCPU{]}{]}
 
 \item {} 
 \sphinxAtStartPar
-get\_field\_FD(arg0: numpy.ndarray{[}numpy.int32{[}m, 1{]}, flags.writeable{]}, arg1: numpy.ndarray{[}numpy.int32{[}m, 1{]}, flags.writeable{]}, arg2: numpy.ndarray{[}numpy.complex128{[}m, 1{]}, flags.writeable{]}, arg3: numpy.ndarray{[}numpy.complex128{[}m, n{]}, flags.writeable, flags.c\_contiguous{]}, max\_iter: int = 1000, AbsoluteTolerance: float = 1e\sphinxhyphen{}12, RelativeTolerance: float = 1e\sphinxhyphen{}12, divergence: float = 100000000.0) \sphinxhyphen{}\textgreater{} tuple{[}numpy.ndarray{[}numpy.complex128{[}m, n{]}{]}, list{[}nirfasterff.lib.nirfasterff\_cpu.ConvergenceInfoCPU{]}{]}
+get\_field\_FD(arg0: numpy.ndarray{[}numpy.int32{[}m, 1{]}, flags.writeable{]}, arg1: numpy.ndarray{[}numpy.int32{[}m, 1{]}, flags.writeable{]}, arg2: numpy.ndarray{[}numpy.complex128{[}m, 1{]}, flags.writeable{]}, arg3: numpy.ndarray{[}numpy.complex128{[}m, n{]}, flags.writeable, flags.c\_contiguous{]}, max\_iter: int = 1000, AbsoluteTolerance: float = 1e\sphinxhyphen{}12, RelativeTolerance: float = 1e\sphinxhyphen{}12, divergence: float = 100000000.0, nthread: int = 8) \sphinxhyphen{}\textgreater{} tuple{[}numpy.ndarray{[}numpy.complex128{[}m, n{]}{]}, list{[}nirfasterff.lib.nirfasterff\_cpu.ConvergenceInfoCPU{]}{]}
 
 \end{enumerate}
 
@@ -9193,11 +9193,11 @@ Overloaded function.
 \sphinxsetlistlabels{\arabic}{enumi}{enumii}{}{.}%
 \item {} 
 \sphinxAtStartPar
-get\_field\_TR(arg0: numpy.ndarray{[}numpy.int32{[}m, 1{]}, flags.writeable{]}, arg1: numpy.ndarray{[}numpy.int32{[}m, 1{]}, flags.writeable{]}, arg2: numpy.ndarray{[}numpy.float64{[}m, 1{]}, flags.writeable{]}, arg3: numpy.ndarray{[}numpy.float64{[}m, 1{]}, flags.writeable{]}, arg4: scipy.sparse.csc\_matrix{[}numpy.float64{]}, arg5: int, max\_iter: int = 1000, AbsoluteTolerance: float = 1e\sphinxhyphen{}12, RelativeTolerance: float = 1e\sphinxhyphen{}12, divergence: float = 100000000.0) \sphinxhyphen{}\textgreater{} tuple{[}numpy.ndarray{[}numpy.float64{[}m, n{]}{]}, list{[}nirfasterff.lib.nirfasterff\_cpu.ConvergenceInfoCPU{]}{]}
+get\_field\_TR(arg0: numpy.ndarray{[}numpy.int32{[}m, 1{]}, flags.writeable{]}, arg1: numpy.ndarray{[}numpy.int32{[}m, 1{]}, flags.writeable{]}, arg2: numpy.ndarray{[}numpy.float64{[}m, 1{]}, flags.writeable{]}, arg3: numpy.ndarray{[}numpy.float64{[}m, 1{]}, flags.writeable{]}, arg4: scipy.sparse.csc\_matrix{[}numpy.float64{]}, arg5: int, max\_iter: int = 1000, AbsoluteTolerance: float = 1e\sphinxhyphen{}12, RelativeTolerance: float = 1e\sphinxhyphen{}12, divergence: float = 100000000.0, nthread: int = 8) \sphinxhyphen{}\textgreater{} tuple{[}numpy.ndarray{[}numpy.float64{[}m, n{]}{]}, list{[}nirfasterff.lib.nirfasterff\_cpu.ConvergenceInfoCPU{]}{]}
 
 \item {} 
 \sphinxAtStartPar
-get\_field\_TR(arg0: numpy.ndarray{[}numpy.int32{[}m, 1{]}, flags.writeable{]}, arg1: numpy.ndarray{[}numpy.int32{[}m, 1{]}, flags.writeable{]}, arg2: numpy.ndarray{[}numpy.float64{[}m, 1{]}, flags.writeable{]}, arg3: numpy.ndarray{[}numpy.float64{[}m, 1{]}, flags.writeable{]}, arg4: numpy.ndarray{[}numpy.float64{[}m, n{]}, flags.writeable, flags.c\_contiguous{]}, arg5: int, max\_iter: int = 1000, AbsoluteTolerance: float = 1e\sphinxhyphen{}12, RelativeTolerance: float = 1e\sphinxhyphen{}12, divergence: float = 100000000.0) \sphinxhyphen{}\textgreater{} tuple{[}numpy.ndarray{[}numpy.float64{[}m, n{]}{]}, list{[}nirfasterff.lib.nirfasterff\_cpu.ConvergenceInfoCPU{]}{]}
+get\_field\_TR(arg0: numpy.ndarray{[}numpy.int32{[}m, 1{]}, flags.writeable{]}, arg1: numpy.ndarray{[}numpy.int32{[}m, 1{]}, flags.writeable{]}, arg2: numpy.ndarray{[}numpy.float64{[}m, 1{]}, flags.writeable{]}, arg3: numpy.ndarray{[}numpy.float64{[}m, 1{]}, flags.writeable{]}, arg4: numpy.ndarray{[}numpy.float64{[}m, n{]}, flags.writeable, flags.c\_contiguous{]}, arg5: int, max\_iter: int = 1000, AbsoluteTolerance: float = 1e\sphinxhyphen{}12, RelativeTolerance: float = 1e\sphinxhyphen{}12, divergence: float = 100000000.0, nthread: int = 8) \sphinxhyphen{}\textgreater{} tuple{[}numpy.ndarray{[}numpy.float64{[}m, n{]}{]}, list{[}nirfasterff.lib.nirfasterff\_cpu.ConvergenceInfoCPU{]}{]}
 
 \end{enumerate}
 
@@ -9213,7 +9213,7 @@ get\_field\_TR(arg0: numpy.ndarray{[}numpy.int32{[}m, 1{]}, flags.writeable{]}, 
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{_autosummary/nirfasterff.lib.nirfasterff_cpu.get_field_TRFL:nirfasterff.lib.nirfasterff_cpu.get_field_TRFL}}
 \pysigstartsignatures
-\pysiglinewithargsret{\sphinxcode{\sphinxupquote{nirfasterff.lib.nirfasterff\_cpu.}}\sphinxbfcode{\sphinxupquote{get\_field\_TRFL}}}{\sphinxparam{\DUrole{n}{arg0}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.int32\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }\DUrole{m}{1}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg1}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.int32\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }\DUrole{m}{1}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg2}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.float64\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }\DUrole{m}{1}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg3}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.float64\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }\DUrole{m}{1}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg4}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.float64\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }n\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{,}\DUrole{w}{ }flags.c\_contiguous\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg5}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}}\sphinxparamcomma \sphinxparam{\DUrole{n}{max\_iter}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{1000}}\sphinxparamcomma \sphinxparam{\DUrole{n}{AbsoluteTolerance}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{1e\sphinxhyphen{}12}}\sphinxparamcomma \sphinxparam{\DUrole{n}{RelativeTolerance}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{1e\sphinxhyphen{}12}}\sphinxparamcomma \sphinxparam{\DUrole{n}{divergence}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{100000000.0}}}{{ $\rightarrow$ tuple\DUrole{p}{{[}}numpy.ndarray\DUrole{p}{{[}}numpy.float64\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }n\DUrole{p}{{]}}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }list\DUrole{p}{{[}}{\hyperref[\detokenize{_autosummary/nirfasterff.lib.nirfasterff_cpu.ConvergenceInfoCPU:nirfasterff.lib.nirfasterff_cpu.ConvergenceInfoCPU}]{\sphinxcrossref{nirfasterff.lib.nirfasterff\_cpu.ConvergenceInfoCPU}}}\DUrole{p}{{]}}\DUrole{p}{{]}}}}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{nirfasterff.lib.nirfasterff\_cpu.}}\sphinxbfcode{\sphinxupquote{get\_field\_TRFL}}}{\sphinxparam{\DUrole{n}{arg0}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.int32\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }\DUrole{m}{1}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg1}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.int32\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }\DUrole{m}{1}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg2}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.float64\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }\DUrole{m}{1}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg3}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.float64\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }\DUrole{m}{1}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg4}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.float64\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }n\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{,}\DUrole{w}{ }flags.c\_contiguous\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg5}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}}\sphinxparamcomma \sphinxparam{\DUrole{n}{max\_iter}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{1000}}\sphinxparamcomma \sphinxparam{\DUrole{n}{AbsoluteTolerance}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{1e\sphinxhyphen{}12}}\sphinxparamcomma \sphinxparam{\DUrole{n}{RelativeTolerance}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{1e\sphinxhyphen{}12}}\sphinxparamcomma \sphinxparam{\DUrole{n}{divergence}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{100000000.0}}\sphinxparamcomma \sphinxparam{\DUrole{n}{nthread}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{8}}}{{ $\rightarrow$ tuple\DUrole{p}{{[}}numpy.ndarray\DUrole{p}{{[}}numpy.float64\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }n\DUrole{p}{{]}}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }list\DUrole{p}{{[}}{\hyperref[\detokenize{_autosummary/nirfasterff.lib.nirfasterff_cpu.ConvergenceInfoCPU:nirfasterff.lib.nirfasterff_cpu.ConvergenceInfoCPU}]{\sphinxcrossref{nirfasterff.lib.nirfasterff\_cpu.ConvergenceInfoCPU}}}\DUrole{p}{{]}}\DUrole{p}{{]}}}}
 \pysigstopsignatures
 \end{fulllineitems}
 
@@ -9227,7 +9227,7 @@ get\_field\_TR(arg0: numpy.ndarray{[}numpy.int32{[}m, 1{]}, flags.writeable{]}, 
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{_autosummary/nirfasterff.lib.nirfasterff_cpu.get_field_TRFL_moments:nirfasterff.lib.nirfasterff_cpu.get_field_TRFL_moments}}
 \pysigstartsignatures
-\pysiglinewithargsret{\sphinxcode{\sphinxupquote{nirfasterff.lib.nirfasterff\_cpu.}}\sphinxbfcode{\sphinxupquote{get\_field\_TRFL\_moments}}}{\sphinxparam{\DUrole{n}{arg0}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.int32\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }\DUrole{m}{1}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg1}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.int32\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }\DUrole{m}{1}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg2}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.float64\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }\DUrole{m}{1}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg3}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.float64\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }\DUrole{m}{1}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg4}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.float64\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }n\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{,}\DUrole{w}{ }flags.c\_contiguous\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg5}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.float64\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }\DUrole{m}{1}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg6}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.float64\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }\DUrole{m}{1}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg7}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}}\sphinxparamcomma \sphinxparam{\DUrole{n}{max\_iter}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{1000}}\sphinxparamcomma \sphinxparam{\DUrole{n}{AbsoluteTolerance}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{1e\sphinxhyphen{}12}}\sphinxparamcomma \sphinxparam{\DUrole{n}{RelativeTolerance}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{1e\sphinxhyphen{}12}}\sphinxparamcomma \sphinxparam{\DUrole{n}{divergence}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{100000000.0}}}{{ $\rightarrow$ tuple\DUrole{p}{{[}}numpy.ndarray\DUrole{p}{{[}}numpy.float64\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }n\DUrole{p}{{]}}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }list\DUrole{p}{{[}}{\hyperref[\detokenize{_autosummary/nirfasterff.lib.nirfasterff_cpu.ConvergenceInfoCPU:nirfasterff.lib.nirfasterff_cpu.ConvergenceInfoCPU}]{\sphinxcrossref{nirfasterff.lib.nirfasterff\_cpu.ConvergenceInfoCPU}}}\DUrole{p}{{]}}\DUrole{p}{{]}}}}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{nirfasterff.lib.nirfasterff\_cpu.}}\sphinxbfcode{\sphinxupquote{get\_field\_TRFL\_moments}}}{\sphinxparam{\DUrole{n}{arg0}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.int32\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }\DUrole{m}{1}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg1}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.int32\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }\DUrole{m}{1}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg2}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.float64\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }\DUrole{m}{1}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg3}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.float64\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }\DUrole{m}{1}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg4}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.float64\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }\DUrole{m}{1}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg5}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.float64\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }n\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{,}\DUrole{w}{ }flags.c\_contiguous\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg6}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.float64\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }\DUrole{m}{1}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg7}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.float64\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }\DUrole{m}{1}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg8}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}}\sphinxparamcomma \sphinxparam{\DUrole{n}{max\_iter}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{1000}}\sphinxparamcomma \sphinxparam{\DUrole{n}{AbsoluteTolerance}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{1e\sphinxhyphen{}12}}\sphinxparamcomma \sphinxparam{\DUrole{n}{RelativeTolerance}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{1e\sphinxhyphen{}12}}\sphinxparamcomma \sphinxparam{\DUrole{n}{divergence}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{100000000.0}}\sphinxparamcomma \sphinxparam{\DUrole{n}{nthread}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{8}}}{{ $\rightarrow$ tuple\DUrole{p}{{[}}numpy.ndarray\DUrole{p}{{[}}numpy.float64\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }n\DUrole{p}{{]}}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }list\DUrole{p}{{[}}{\hyperref[\detokenize{_autosummary/nirfasterff.lib.nirfasterff_cpu.ConvergenceInfoCPU:nirfasterff.lib.nirfasterff_cpu.ConvergenceInfoCPU}]{\sphinxcrossref{nirfasterff.lib.nirfasterff\_cpu.ConvergenceInfoCPU}}}\DUrole{p}{{]}}\DUrole{p}{{]}}}}
 \pysigstopsignatures
 \end{fulllineitems}
 
@@ -9249,11 +9249,11 @@ Overloaded function.
 \sphinxsetlistlabels{\arabic}{enumi}{enumii}{}{.}%
 \item {} 
 \sphinxAtStartPar
-get\_field\_TR\_moments(arg0: numpy.ndarray{[}numpy.int32{[}m, 1{]}, flags.writeable{]}, arg1: numpy.ndarray{[}numpy.int32{[}m, 1{]}, flags.writeable{]}, arg2: numpy.ndarray{[}numpy.float64{[}m, 1{]}, flags.writeable{]}, arg3: numpy.ndarray{[}numpy.float64{[}m, 1{]}, flags.writeable{]}, arg4: scipy.sparse.csc\_matrix{[}numpy.float64{]}, arg5: int, max\_iter: int = 1000, AbsoluteTolerance: float = 1e\sphinxhyphen{}12, RelativeTolerance: float = 1e\sphinxhyphen{}12, divergence: float = 100000000.0) \sphinxhyphen{}\textgreater{} tuple{[}numpy.ndarray{[}numpy.float64{[}m, n{]}{]}, list{[}nirfasterff.lib.nirfasterff\_cpu.ConvergenceInfoCPU{]}{]}
+get\_field\_TR\_moments(arg0: numpy.ndarray{[}numpy.int32{[}m, 1{]}, flags.writeable{]}, arg1: numpy.ndarray{[}numpy.int32{[}m, 1{]}, flags.writeable{]}, arg2: numpy.ndarray{[}numpy.float64{[}m, 1{]}, flags.writeable{]}, arg3: numpy.ndarray{[}numpy.float64{[}m, 1{]}, flags.writeable{]}, arg4: scipy.sparse.csc\_matrix{[}numpy.float64{]}, arg5: int, max\_iter: int = 1000, AbsoluteTolerance: float = 1e\sphinxhyphen{}12, RelativeTolerance: float = 1e\sphinxhyphen{}12, divergence: float = 100000000.0, nthread: int = 8) \sphinxhyphen{}\textgreater{} tuple{[}numpy.ndarray{[}numpy.float64{[}m, n{]}{]}, list{[}nirfasterff.lib.nirfasterff\_cpu.ConvergenceInfoCPU{]}{]}
 
 \item {} 
 \sphinxAtStartPar
-get\_field\_TR\_moments(arg0: numpy.ndarray{[}numpy.int32{[}m, 1{]}, flags.writeable{]}, arg1: numpy.ndarray{[}numpy.int32{[}m, 1{]}, flags.writeable{]}, arg2: numpy.ndarray{[}numpy.float64{[}m, 1{]}, flags.writeable{]}, arg3: numpy.ndarray{[}numpy.float64{[}m, 1{]}, flags.writeable{]}, arg4: numpy.ndarray{[}numpy.float64{[}m, n{]}, flags.writeable, flags.c\_contiguous{]}, arg5: int, max\_iter: int = 1000, AbsoluteTolerance: float = 1e\sphinxhyphen{}12, RelativeTolerance: float = 1e\sphinxhyphen{}12, divergence: float = 100000000.0) \sphinxhyphen{}\textgreater{} tuple{[}numpy.ndarray{[}numpy.float64{[}m, n{]}{]}, list{[}nirfasterff.lib.nirfasterff\_cpu.ConvergenceInfoCPU{]}{]}
+get\_field\_TR\_moments(arg0: numpy.ndarray{[}numpy.int32{[}m, 1{]}, flags.writeable{]}, arg1: numpy.ndarray{[}numpy.int32{[}m, 1{]}, flags.writeable{]}, arg2: numpy.ndarray{[}numpy.float64{[}m, 1{]}, flags.writeable{]}, arg3: numpy.ndarray{[}numpy.float64{[}m, 1{]}, flags.writeable{]}, arg4: numpy.ndarray{[}numpy.float64{[}m, n{]}, flags.writeable, flags.c\_contiguous{]}, arg5: int, max\_iter: int = 1000, AbsoluteTolerance: float = 1e\sphinxhyphen{}12, RelativeTolerance: float = 1e\sphinxhyphen{}12, divergence: float = 100000000.0, nthread: int = 8) \sphinxhyphen{}\textgreater{} tuple{[}numpy.ndarray{[}numpy.float64{[}m, n{]}{]}, list{[}nirfasterff.lib.nirfasterff\_cpu.ConvergenceInfoCPU{]}{]}
 
 \end{enumerate}
 
@@ -9660,7 +9660,7 @@ get\_field\_TR(arg0: numpy.ndarray{[}numpy.int32{[}m, 1{]}, flags.writeable{]}, 
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{_autosummary/nirfasterff.lib.nirfasterff_cuda.get_field_TRFL_moments:nirfasterff.lib.nirfasterff_cuda.get_field_TRFL_moments}}
 \pysigstartsignatures
-\pysiglinewithargsret{\sphinxcode{\sphinxupquote{nirfasterff.lib.nirfasterff\_cuda.}}\sphinxbfcode{\sphinxupquote{get\_field\_TRFL\_moments}}}{\sphinxparam{\DUrole{n}{arg0}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.int32\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }\DUrole{m}{1}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg1}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.int32\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }\DUrole{m}{1}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg2}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.float64\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }\DUrole{m}{1}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg3}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.float64\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }\DUrole{m}{1}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg4}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.float64\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }n\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{,}\DUrole{w}{ }flags.c\_contiguous\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg5}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.float64\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }\DUrole{m}{1}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg6}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.float64\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }\DUrole{m}{1}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg7}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}}\sphinxparamcomma \sphinxparam{\DUrole{n}{max\_iter}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{1000}}\sphinxparamcomma \sphinxparam{\DUrole{n}{AbsoluteTolerance}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{1e\sphinxhyphen{}12}}\sphinxparamcomma \sphinxparam{\DUrole{n}{RelativeTolerance}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{1e\sphinxhyphen{}12}}\sphinxparamcomma \sphinxparam{\DUrole{n}{divergence}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{100000000.0}}\sphinxparamcomma \sphinxparam{\DUrole{n}{GPU}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{\sphinxhyphen{}1}}}{{ $\rightarrow$ tuple\DUrole{p}{{[}}numpy.ndarray\DUrole{p}{{[}}numpy.float64\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }n\DUrole{p}{{]}}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }list\DUrole{p}{{[}}{\hyperref[\detokenize{_autosummary/nirfasterff.lib.nirfasterff_cuda.ConvergenceInfoGPU:nirfasterff.lib.nirfasterff_cuda.ConvergenceInfoGPU}]{\sphinxcrossref{nirfasterff.lib.nirfasterff\_cuda.ConvergenceInfoGPU}}}\DUrole{p}{{]}}\DUrole{p}{{]}}}}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{nirfasterff.lib.nirfasterff\_cuda.}}\sphinxbfcode{\sphinxupquote{get\_field\_TRFL\_moments}}}{\sphinxparam{\DUrole{n}{arg0}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.int32\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }\DUrole{m}{1}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg1}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.int32\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }\DUrole{m}{1}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg2}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.float64\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }\DUrole{m}{1}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg3}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.float64\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }\DUrole{m}{1}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg4}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.float64\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }\DUrole{m}{1}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg5}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.float64\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }n\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{,}\DUrole{w}{ }flags.c\_contiguous\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg6}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.float64\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }\DUrole{m}{1}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg7}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{numpy.ndarray\DUrole{p}{{[}}numpy.float64\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }\DUrole{m}{1}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }flags.writeable\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{arg8}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}}\sphinxparamcomma \sphinxparam{\DUrole{n}{max\_iter}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{1000}}\sphinxparamcomma \sphinxparam{\DUrole{n}{AbsoluteTolerance}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{1e\sphinxhyphen{}12}}\sphinxparamcomma \sphinxparam{\DUrole{n}{RelativeTolerance}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{1e\sphinxhyphen{}12}}\sphinxparamcomma \sphinxparam{\DUrole{n}{divergence}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{100000000.0}}\sphinxparamcomma \sphinxparam{\DUrole{n}{GPU}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{\sphinxhyphen{}1}}}{{ $\rightarrow$ tuple\DUrole{p}{{[}}numpy.ndarray\DUrole{p}{{[}}numpy.float64\DUrole{p}{{[}}m\DUrole{p}{,}\DUrole{w}{ }n\DUrole{p}{{]}}\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }list\DUrole{p}{{[}}{\hyperref[\detokenize{_autosummary/nirfasterff.lib.nirfasterff_cuda.ConvergenceInfoGPU:nirfasterff.lib.nirfasterff_cuda.ConvergenceInfoGPU}]{\sphinxcrossref{nirfasterff.lib.nirfasterff\_cuda.ConvergenceInfoGPU}}}\DUrole{p}{{]}}\DUrole{p}{{]}}}}
 \pysigstopsignatures
 \end{fulllineitems}
 
@@ -9821,7 +9821,7 @@ It is usually unnecessary to use them directly and caution must be excercised, a
 \sphinxtoprule
 \sphinxtableatstartofbodyhook
 \sphinxAtStartPar
-{\hyperref[\detokenize{_autosummary/nirfasterff.math.gen_mass_matrix:nirfasterff.math.gen_mass_matrix}]{\sphinxcrossref{\sphinxcode{\sphinxupquote{gen\_mass\_matrix}}}}}(mesh, freq{[}, solver, GPU{]})
+{\hyperref[\detokenize{_autosummary/nirfasterff.math.gen_mass_matrix:nirfasterff.math.gen_mass_matrix}]{\sphinxcrossref{\sphinxcode{\sphinxupquote{gen\_mass\_matrix}}}}}(mesh, omega{[}, solver, GPU{]})
 &
 \sphinxAtStartPar
 Calculate the MASS matrix, and return the coordinates in CSR format.
@@ -9870,14 +9870,14 @@ Call the Preconditioned Conjugate Gradient solver with FSAI preconditioner.
 \\
 \sphinxhline
 \sphinxAtStartPar
-{\hyperref[\detokenize{_autosummary/nirfasterff.math.get_field_TRFL:nirfasterff.math.get_field_TRFL}]{\sphinxcrossref{\sphinxcode{\sphinxupquote{get\_field\_TRFL}}}}}(csrI, csrJ, csrV, phix, dt, ...)
+{\hyperref[\detokenize{_autosummary/nirfasterff.math.get_field_TRFL:nirfasterff.math.get_field_TRFL}]{\sphinxcrossref{\sphinxcode{\sphinxupquote{get\_field\_TRFL}}}}}(csrI, csrJ, csrV, qvec\_m, dt, ...)
 &
 \sphinxAtStartPar
 Call the Preconditioned Conjugate Gradient solver with FSAI preconditioner.
 \\
 \sphinxhline
 \sphinxAtStartPar
-{\hyperref[\detokenize{_autosummary/nirfasterff.math.get_field_TRFLmoments:nirfasterff.math.get_field_TRFLmoments}]{\sphinxcrossref{\sphinxcode{\sphinxupquote{get\_field\_TRFLmoments}}}}}(csrI, csrJ, csrV, mx, ...)
+{\hyperref[\detokenize{_autosummary/nirfasterff.math.get_field_TRFLmoments:nirfasterff.math.get_field_TRFLmoments}]{\sphinxcrossref{\sphinxcode{\sphinxupquote{get\_field\_TRFLmoments}}}}}(csrI, csrJ, csrV, ...)
 &
 \sphinxAtStartPar
 Call the Preconditioned Conjugate Gradient solver with FSAI preconditioner.
@@ -9903,7 +9903,7 @@ Call the Preconditioned Conjugate Gradient solver with FSAI preconditioner.
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{_autosummary/nirfasterff.math.gen_mass_matrix:nirfasterff.math.gen_mass_matrix}}
 \pysigstartsignatures
-\pysiglinewithargsret{\sphinxcode{\sphinxupquote{nirfasterff.math.}}\sphinxbfcode{\sphinxupquote{gen\_mass\_matrix}}}{\sphinxparam{\DUrole{n}{mesh}}\sphinxparamcomma \sphinxparam{\DUrole{n}{freq}}\sphinxparamcomma \sphinxparam{\DUrole{n}{solver}\DUrole{o}{=}\DUrole{default_value}{utils.get\_solver()}}\sphinxparamcomma \sphinxparam{\DUrole{n}{GPU}\DUrole{o}{=}\DUrole{default_value}{\sphinxhyphen{}1}}}{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{nirfasterff.math.}}\sphinxbfcode{\sphinxupquote{gen\_mass\_matrix}}}{\sphinxparam{\DUrole{n}{mesh}}\sphinxparamcomma \sphinxparam{\DUrole{n}{omega}}\sphinxparamcomma \sphinxparam{\DUrole{n}{solver}\DUrole{o}{=}\DUrole{default_value}{utils.get\_solver()}}\sphinxparamcomma \sphinxparam{\DUrole{n}{GPU}\DUrole{o}{=}\DUrole{default_value}{\sphinxhyphen{}1}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Calculate the MASS matrix, and return the coordinates in CSR format.
@@ -9921,7 +9921,7 @@ If calculation fails on GPU (if chosen), it will generate a warning and automati
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{freq}} (\sphinxstyleliteralemphasis{\sphinxupquote{double}}) \textendash{} modulation frequency, in Hz.
+\sphinxstyleliteralstrong{\sphinxupquote{omega}} (\sphinxstyleliteralemphasis{\sphinxupquote{double}}) \textendash{} modulation frequency, in radian.
 
 \item {} 
 \sphinxAtStartPar
@@ -10469,7 +10469,7 @@ Arridges et al., Med. Phys,, 1993. doi:10.1118/1.597069
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{_autosummary/nirfasterff.math.get_field_TRFL:nirfasterff.math.get_field_TRFL}}
 \pysigstartsignatures
-\pysiglinewithargsret{\sphinxcode{\sphinxupquote{nirfasterff.math.}}\sphinxbfcode{\sphinxupquote{get\_field\_TRFL}}}{\sphinxparam{\DUrole{n}{csrI}}\sphinxparamcomma \sphinxparam{\DUrole{n}{csrJ}}\sphinxparamcomma \sphinxparam{\DUrole{n}{csrV}}\sphinxparamcomma \sphinxparam{\DUrole{n}{phix}}\sphinxparamcomma \sphinxparam{\DUrole{n}{dt}}\sphinxparamcomma \sphinxparam{\DUrole{n}{max\_step}}\sphinxparamcomma \sphinxparam{\DUrole{n}{opt}\DUrole{o}{=}\DUrole{default_value}{utils.SolverOptions()}}\sphinxparamcomma \sphinxparam{\DUrole{n}{solver}\DUrole{o}{=}\DUrole{default_value}{utils.get\_solver()}}}{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{nirfasterff.math.}}\sphinxbfcode{\sphinxupquote{get\_field\_TRFL}}}{\sphinxparam{\DUrole{n}{csrI}}\sphinxparamcomma \sphinxparam{\DUrole{n}{csrJ}}\sphinxparamcomma \sphinxparam{\DUrole{n}{csrV}}\sphinxparamcomma \sphinxparam{\DUrole{n}{qvec\_m}}\sphinxparamcomma \sphinxparam{\DUrole{n}{dt}}\sphinxparamcomma \sphinxparam{\DUrole{n}{max\_step}}\sphinxparamcomma \sphinxparam{\DUrole{n}{opt}\DUrole{o}{=}\DUrole{default_value}{utils.SolverOptions()}}\sphinxparamcomma \sphinxparam{\DUrole{n}{solver}\DUrole{o}{=}\DUrole{default_value}{utils.get\_solver()}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Call the Preconditioned Conjugate Gradient solver with FSAI preconditioner. Calculates the TPSFs of fluorescence emission given the TPSFs of excitation
@@ -10501,9 +10501,9 @@ This is calculated using gen\_mass\_matrix with omega=1.
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{phix}} (\sphinxstyleliteralemphasis{\sphinxupquote{double NumPy array}}) \textendash{} 
+\sphinxstyleliteralstrong{\sphinxupquote{qvec\_m}} (\sphinxstyleliteralemphasis{\sphinxupquote{double NumPy array}}) \textendash{} 
 \sphinxAtStartPar
-TPSF of the excitation. Size (NNodes, NSources*NTime), structured as,
+TPSF of the excitation convolved with decay, and multiplied by the FEM matrix. Size (NNodes, NSources*NTime), structured as,
 
 \sphinxAtStartPar
 {[}src0\_step0, src1\_step0,…,src0\_step1, src1\_step1,…{]}
@@ -10591,7 +10591,7 @@ See {\hyperref[\detokenize{_autosummary/nirfasterff.utils.ConvergenceInfo:nirfas
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{_autosummary/nirfasterff.math.get_field_TRFLmoments:nirfasterff.math.get_field_TRFLmoments}}
 \pysigstartsignatures
-\pysiglinewithargsret{\sphinxcode{\sphinxupquote{nirfasterff.math.}}\sphinxbfcode{\sphinxupquote{get\_field\_TRFLmoments}}}{\sphinxparam{\DUrole{n}{csrI}}\sphinxparamcomma \sphinxparam{\DUrole{n}{csrJ}}\sphinxparamcomma \sphinxparam{\DUrole{n}{csrV}}\sphinxparamcomma \sphinxparam{\DUrole{n}{mx}}\sphinxparamcomma \sphinxparam{\DUrole{n}{alpha}}\sphinxparamcomma \sphinxparam{\DUrole{n}{tau}}\sphinxparamcomma \sphinxparam{\DUrole{n}{max\_moment}}\sphinxparamcomma \sphinxparam{\DUrole{n}{opt}\DUrole{o}{=}\DUrole{default_value}{utils.SolverOptions()}}\sphinxparamcomma \sphinxparam{\DUrole{n}{solver}\DUrole{o}{=}\DUrole{default_value}{utils.get\_solver()}}}{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{nirfasterff.math.}}\sphinxbfcode{\sphinxupquote{get\_field\_TRFLmoments}}}{\sphinxparam{\DUrole{n}{csrI}}\sphinxparamcomma \sphinxparam{\DUrole{n}{csrJ}}\sphinxparamcomma \sphinxparam{\DUrole{n}{csrV}}\sphinxparamcomma \sphinxparam{\DUrole{n}{csrV2}}\sphinxparamcomma \sphinxparam{\DUrole{n}{mx}}\sphinxparamcomma \sphinxparam{\DUrole{n}{gamma}}\sphinxparamcomma \sphinxparam{\DUrole{n}{tau}}\sphinxparamcomma \sphinxparam{\DUrole{n}{max\_moment}}\sphinxparamcomma \sphinxparam{\DUrole{n}{opt}\DUrole{o}{=}\DUrole{default_value}{utils.SolverOptions()}}\sphinxparamcomma \sphinxparam{\DUrole{n}{solver}\DUrole{o}{=}\DUrole{default_value}{utils.get\_solver()}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Call the Preconditioned Conjugate Gradient solver with FSAI preconditioner. Directly calculates moments of re\sphinxhyphen{}emission using Mellin transform, given the moments of excitation
@@ -10623,6 +10623,16 @@ This is calculated using gen\_mass\_matrix with omega=1.
 
 \item {} 
 \sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{csrV2}} (\sphinxstyleliteralemphasis{\sphinxupquote{double NumPy vector}}) \textendash{} 
+\sphinxAtStartPar
+values of the FEM integration matrix, in CSR format.
+
+\sphinxAtStartPar
+This is calculated using gen\_mass\_matrix with omega=0, mua=1, kappa=0, and no boundary nodes.
+
+
+\item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{mx}} (\sphinxstyleliteralemphasis{\sphinxupquote{double NumPy array}}) \textendash{} 
 \sphinxAtStartPar
 moments of the excitation. Size (NNodes, Nsources*(max\_moment+1)), structured as,
@@ -10633,7 +10643,7 @@ moments of the excitation. Size (NNodes, Nsources*(max\_moment+1)), structured a
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{alpha}} (\sphinxstyleliteralemphasis{\sphinxupquote{double NumPy array}}) \textendash{} defined as mesh.eta*mesh.muaf.
+\sphinxstyleliteralstrong{\sphinxupquote{gamma}} (\sphinxstyleliteralemphasis{\sphinxupquote{double NumPy array}}) \textendash{} defined as mesh.eta*mesh.muaf.
 
 \item {} 
 \sphinxAtStartPar
@@ -11693,6 +11703,13 @@ YOU SHOULD NOT USE THIS FUNCTION DIRECTLY.
 \\
 \sphinxhline
 \sphinxAtStartPar
+{\hyperref[\detokenize{_autosummary/nirfasterff.utils.get_nthread:nirfasterff.utils.get_nthread}]{\sphinxcrossref{\sphinxcode{\sphinxupquote{get\_nthread}}}}}()
+&
+\sphinxAtStartPar
+Choose the number of OpenMP threads in CPU solvers
+\\
+\sphinxhline
+\sphinxAtStartPar
 {\hyperref[\detokenize{_autosummary/nirfasterff.utils.get_solver:nirfasterff.utils.get_solver}]{\sphinxcrossref{\sphinxcode{\sphinxupquote{get\_solver}}}}}()
 &
 \sphinxAtStartPar
@@ -11949,6 +11966,43 @@ Heart of the gen\_intmat function, which calculates the necessary information fo
 
 \end{itemize}
 
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+
+\sphinxstepscope
+
+
+\subsubsection{nirfasterff.utils.get\_nthread}
+\label{\detokenize{_autosummary/nirfasterff.utils.get_nthread:nirfasterff-utils-get-nthread}}\label{\detokenize{_autosummary/nirfasterff.utils.get_nthread::doc}}\index{get\_nthread() (in module nirfasterff.utils)@\spxentry{get\_nthread()}\spxextra{in module nirfasterff.utils}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{_autosummary/nirfasterff.utils.get_nthread:nirfasterff.utils.get_nthread}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{nirfasterff.utils.}}\sphinxbfcode{\sphinxupquote{get\_nthread}}}{}{}
+\pysigstopsignatures
+\sphinxAtStartPar
+Choose the number of OpenMP threads in CPU solvers
+
+\sphinxAtStartPar
+On CPUs with no hyperthreading, all physical cores are used
+Otherwise use min(physical\_core, 8), i.e. no more than 8
+
+\sphinxAtStartPar
+This is heuristically determined to avoid performance loss due to memory bottlenecking
+
+\sphinxAtStartPar
+Advanced user can directly modify this function to choose the appropriate number of threads
+\begin{quote}\begin{description}
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
+\sphinxstylestrong{nthread} \textendash{} number of OpenMP threads to use in CPU solvers.
+
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
+int
 
 \end{description}\end{quote}
 
