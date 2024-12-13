@@ -2,8 +2,8 @@
 \indexentry{nirfasterff@\spxentry{nirfasterff}!module@\spxentry{module}|hyperpage}{9}
 \indexentry{module@\spxentry{module}!nirfasterff.base@\spxentry{nirfasterff.base}|hyperpage}{9}
 \indexentry{nirfasterff.base@\spxentry{nirfasterff.base}!module@\spxentry{module}|hyperpage}{9}
-\indexentry{module@\spxentry{module}!nirfasterff.base.data@\spxentry{nirfasterff.base.data}|hyperpage}{10}
-\indexentry{nirfasterff.base.data@\spxentry{nirfasterff.base.data}!module@\spxentry{module}|hyperpage}{10}
+\indexentry{module@\spxentry{module}!nirfasterff.base.data@\spxentry{nirfasterff.base.data}|hyperpage}{9}
+\indexentry{nirfasterff.base.data@\spxentry{nirfasterff.base.data}!module@\spxentry{module}|hyperpage}{9}
 \indexentry{DCSdata (class in nirfasterff.base.data)@\spxentry{DCSdata}\spxextra{class in nirfasterff.base.data}|hyperpage}{10}
 \indexentry{phi (nirfasterff.base.data.DCSdata attribute)@\spxentry{phi}\spxextra{nirfasterff.base.data.DCSdata attribute}|hyperpage}{10}
 \indexentry{link (nirfasterff.base.data.DCSdata attribute)@\spxentry{link}\spxextra{nirfasterff.base.data.DCSdata attribute}|hyperpage}{10}
@@ -16,7 +16,7 @@
 \indexentry{\_\_init\_\_() (nirfasterff.base.data.DCSdata method)@\spxentry{\_\_init\_\_()}\spxextra{nirfasterff.base.data.DCSdata method}|hyperpage}{11}
 \indexentry{isvol() (nirfasterff.base.data.DCSdata method)@\spxentry{isvol()}\spxextra{nirfasterff.base.data.DCSdata method}|hyperpage}{11}
 \indexentry{togrid() (nirfasterff.base.data.DCSdata method)@\spxentry{togrid()}\spxextra{nirfasterff.base.data.DCSdata method}|hyperpage}{11}
-\indexentry{tomesh() (nirfasterff.base.data.DCSdata method)@\spxentry{tomesh()}\spxextra{nirfasterff.base.data.DCSdata method}|hyperpage}{12}
+\indexentry{tomesh() (nirfasterff.base.data.DCSdata method)@\spxentry{tomesh()}\spxextra{nirfasterff.base.data.DCSdata method}|hyperpage}{11}
 \indexentry{FDdata (class in nirfasterff.base.data)@\spxentry{FDdata}\spxextra{class in nirfasterff.base.data}|hyperpage}{12}
 \indexentry{phi (nirfasterff.base.data.FDdata attribute)@\spxentry{phi}\spxextra{nirfasterff.base.data.FDdata attribute}|hyperpage}{12}
 \indexentry{complex (nirfasterff.base.data.FDdata attribute)@\spxentry{complex}\spxextra{nirfasterff.base.data.FDdata attribute}|hyperpage}{12}
@@ -28,9 +28,9 @@
 \indexentry{isvol() (nirfasterff.base.data.FDdata method)@\spxentry{isvol()}\spxextra{nirfasterff.base.data.FDdata method}|hyperpage}{13}
 \indexentry{togrid() (nirfasterff.base.data.FDdata method)@\spxentry{togrid()}\spxextra{nirfasterff.base.data.FDdata method}|hyperpage}{13}
 \indexentry{tomesh() (nirfasterff.base.data.FDdata method)@\spxentry{tomesh()}\spxextra{nirfasterff.base.data.FDdata method}|hyperpage}{13}
-\indexentry{FLdata (class in nirfasterff.base.data)@\spxentry{FLdata}\spxextra{class in nirfasterff.base.data}|hyperpage}{14}
-\indexentry{phix (nirfasterff.base.data.FLdata attribute)@\spxentry{phix}\spxextra{nirfasterff.base.data.FLdata attribute}|hyperpage}{14}
-\indexentry{phimm (nirfasterff.base.data.FLdata attribute)@\spxentry{phimm}\spxextra{nirfasterff.base.data.FLdata attribute}|hyperpage}{14}
+\indexentry{FLdata (class in nirfasterff.base.data)@\spxentry{FLdata}\spxextra{class in nirfasterff.base.data}|hyperpage}{13}
+\indexentry{phix (nirfasterff.base.data.FLdata attribute)@\spxentry{phix}\spxextra{nirfasterff.base.data.FLdata attribute}|hyperpage}{13}
+\indexentry{phimm (nirfasterff.base.data.FLdata attribute)@\spxentry{phimm}\spxextra{nirfasterff.base.data.FLdata attribute}|hyperpage}{13}
 \indexentry{phifl (nirfasterff.base.data.FLdata attribute)@\spxentry{phifl}\spxextra{nirfasterff.base.data.FLdata attribute}|hyperpage}{14}
 \indexentry{complexx (nirfasterff.base.data.FLdata attribute)@\spxentry{complexx}\spxextra{nirfasterff.base.data.FLdata attribute}|hyperpage}{14}
 \indexentry{complexmm (nirfasterff.base.data.FLdata attribute)@\spxentry{complexmm}\spxextra{nirfasterff.base.data.FLdata attribute}|hyperpage}{14}
@@ -39,40 +39,40 @@
 \indexentry{amplitudex (nirfasterff.base.data.FLdata attribute)@\spxentry{amplitudex}\spxextra{nirfasterff.base.data.FLdata attribute}|hyperpage}{14}
 \indexentry{amplitudemm (nirfasterff.base.data.FLdata attribute)@\spxentry{amplitudemm}\spxextra{nirfasterff.base.data.FLdata attribute}|hyperpage}{14}
 \indexentry{amplitudefl (nirfasterff.base.data.FLdata attribute)@\spxentry{amplitudefl}\spxextra{nirfasterff.base.data.FLdata attribute}|hyperpage}{14}
-\indexentry{phasex (nirfasterff.base.data.FLdata attribute)@\spxentry{phasex}\spxextra{nirfasterff.base.data.FLdata attribute}|hyperpage}{15}
-\indexentry{phasemm (nirfasterff.base.data.FLdata attribute)@\spxentry{phasemm}\spxextra{nirfasterff.base.data.FLdata attribute}|hyperpage}{15}
+\indexentry{phasex (nirfasterff.base.data.FLdata attribute)@\spxentry{phasex}\spxextra{nirfasterff.base.data.FLdata attribute}|hyperpage}{14}
+\indexentry{phasemm (nirfasterff.base.data.FLdata attribute)@\spxentry{phasemm}\spxextra{nirfasterff.base.data.FLdata attribute}|hyperpage}{14}
 \indexentry{phasefl (nirfasterff.base.data.FLdata attribute)@\spxentry{phasefl}\spxextra{nirfasterff.base.data.FLdata attribute}|hyperpage}{15}
 \indexentry{vol (nirfasterff.base.data.FLdata attribute)@\spxentry{vol}\spxextra{nirfasterff.base.data.FLdata attribute}|hyperpage}{15}
 \indexentry{\_\_init\_\_() (nirfasterff.base.data.FLdata method)@\spxentry{\_\_init\_\_()}\spxextra{nirfasterff.base.data.FLdata method}|hyperpage}{15}
 \indexentry{isvol() (nirfasterff.base.data.FLdata method)@\spxentry{isvol()}\spxextra{nirfasterff.base.data.FLdata method}|hyperpage}{15}
 \indexentry{togrid() (nirfasterff.base.data.FLdata method)@\spxentry{togrid()}\spxextra{nirfasterff.base.data.FLdata method}|hyperpage}{15}
-\indexentry{tomesh() (nirfasterff.base.data.FLdata method)@\spxentry{tomesh()}\spxextra{nirfasterff.base.data.FLdata method}|hyperpage}{16}
+\indexentry{tomesh() (nirfasterff.base.data.FLdata method)@\spxentry{tomesh()}\spxextra{nirfasterff.base.data.FLdata method}|hyperpage}{15}
 \indexentry{TPSFdata (class in nirfasterff.base.data)@\spxentry{TPSFdata}\spxextra{class in nirfasterff.base.data}|hyperpage}{16}
 \indexentry{phi (nirfasterff.base.data.TPSFdata attribute)@\spxentry{phi}\spxextra{nirfasterff.base.data.TPSFdata attribute}|hyperpage}{16}
 \indexentry{time (nirfasterff.base.data.TPSFdata attribute)@\spxentry{time}\spxextra{nirfasterff.base.data.TPSFdata attribute}|hyperpage}{16}
 \indexentry{tpsf (nirfasterff.base.data.TPSFdata attribute)@\spxentry{tpsf}\spxextra{nirfasterff.base.data.TPSFdata attribute}|hyperpage}{16}
 \indexentry{link (nirfasterff.base.data.TPSFdata attribute)@\spxentry{link}\spxextra{nirfasterff.base.data.TPSFdata attribute}|hyperpage}{16}
 \indexentry{vol (nirfasterff.base.data.TPSFdata attribute)@\spxentry{vol}\spxextra{nirfasterff.base.data.TPSFdata attribute}|hyperpage}{16}
-\indexentry{\_\_init\_\_() (nirfasterff.base.data.TPSFdata method)@\spxentry{\_\_init\_\_()}\spxextra{nirfasterff.base.data.TPSFdata method}|hyperpage}{17}
+\indexentry{\_\_init\_\_() (nirfasterff.base.data.TPSFdata method)@\spxentry{\_\_init\_\_()}\spxextra{nirfasterff.base.data.TPSFdata method}|hyperpage}{16}
 \indexentry{isvol() (nirfasterff.base.data.TPSFdata method)@\spxentry{isvol()}\spxextra{nirfasterff.base.data.TPSFdata method}|hyperpage}{17}
 \indexentry{togrid() (nirfasterff.base.data.TPSFdata method)@\spxentry{togrid()}\spxextra{nirfasterff.base.data.TPSFdata method}|hyperpage}{17}
 \indexentry{tomesh() (nirfasterff.base.data.TPSFdata method)@\spxentry{tomesh()}\spxextra{nirfasterff.base.data.TPSFdata method}|hyperpage}{17}
-\indexentry{TRMomentsdata (class in nirfasterff.base.data)@\spxentry{TRMomentsdata}\spxextra{class in nirfasterff.base.data}|hyperpage}{18}
-\indexentry{phi (nirfasterff.base.data.TRMomentsdata attribute)@\spxentry{phi}\spxextra{nirfasterff.base.data.TRMomentsdata attribute}|hyperpage}{18}
+\indexentry{TRMomentsdata (class in nirfasterff.base.data)@\spxentry{TRMomentsdata}\spxextra{class in nirfasterff.base.data}|hyperpage}{17}
+\indexentry{phi (nirfasterff.base.data.TRMomentsdata attribute)@\spxentry{phi}\spxextra{nirfasterff.base.data.TRMomentsdata attribute}|hyperpage}{17}
 \indexentry{moments (nirfasterff.base.data.TRMomentsdata attribute)@\spxentry{moments}\spxextra{nirfasterff.base.data.TRMomentsdata attribute}|hyperpage}{18}
 \indexentry{link (nirfasterff.base.data.TRMomentsdata attribute)@\spxentry{link}\spxextra{nirfasterff.base.data.TRMomentsdata attribute}|hyperpage}{18}
 \indexentry{vol (nirfasterff.base.data.TRMomentsdata attribute)@\spxentry{vol}\spxextra{nirfasterff.base.data.TRMomentsdata attribute}|hyperpage}{18}
 \indexentry{\_\_init\_\_() (nirfasterff.base.data.TRMomentsdata method)@\spxentry{\_\_init\_\_()}\spxextra{nirfasterff.base.data.TRMomentsdata method}|hyperpage}{18}
 \indexentry{isvol() (nirfasterff.base.data.TRMomentsdata method)@\spxentry{isvol()}\spxextra{nirfasterff.base.data.TRMomentsdata method}|hyperpage}{18}
-\indexentry{togrid() (nirfasterff.base.data.TRMomentsdata method)@\spxentry{togrid()}\spxextra{nirfasterff.base.data.TRMomentsdata method}|hyperpage}{19}
+\indexentry{togrid() (nirfasterff.base.data.TRMomentsdata method)@\spxentry{togrid()}\spxextra{nirfasterff.base.data.TRMomentsdata method}|hyperpage}{18}
 \indexentry{tomesh() (nirfasterff.base.data.TRMomentsdata method)@\spxentry{tomesh()}\spxextra{nirfasterff.base.data.TRMomentsdata method}|hyperpage}{19}
 \indexentry{flTPSFdata (class in nirfasterff.base.data)@\spxentry{flTPSFdata}\spxextra{class in nirfasterff.base.data}|hyperpage}{19}
 \indexentry{phix (nirfasterff.base.data.flTPSFdata attribute)@\spxentry{phix}\spxextra{nirfasterff.base.data.flTPSFdata attribute}|hyperpage}{19}
 \indexentry{phifl (nirfasterff.base.data.flTPSFdata attribute)@\spxentry{phifl}\spxextra{nirfasterff.base.data.flTPSFdata attribute}|hyperpage}{19}
 \indexentry{time (nirfasterff.base.data.flTPSFdata attribute)@\spxentry{time}\spxextra{nirfasterff.base.data.flTPSFdata attribute}|hyperpage}{19}
-\indexentry{tpsfx (nirfasterff.base.data.flTPSFdata attribute)@\spxentry{tpsfx}\spxextra{nirfasterff.base.data.flTPSFdata attribute}|hyperpage}{20}
-\indexentry{link (nirfasterff.base.data.flTPSFdata attribute)@\spxentry{link}\spxextra{nirfasterff.base.data.flTPSFdata attribute}|hyperpage}{20}
-\indexentry{vol (nirfasterff.base.data.flTPSFdata attribute)@\spxentry{vol}\spxextra{nirfasterff.base.data.flTPSFdata attribute}|hyperpage}{20}
+\indexentry{tpsfx (nirfasterff.base.data.flTPSFdata attribute)@\spxentry{tpsfx}\spxextra{nirfasterff.base.data.flTPSFdata attribute}|hyperpage}{19}
+\indexentry{link (nirfasterff.base.data.flTPSFdata attribute)@\spxentry{link}\spxextra{nirfasterff.base.data.flTPSFdata attribute}|hyperpage}{19}
+\indexentry{vol (nirfasterff.base.data.flTPSFdata attribute)@\spxentry{vol}\spxextra{nirfasterff.base.data.flTPSFdata attribute}|hyperpage}{19}
 \indexentry{\_\_init\_\_() (nirfasterff.base.data.flTPSFdata method)@\spxentry{\_\_init\_\_()}\spxextra{nirfasterff.base.data.flTPSFdata method}|hyperpage}{20}
 \indexentry{isvol() (nirfasterff.base.data.flTPSFdata method)@\spxentry{isvol()}\spxextra{nirfasterff.base.data.flTPSFdata method}|hyperpage}{20}
 \indexentry{togrid() (nirfasterff.base.data.flTPSFdata method)@\spxentry{togrid()}\spxextra{nirfasterff.base.data.flTPSFdata method}|hyperpage}{20}
@@ -84,12 +84,12 @@
 \indexentry{momentsfl (nirfasterff.base.data.flTRMomentsdata attribute)@\spxentry{momentsfl}\spxextra{nirfasterff.base.data.flTRMomentsdata attribute}|hyperpage}{21}
 \indexentry{link (nirfasterff.base.data.flTRMomentsdata attribute)@\spxentry{link}\spxextra{nirfasterff.base.data.flTRMomentsdata attribute}|hyperpage}{21}
 \indexentry{vol (nirfasterff.base.data.flTRMomentsdata attribute)@\spxentry{vol}\spxextra{nirfasterff.base.data.flTRMomentsdata attribute}|hyperpage}{21}
-\indexentry{\_\_init\_\_() (nirfasterff.base.data.flTRMomentsdata method)@\spxentry{\_\_init\_\_()}\spxextra{nirfasterff.base.data.flTRMomentsdata method}|hyperpage}{22}
+\indexentry{\_\_init\_\_() (nirfasterff.base.data.flTRMomentsdata method)@\spxentry{\_\_init\_\_()}\spxextra{nirfasterff.base.data.flTRMomentsdata method}|hyperpage}{21}
 \indexentry{isvol() (nirfasterff.base.data.flTRMomentsdata method)@\spxentry{isvol()}\spxextra{nirfasterff.base.data.flTRMomentsdata method}|hyperpage}{22}
 \indexentry{togrid() (nirfasterff.base.data.flTRMomentsdata method)@\spxentry{togrid()}\spxextra{nirfasterff.base.data.flTRMomentsdata method}|hyperpage}{22}
 \indexentry{tomesh() (nirfasterff.base.data.flTRMomentsdata method)@\spxentry{tomesh()}\spxextra{nirfasterff.base.data.flTRMomentsdata method}|hyperpage}{22}
-\indexentry{meshvol (class in nirfasterff.base.data)@\spxentry{meshvol}\spxextra{class in nirfasterff.base.data}|hyperpage}{23}
-\indexentry{xgrid (nirfasterff.base.data.meshvol attribute)@\spxentry{xgrid}\spxextra{nirfasterff.base.data.meshvol attribute}|hyperpage}{23}
+\indexentry{meshvol (class in nirfasterff.base.data)@\spxentry{meshvol}\spxextra{class in nirfasterff.base.data}|hyperpage}{22}
+\indexentry{xgrid (nirfasterff.base.data.meshvol attribute)@\spxentry{xgrid}\spxextra{nirfasterff.base.data.meshvol attribute}|hyperpage}{22}
 \indexentry{ygrid (nirfasterff.base.data.meshvol attribute)@\spxentry{ygrid}\spxextra{nirfasterff.base.data.meshvol attribute}|hyperpage}{23}
 \indexentry{zgrid (nirfasterff.base.data.meshvol attribute)@\spxentry{zgrid}\spxextra{nirfasterff.base.data.meshvol attribute}|hyperpage}{23}
 \indexentry{mesh2grid (nirfasterff.base.data.meshvol attribute)@\spxentry{mesh2grid}\spxextra{nirfasterff.base.data.meshvol attribute}|hyperpage}{23}
@@ -97,7 +97,7 @@
 \indexentry{res (nirfasterff.base.data.meshvol attribute)@\spxentry{res}\spxextra{nirfasterff.base.data.meshvol attribute}|hyperpage}{23}
 \indexentry{grid2mesh (nirfasterff.base.data.meshvol attribute)@\spxentry{grid2mesh}\spxextra{nirfasterff.base.data.meshvol attribute}|hyperpage}{23}
 \indexentry{meshingrid (nirfasterff.base.data.meshvol attribute)@\spxentry{meshingrid}\spxextra{nirfasterff.base.data.meshvol attribute}|hyperpage}{23}
-\indexentry{\_\_init\_\_() (nirfasterff.base.data.meshvol method)@\spxentry{\_\_init\_\_()}\spxextra{nirfasterff.base.data.meshvol method}|hyperpage}{24}
+\indexentry{\_\_init\_\_() (nirfasterff.base.data.meshvol method)@\spxentry{\_\_init\_\_()}\spxextra{nirfasterff.base.data.meshvol method}|hyperpage}{23}
 \indexentry{module@\spxentry{module}!nirfasterff.base.dcs\_mesh@\spxentry{nirfasterff.base.dcs\_mesh}|hyperpage}{24}
 \indexentry{nirfasterff.base.dcs\_mesh@\spxentry{nirfasterff.base.dcs\_mesh}!module@\spxentry{module}|hyperpage}{24}
 \indexentry{dcsmesh (class in nirfasterff.base.dcs\_mesh)@\spxentry{dcsmesh}\spxextra{class in nirfasterff.base.dcs\_mesh}|hyperpage}{24}
@@ -106,8 +106,8 @@
 \indexentry{bndvtx (nirfasterff.base.dcs\_mesh.dcsmesh attribute)@\spxentry{bndvtx}\spxextra{nirfasterff.base.dcs\_mesh.dcsmesh attribute}|hyperpage}{24}
 \indexentry{type (nirfasterff.base.dcs\_mesh.dcsmesh attribute)@\spxentry{type}\spxextra{nirfasterff.base.dcs\_mesh.dcsmesh attribute}|hyperpage}{24}
 \indexentry{mua (nirfasterff.base.dcs\_mesh.dcsmesh attribute)@\spxentry{mua}\spxextra{nirfasterff.base.dcs\_mesh.dcsmesh attribute}|hyperpage}{24}
-\indexentry{kappa (nirfasterff.base.dcs\_mesh.dcsmesh attribute)@\spxentry{kappa}\spxextra{nirfasterff.base.dcs\_mesh.dcsmesh attribute}|hyperpage}{25}
-\indexentry{ri (nirfasterff.base.dcs\_mesh.dcsmesh attribute)@\spxentry{ri}\spxextra{nirfasterff.base.dcs\_mesh.dcsmesh attribute}|hyperpage}{25}
+\indexentry{kappa (nirfasterff.base.dcs\_mesh.dcsmesh attribute)@\spxentry{kappa}\spxextra{nirfasterff.base.dcs\_mesh.dcsmesh attribute}|hyperpage}{24}
+\indexentry{ri (nirfasterff.base.dcs\_mesh.dcsmesh attribute)@\spxentry{ri}\spxextra{nirfasterff.base.dcs\_mesh.dcsmesh attribute}|hyperpage}{24}
 \indexentry{mus (nirfasterff.base.dcs\_mesh.dcsmesh attribute)@\spxentry{mus}\spxextra{nirfasterff.base.dcs\_mesh.dcsmesh attribute}|hyperpage}{25}
 \indexentry{wv\_DCS (nirfasterff.base.dcs\_mesh.dcsmesh attribute)@\spxentry{wv\_DCS}\spxextra{nirfasterff.base.dcs\_mesh.dcsmesh attribute}|hyperpage}{25}
 \indexentry{alpha (nirfasterff.base.dcs\_mesh.dcsmesh attribute)@\spxentry{alpha}\spxextra{nirfasterff.base.dcs\_mesh.dcsmesh attribute}|hyperpage}{25}
@@ -115,8 +115,8 @@
 \indexentry{aDb (nirfasterff.base.dcs\_mesh.dcsmesh attribute)@\spxentry{aDb}\spxextra{nirfasterff.base.dcs\_mesh.dcsmesh attribute}|hyperpage}{25}
 \indexentry{elements (nirfasterff.base.dcs\_mesh.dcsmesh attribute)@\spxentry{elements}\spxextra{nirfasterff.base.dcs\_mesh.dcsmesh attribute}|hyperpage}{25}
 \indexentry{region (nirfasterff.base.dcs\_mesh.dcsmesh attribute)@\spxentry{region}\spxextra{nirfasterff.base.dcs\_mesh.dcsmesh attribute}|hyperpage}{25}
-\indexentry{source (nirfasterff.base.dcs\_mesh.dcsmesh attribute)@\spxentry{source}\spxextra{nirfasterff.base.dcs\_mesh.dcsmesh attribute}|hyperpage}{26}
-\indexentry{meas (nirfasterff.base.dcs\_mesh.dcsmesh attribute)@\spxentry{meas}\spxextra{nirfasterff.base.dcs\_mesh.dcsmesh attribute}|hyperpage}{26}
+\indexentry{source (nirfasterff.base.dcs\_mesh.dcsmesh attribute)@\spxentry{source}\spxextra{nirfasterff.base.dcs\_mesh.dcsmesh attribute}|hyperpage}{25}
+\indexentry{meas (nirfasterff.base.dcs\_mesh.dcsmesh attribute)@\spxentry{meas}\spxextra{nirfasterff.base.dcs\_mesh.dcsmesh attribute}|hyperpage}{25}
 \indexentry{link (nirfasterff.base.dcs\_mesh.dcsmesh attribute)@\spxentry{link}\spxextra{nirfasterff.base.dcs\_mesh.dcsmesh attribute}|hyperpage}{26}
 \indexentry{c (nirfasterff.base.dcs\_mesh.dcsmesh attribute)@\spxentry{c}\spxextra{nirfasterff.base.dcs\_mesh.dcsmesh attribute}|hyperpage}{26}
 \indexentry{ksi (nirfasterff.base.dcs\_mesh.dcsmesh attribute)@\spxentry{ksi}\spxextra{nirfasterff.base.dcs\_mesh.dcsmesh attribute}|hyperpage}{26}
@@ -166,13 +166,13 @@
 \indexentry{vol (nirfasterff.base.fluor\_mesh.fluormesh attribute)@\spxentry{vol}\spxextra{nirfasterff.base.fluor\_mesh.fluormesh attribute}|hyperpage}{34}
 \indexentry{\_\_init\_\_() (nirfasterff.base.fluor\_mesh.fluormesh method)@\spxentry{\_\_init\_\_()}\spxextra{nirfasterff.base.fluor\_mesh.fluormesh method}|hyperpage}{34}
 \indexentry{change\_prop() (nirfasterff.base.fluor\_mesh.fluormesh method)@\spxentry{change\_prop()}\spxextra{nirfasterff.base.fluor\_mesh.fluormesh method}|hyperpage}{35}
-\indexentry{femdata() (nirfasterff.base.fluor\_mesh.fluormesh method)@\spxentry{femdata()}\spxextra{nirfasterff.base.fluor\_mesh.fluormesh method}|hyperpage}{36}
+\indexentry{femdata() (nirfasterff.base.fluor\_mesh.fluormesh method)@\spxentry{femdata()}\spxextra{nirfasterff.base.fluor\_mesh.fluormesh method}|hyperpage}{35}
 \indexentry{femdata\_moments() (nirfasterff.base.fluor\_mesh.fluormesh method)@\spxentry{femdata\_moments()}\spxextra{nirfasterff.base.fluor\_mesh.fluormesh method}|hyperpage}{36}
 \indexentry{femdata\_tpsf() (nirfasterff.base.fluor\_mesh.fluormesh method)@\spxentry{femdata\_tpsf()}\spxextra{nirfasterff.base.fluor\_mesh.fluormesh method}|hyperpage}{37}
 \indexentry{from\_copy() (nirfasterff.base.fluor\_mesh.fluormesh method)@\spxentry{from\_copy()}\spxextra{nirfasterff.base.fluor\_mesh.fluormesh method}|hyperpage}{38}
 \indexentry{from\_file() (nirfasterff.base.fluor\_mesh.fluormesh method)@\spxentry{from\_file()}\spxextra{nirfasterff.base.fluor\_mesh.fluormesh method}|hyperpage}{38}
 \indexentry{from\_mat() (nirfasterff.base.fluor\_mesh.fluormesh method)@\spxentry{from\_mat()}\spxextra{nirfasterff.base.fluor\_mesh.fluormesh method}|hyperpage}{38}
-\indexentry{from\_solid() (nirfasterff.base.fluor\_mesh.fluormesh method)@\spxentry{from\_solid()}\spxextra{nirfasterff.base.fluor\_mesh.fluormesh method}|hyperpage}{39}
+\indexentry{from\_solid() (nirfasterff.base.fluor\_mesh.fluormesh method)@\spxentry{from\_solid()}\spxextra{nirfasterff.base.fluor\_mesh.fluormesh method}|hyperpage}{38}
 \indexentry{from\_volume() (nirfasterff.base.fluor\_mesh.fluormesh method)@\spxentry{from\_volume()}\spxextra{nirfasterff.base.fluor\_mesh.fluormesh method}|hyperpage}{39}
 \indexentry{gen\_intmat() (nirfasterff.base.fluor\_mesh.fluormesh method)@\spxentry{gen\_intmat()}\spxextra{nirfasterff.base.fluor\_mesh.fluormesh method}|hyperpage}{40}
 \indexentry{isvol() (nirfasterff.base.fluor\_mesh.fluormesh method)@\spxentry{isvol()}\spxextra{nirfasterff.base.fluor\_mesh.fluormesh method}|hyperpage}{40}
@@ -197,7 +197,7 @@
 \indexentry{stndmesh (class in nirfasterff.base.stnd\_mesh)@\spxentry{stndmesh}\spxextra{class in nirfasterff.base.stnd\_mesh}|hyperpage}{44}
 \indexentry{name (nirfasterff.base.stnd\_mesh.stndmesh attribute)@\spxentry{name}\spxextra{nirfasterff.base.stnd\_mesh.stndmesh attribute}|hyperpage}{44}
 \indexentry{nodes (nirfasterff.base.stnd\_mesh.stndmesh attribute)@\spxentry{nodes}\spxextra{nirfasterff.base.stnd\_mesh.stndmesh attribute}|hyperpage}{44}
-\indexentry{bndvtx (nirfasterff.base.stnd\_mesh.stndmesh attribute)@\spxentry{bndvtx}\spxextra{nirfasterff.base.stnd\_mesh.stndmesh attribute}|hyperpage}{45}
+\indexentry{bndvtx (nirfasterff.base.stnd\_mesh.stndmesh attribute)@\spxentry{bndvtx}\spxextra{nirfasterff.base.stnd\_mesh.stndmesh attribute}|hyperpage}{44}
 \indexentry{type (nirfasterff.base.stnd\_mesh.stndmesh attribute)@\spxentry{type}\spxextra{nirfasterff.base.stnd\_mesh.stndmesh attribute}|hyperpage}{45}
 \indexentry{mua (nirfasterff.base.stnd\_mesh.stndmesh attribute)@\spxentry{mua}\spxextra{nirfasterff.base.stnd\_mesh.stndmesh attribute}|hyperpage}{45}
 \indexentry{kappa (nirfasterff.base.stnd\_mesh.stndmesh attribute)@\spxentry{kappa}\spxextra{nirfasterff.base.stnd\_mesh.stndmesh attribute}|hyperpage}{45}
@@ -222,9 +222,9 @@
 \indexentry{from\_file() (nirfasterff.base.stnd\_mesh.stndmesh method)@\spxentry{from\_file()}\spxextra{nirfasterff.base.stnd\_mesh.stndmesh method}|hyperpage}{49}
 \indexentry{from\_mat() (nirfasterff.base.stnd\_mesh.stndmesh method)@\spxentry{from\_mat()}\spxextra{nirfasterff.base.stnd\_mesh.stndmesh method}|hyperpage}{50}
 \indexentry{from\_solid() (nirfasterff.base.stnd\_mesh.stndmesh method)@\spxentry{from\_solid()}\spxextra{nirfasterff.base.stnd\_mesh.stndmesh method}|hyperpage}{50}
-\indexentry{from\_volume() (nirfasterff.base.stnd\_mesh.stndmesh method)@\spxentry{from\_volume()}\spxextra{nirfasterff.base.stnd\_mesh.stndmesh method}|hyperpage}{51}
+\indexentry{from\_volume() (nirfasterff.base.stnd\_mesh.stndmesh method)@\spxentry{from\_volume()}\spxextra{nirfasterff.base.stnd\_mesh.stndmesh method}|hyperpage}{50}
 \indexentry{gen\_intmat() (nirfasterff.base.stnd\_mesh.stndmesh method)@\spxentry{gen\_intmat()}\spxextra{nirfasterff.base.stnd\_mesh.stndmesh method}|hyperpage}{51}
-\indexentry{isvol() (nirfasterff.base.stnd\_mesh.stndmesh method)@\spxentry{isvol()}\spxextra{nirfasterff.base.stnd\_mesh.stndmesh method}|hyperpage}{52}
+\indexentry{isvol() (nirfasterff.base.stnd\_mesh.stndmesh method)@\spxentry{isvol()}\spxextra{nirfasterff.base.stnd\_mesh.stndmesh method}|hyperpage}{51}
 \indexentry{jacobian() (nirfasterff.base.stnd\_mesh.stndmesh method)@\spxentry{jacobian()}\spxextra{nirfasterff.base.stnd\_mesh.stndmesh method}|hyperpage}{52}
 \indexentry{save\_nirfast() (nirfasterff.base.stnd\_mesh.stndmesh method)@\spxentry{save\_nirfast()}\spxextra{nirfasterff.base.stnd\_mesh.stndmesh method}|hyperpage}{52}
 \indexentry{set\_prop() (nirfasterff.base.stnd\_mesh.stndmesh method)@\spxentry{set\_prop()}\spxextra{nirfasterff.base.stnd\_mesh.stndmesh method}|hyperpage}{52}
@@ -233,137 +233,137 @@
 \indexentry{nirfasterff.forward@\spxentry{nirfasterff.forward}!module@\spxentry{module}|hyperpage}{53}
 \indexentry{module@\spxentry{module}!nirfasterff.forward.analytical@\spxentry{nirfasterff.forward.analytical}|hyperpage}{53}
 \indexentry{nirfasterff.forward.analytical@\spxentry{nirfasterff.forward.analytical}!module@\spxentry{module}|hyperpage}{53}
-\indexentry{semi\_infinite\_CW() (in module nirfasterff.forward.analytical)@\spxentry{semi\_infinite\_CW()}\spxextra{in module nirfasterff.forward.analytical}|hyperpage}{54}
+\indexentry{semi\_infinite\_CW() (in module nirfasterff.forward.analytical)@\spxentry{semi\_infinite\_CW()}\spxextra{in module nirfasterff.forward.analytical}|hyperpage}{53}
 \indexentry{semi\_infinite\_DCS() (in module nirfasterff.forward.analytical)@\spxentry{semi\_infinite\_DCS()}\spxextra{in module nirfasterff.forward.analytical}|hyperpage}{54}
 \indexentry{semi\_infinite\_FD() (in module nirfasterff.forward.analytical)@\spxentry{semi\_infinite\_FD()}\spxextra{in module nirfasterff.forward.analytical}|hyperpage}{55}
 \indexentry{semi\_infinite\_TR() (in module nirfasterff.forward.analytical)@\spxentry{semi\_infinite\_TR()}\spxextra{in module nirfasterff.forward.analytical}|hyperpage}{56}
 \indexentry{module@\spxentry{module}!nirfasterff.forward.femdata@\spxentry{nirfasterff.forward.femdata}|hyperpage}{57}
 \indexentry{nirfasterff.forward.femdata@\spxentry{nirfasterff.forward.femdata}!module@\spxentry{module}|hyperpage}{57}
-\indexentry{femdata\_DCS() (in module nirfasterff.forward.femdata)@\spxentry{femdata\_DCS()}\spxextra{in module nirfasterff.forward.femdata}|hyperpage}{58}
-\indexentry{femdata\_fl\_CW() (in module nirfasterff.forward.femdata)@\spxentry{femdata\_fl\_CW()}\spxextra{in module nirfasterff.forward.femdata}|hyperpage}{59}
-\indexentry{femdata\_fl\_FD() (in module nirfasterff.forward.femdata)@\spxentry{femdata\_fl\_FD()}\spxextra{in module nirfasterff.forward.femdata}|hyperpage}{60}
-\indexentry{femdata\_fl\_TR() (in module nirfasterff.forward.femdata)@\spxentry{femdata\_fl\_TR()}\spxextra{in module nirfasterff.forward.femdata}|hyperpage}{61}
+\indexentry{femdata\_DCS() (in module nirfasterff.forward.femdata)@\spxentry{femdata\_DCS()}\spxextra{in module nirfasterff.forward.femdata}|hyperpage}{57}
+\indexentry{femdata\_fl\_CW() (in module nirfasterff.forward.femdata)@\spxentry{femdata\_fl\_CW()}\spxextra{in module nirfasterff.forward.femdata}|hyperpage}{58}
+\indexentry{femdata\_fl\_FD() (in module nirfasterff.forward.femdata)@\spxentry{femdata\_fl\_FD()}\spxextra{in module nirfasterff.forward.femdata}|hyperpage}{59}
+\indexentry{femdata\_fl\_TR() (in module nirfasterff.forward.femdata)@\spxentry{femdata\_fl\_TR()}\spxextra{in module nirfasterff.forward.femdata}|hyperpage}{60}
 \indexentry{femdata\_fl\_TR\_moments() (in module nirfasterff.forward.femdata)@\spxentry{femdata\_fl\_TR\_moments()}\spxextra{in module nirfasterff.forward.femdata}|hyperpage}{62}
 \indexentry{femdata\_stnd\_CW() (in module nirfasterff.forward.femdata)@\spxentry{femdata\_stnd\_CW()}\spxextra{in module nirfasterff.forward.femdata}|hyperpage}{63}
-\indexentry{femdata\_stnd\_FD() (in module nirfasterff.forward.femdata)@\spxentry{femdata\_stnd\_FD()}\spxextra{in module nirfasterff.forward.femdata}|hyperpage}{64}
-\indexentry{femdata\_stnd\_TR() (in module nirfasterff.forward.femdata)@\spxentry{femdata\_stnd\_TR()}\spxextra{in module nirfasterff.forward.femdata}|hyperpage}{65}
-\indexentry{femdata\_stnd\_TR\_moments() (in module nirfasterff.forward.femdata)@\spxentry{femdata\_stnd\_TR\_moments()}\spxextra{in module nirfasterff.forward.femdata}|hyperpage}{66}
-\indexentry{module@\spxentry{module}!nirfasterff.inverse@\spxentry{nirfasterff.inverse}|hyperpage}{67}
-\indexentry{nirfasterff.inverse@\spxentry{nirfasterff.inverse}!module@\spxentry{module}|hyperpage}{67}
+\indexentry{femdata\_stnd\_FD() (in module nirfasterff.forward.femdata)@\spxentry{femdata\_stnd\_FD()}\spxextra{in module nirfasterff.forward.femdata}|hyperpage}{63}
+\indexentry{femdata\_stnd\_TR() (in module nirfasterff.forward.femdata)@\spxentry{femdata\_stnd\_TR()}\spxextra{in module nirfasterff.forward.femdata}|hyperpage}{64}
+\indexentry{femdata\_stnd\_TR\_moments() (in module nirfasterff.forward.femdata)@\spxentry{femdata\_stnd\_TR\_moments()}\spxextra{in module nirfasterff.forward.femdata}|hyperpage}{65}
+\indexentry{module@\spxentry{module}!nirfasterff.inverse@\spxentry{nirfasterff.inverse}|hyperpage}{66}
+\indexentry{nirfasterff.inverse@\spxentry{nirfasterff.inverse}!module@\spxentry{module}|hyperpage}{66}
 \indexentry{jacobian\_DCS() (in module nirfasterff.inverse)@\spxentry{jacobian\_DCS()}\spxextra{in module nirfasterff.inverse}|hyperpage}{67}
-\indexentry{jacobian\_fl\_CW() (in module nirfasterff.inverse)@\spxentry{jacobian\_fl\_CW()}\spxextra{in module nirfasterff.inverse}|hyperpage}{68}
-\indexentry{jacobian\_fl\_FD() (in module nirfasterff.inverse)@\spxentry{jacobian\_fl\_FD()}\spxextra{in module nirfasterff.inverse}|hyperpage}{69}
-\indexentry{jacobian\_stnd\_CW() (in module nirfasterff.inverse)@\spxentry{jacobian\_stnd\_CW()}\spxextra{in module nirfasterff.inverse}|hyperpage}{70}
-\indexentry{jacobian\_stnd\_FD() (in module nirfasterff.inverse)@\spxentry{jacobian\_stnd\_FD()}\spxextra{in module nirfasterff.inverse}|hyperpage}{71}
-\indexentry{tikhonov() (in module nirfasterff.inverse)@\spxentry{tikhonov()}\spxextra{in module nirfasterff.inverse}|hyperpage}{72}
+\indexentry{jacobian\_fl\_CW() (in module nirfasterff.inverse)@\spxentry{jacobian\_fl\_CW()}\spxextra{in module nirfasterff.inverse}|hyperpage}{67}
+\indexentry{jacobian\_fl\_FD() (in module nirfasterff.inverse)@\spxentry{jacobian\_fl\_FD()}\spxextra{in module nirfasterff.inverse}|hyperpage}{68}
+\indexentry{jacobian\_stnd\_CW() (in module nirfasterff.inverse)@\spxentry{jacobian\_stnd\_CW()}\spxextra{in module nirfasterff.inverse}|hyperpage}{69}
+\indexentry{jacobian\_stnd\_FD() (in module nirfasterff.inverse)@\spxentry{jacobian\_stnd\_FD()}\spxextra{in module nirfasterff.inverse}|hyperpage}{70}
+\indexentry{tikhonov() (in module nirfasterff.inverse)@\spxentry{tikhonov()}\spxextra{in module nirfasterff.inverse}|hyperpage}{71}
 \indexentry{module@\spxentry{module}!nirfasterff.io@\spxentry{nirfasterff.io}|hyperpage}{72}
 \indexentry{nirfasterff.io@\spxentry{nirfasterff.io}!module@\spxentry{module}|hyperpage}{72}
-\indexentry{readMEDIT() (in module nirfasterff.io)@\spxentry{readMEDIT()}\spxextra{in module nirfasterff.io}|hyperpage}{73}
-\indexentry{saveinr() (in module nirfasterff.io)@\spxentry{saveinr()}\spxextra{in module nirfasterff.io}|hyperpage}{73}
-\indexentry{module@\spxentry{module}!nirfasterff.lib@\spxentry{nirfasterff.lib}|hyperpage}{74}
-\indexentry{nirfasterff.lib@\spxentry{nirfasterff.lib}!module@\spxentry{module}|hyperpage}{74}
-\indexentry{module@\spxentry{module}!nirfasterff.lib.nirfasterff\_cpu@\spxentry{nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{74}
-\indexentry{nirfasterff.lib.nirfasterff\_cpu@\spxentry{nirfasterff.lib.nirfasterff\_cpu}!module@\spxentry{module}|hyperpage}{74}
-\indexentry{IntGradGrid() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{IntGradGrid()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{75}
-\indexentry{IntGrid() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{IntGrid()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{75}
-\indexentry{ele\_area() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{ele\_area()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{75}
-\indexentry{gen\_mass\_matrix() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{gen\_mass\_matrix()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{76}
-\indexentry{gen\_source\_fl() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{gen\_source\_fl()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{76}
-\indexentry{get\_field\_CW() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{get\_field\_CW()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{76}
-\indexentry{get\_field\_FD() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{get\_field\_FD()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{77}
-\indexentry{get\_field\_TR() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{get\_field\_TR()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{77}
-\indexentry{get\_field\_TRFL() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{get\_field\_TRFL()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{77}
-\indexentry{get\_field\_TRFL\_moments() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{get\_field\_TRFL\_moments()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{78}
-\indexentry{get\_field\_TR\_moments() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{get\_field\_TR\_moments()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{78}
-\indexentry{gradientIntfunc() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{gradientIntfunc()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{79}
-\indexentry{gradientIntfunc2() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{gradientIntfunc2()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{79}
-\indexentry{isCUDA() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{isCUDA()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{79}
-\indexentry{mesh\_support() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{mesh\_support()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{79}
-\indexentry{pointLocation() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{pointLocation()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{79}
-\indexentry{ConvergenceInfoCPU (class in nirfasterff.lib.nirfasterff\_cpu)@\spxentry{ConvergenceInfoCPU}\spxextra{class in nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{80}
-\indexentry{\_\_init\_\_() (nirfasterff.lib.nirfasterff\_cpu.ConvergenceInfoCPU method)@\spxentry{\_\_init\_\_()}\spxextra{nirfasterff.lib.nirfasterff\_cpu.ConvergenceInfoCPU method}|hyperpage}{80}
-\indexentry{module@\spxentry{module}!nirfasterff.lib.nirfasterff\_cuda@\spxentry{nirfasterff.lib.nirfasterff\_cuda}|hyperpage}{80}
-\indexentry{nirfasterff.lib.nirfasterff\_cuda@\spxentry{nirfasterff.lib.nirfasterff\_cuda}!module@\spxentry{module}|hyperpage}{80}
-\indexentry{gen\_mass\_matrix() (in module nirfasterff.lib.nirfasterff\_cuda)@\spxentry{gen\_mass\_matrix()}\spxextra{in module nirfasterff.lib.nirfasterff\_cuda}|hyperpage}{81}
-\indexentry{gen\_source\_fl() (in module nirfasterff.lib.nirfasterff\_cuda)@\spxentry{gen\_source\_fl()}\spxextra{in module nirfasterff.lib.nirfasterff\_cuda}|hyperpage}{81}
-\indexentry{get\_field\_CW() (in module nirfasterff.lib.nirfasterff\_cuda)@\spxentry{get\_field\_CW()}\spxextra{in module nirfasterff.lib.nirfasterff\_cuda}|hyperpage}{81}
-\indexentry{get\_field\_FD() (in module nirfasterff.lib.nirfasterff\_cuda)@\spxentry{get\_field\_FD()}\spxextra{in module nirfasterff.lib.nirfasterff\_cuda}|hyperpage}{82}
-\indexentry{get\_field\_TR() (in module nirfasterff.lib.nirfasterff\_cuda)@\spxentry{get\_field\_TR()}\spxextra{in module nirfasterff.lib.nirfasterff\_cuda}|hyperpage}{82}
-\indexentry{get\_field\_TRFL() (in module nirfasterff.lib.nirfasterff\_cuda)@\spxentry{get\_field\_TRFL()}\spxextra{in module nirfasterff.lib.nirfasterff\_cuda}|hyperpage}{82}
-\indexentry{get\_field\_TRFL\_moments() (in module nirfasterff.lib.nirfasterff\_cuda)@\spxentry{get\_field\_TRFL\_moments()}\spxextra{in module nirfasterff.lib.nirfasterff\_cuda}|hyperpage}{83}
-\indexentry{get\_field\_TR\_moments() (in module nirfasterff.lib.nirfasterff\_cuda)@\spxentry{get\_field\_TR\_moments()}\spxextra{in module nirfasterff.lib.nirfasterff\_cuda}|hyperpage}{83}
-\indexentry{ConvergenceInfoGPU (class in nirfasterff.lib.nirfasterff\_cuda)@\spxentry{ConvergenceInfoGPU}\spxextra{class in nirfasterff.lib.nirfasterff\_cuda}|hyperpage}{84}
-\indexentry{\_\_init\_\_() (nirfasterff.lib.nirfasterff\_cuda.ConvergenceInfoGPU method)@\spxentry{\_\_init\_\_()}\spxextra{nirfasterff.lib.nirfasterff\_cuda.ConvergenceInfoGPU method}|hyperpage}{84}
-\indexentry{module@\spxentry{module}!nirfasterff.math@\spxentry{nirfasterff.math}|hyperpage}{84}
-\indexentry{nirfasterff.math@\spxentry{nirfasterff.math}!module@\spxentry{module}|hyperpage}{84}
-\indexentry{gen\_mass\_matrix() (in module nirfasterff.math)@\spxentry{gen\_mass\_matrix()}\spxextra{in module nirfasterff.math}|hyperpage}{85}
-\indexentry{gen\_sources() (in module nirfasterff.math)@\spxentry{gen\_sources()}\spxextra{in module nirfasterff.math}|hyperpage}{86}
-\indexentry{gen\_sources\_fl() (in module nirfasterff.math)@\spxentry{gen\_sources\_fl()}\spxextra{in module nirfasterff.math}|hyperpage}{86}
-\indexentry{get\_boundary\_data() (in module nirfasterff.math)@\spxentry{get\_boundary\_data()}\spxextra{in module nirfasterff.math}|hyperpage}{87}
-\indexentry{get\_field\_CW() (in module nirfasterff.math)@\spxentry{get\_field\_CW()}\spxextra{in module nirfasterff.math}|hyperpage}{87}
-\indexentry{get\_field\_FD() (in module nirfasterff.math)@\spxentry{get\_field\_FD()}\spxextra{in module nirfasterff.math}|hyperpage}{88}
-\indexentry{get\_field\_TR() (in module nirfasterff.math)@\spxentry{get\_field\_TR()}\spxextra{in module nirfasterff.math}|hyperpage}{89}
-\indexentry{get\_field\_TRFL() (in module nirfasterff.math)@\spxentry{get\_field\_TRFL()}\spxextra{in module nirfasterff.math}|hyperpage}{90}
-\indexentry{get\_field\_TRFLmoments() (in module nirfasterff.math)@\spxentry{get\_field\_TRFLmoments()}\spxextra{in module nirfasterff.math}|hyperpage}{91}
-\indexentry{get\_field\_TRmoments() (in module nirfasterff.math)@\spxentry{get\_field\_TRmoments()}\spxextra{in module nirfasterff.math}|hyperpage}{92}
-\indexentry{module@\spxentry{module}!nirfasterff.meshing@\spxentry{nirfasterff.meshing}|hyperpage}{93}
-\indexentry{nirfasterff.meshing@\spxentry{nirfasterff.meshing}!module@\spxentry{module}|hyperpage}{93}
-\indexentry{module@\spxentry{module}!nirfasterff.meshing.auxiliary@\spxentry{nirfasterff.meshing.auxiliary}|hyperpage}{93}
-\indexentry{nirfasterff.meshing.auxiliary@\spxentry{nirfasterff.meshing.auxiliary}!module@\spxentry{module}|hyperpage}{93}
-\indexentry{check\_facearea() (in module nirfasterff.meshing.auxiliary)@\spxentry{check\_facearea()}\spxextra{in module nirfasterff.meshing.auxiliary}|hyperpage}{94}
-\indexentry{check\_tetrahedron\_faces() (in module nirfasterff.meshing.auxiliary)@\spxentry{check\_tetrahedron\_faces()}\spxextra{in module nirfasterff.meshing.auxiliary}|hyperpage}{94}
-\indexentry{checkedges() (in module nirfasterff.meshing.auxiliary)@\spxentry{checkedges()}\spxextra{in module nirfasterff.meshing.auxiliary}|hyperpage}{95}
-\indexentry{quality\_triangle\_radius() (in module nirfasterff.meshing.auxiliary)@\spxentry{quality\_triangle\_radius()}\spxextra{in module nirfasterff.meshing.auxiliary}|hyperpage}{95}
-\indexentry{simpqual() (in module nirfasterff.meshing.auxiliary)@\spxentry{simpqual()}\spxextra{in module nirfasterff.meshing.auxiliary}|hyperpage}{95}
-\indexentry{vector\_vector\_angle() (in module nirfasterff.meshing.auxiliary)@\spxentry{vector\_vector\_angle()}\spxextra{in module nirfasterff.meshing.auxiliary}|hyperpage}{96}
-\indexentry{module@\spxentry{module}!nirfasterff.meshing.meshutils@\spxentry{nirfasterff.meshing.meshutils}|hyperpage}{96}
-\indexentry{nirfasterff.meshing.meshutils@\spxentry{nirfasterff.meshing.meshutils}!module@\spxentry{module}|hyperpage}{96}
-\indexentry{CheckMesh2D() (in module nirfasterff.meshing.meshutils)@\spxentry{CheckMesh2D()}\spxextra{in module nirfasterff.meshing.meshutils}|hyperpage}{96}
-\indexentry{CheckMesh3D() (in module nirfasterff.meshing.meshutils)@\spxentry{CheckMesh3D()}\spxextra{in module nirfasterff.meshing.meshutils}|hyperpage}{97}
-\indexentry{RunCGALMeshGenerator() (in module nirfasterff.meshing.meshutils)@\spxentry{RunCGALMeshGenerator()}\spxextra{in module nirfasterff.meshing.meshutils}|hyperpage}{98}
-\indexentry{boundfaces() (in module nirfasterff.meshing.meshutils)@\spxentry{boundfaces()}\spxextra{in module nirfasterff.meshing.meshutils}|hyperpage}{98}
-\indexentry{checkmesh3d\_solid() (in module nirfasterff.meshing.meshutils)@\spxentry{checkmesh3d\_solid()}\spxextra{in module nirfasterff.meshing.meshutils}|hyperpage}{99}
-\indexentry{checkmesh3d\_surface() (in module nirfasterff.meshing.meshutils)@\spxentry{checkmesh3d\_surface()}\spxextra{in module nirfasterff.meshing.meshutils}|hyperpage}{99}
-\indexentry{module@\spxentry{module}!nirfasterff.utils@\spxentry{nirfasterff.utils}|hyperpage}{100}
-\indexentry{nirfasterff.utils@\spxentry{nirfasterff.utils}!module@\spxentry{module}|hyperpage}{100}
-\indexentry{boundary\_attenuation() (in module nirfasterff.utils)@\spxentry{boundary\_attenuation()}\spxextra{in module nirfasterff.utils}|hyperpage}{100}
-\indexentry{check\_element\_orientation\_2d() (in module nirfasterff.utils)@\spxentry{check\_element\_orientation\_2d()}\spxextra{in module nirfasterff.utils}|hyperpage}{101}
-\indexentry{compress\_coo() (in module nirfasterff.utils)@\spxentry{compress\_coo()}\spxextra{in module nirfasterff.utils}|hyperpage}{102}
-\indexentry{gen\_intmat\_impl() (in module nirfasterff.utils)@\spxentry{gen\_intmat\_impl()}\spxextra{in module nirfasterff.utils}|hyperpage}{102}
-\indexentry{get\_nthread() (in module nirfasterff.utils)@\spxentry{get\_nthread()}\spxextra{in module nirfasterff.utils}|hyperpage}{102}
-\indexentry{get\_solver() (in module nirfasterff.utils)@\spxentry{get\_solver()}\spxextra{in module nirfasterff.utils}|hyperpage}{103}
-\indexentry{isCUDA() (in module nirfasterff.utils)@\spxentry{isCUDA()}\spxextra{in module nirfasterff.utils}|hyperpage}{103}
-\indexentry{pointLineDistance() (in module nirfasterff.utils)@\spxentry{pointLineDistance()}\spxextra{in module nirfasterff.utils}|hyperpage}{103}
-\indexentry{pointLocation() (in module nirfasterff.utils)@\spxentry{pointLocation()}\spxextra{in module nirfasterff.utils}|hyperpage}{104}
-\indexentry{pointTriangleDistance() (in module nirfasterff.utils)@\spxentry{pointTriangleDistance()}\spxextra{in module nirfasterff.utils}|hyperpage}{104}
-\indexentry{uncompress\_coo() (in module nirfasterff.utils)@\spxentry{uncompress\_coo()}\spxextra{in module nirfasterff.utils}|hyperpage}{105}
-\indexentry{ConvergenceInfo (class in nirfasterff.utils)@\spxentry{ConvergenceInfo}\spxextra{class in nirfasterff.utils}|hyperpage}{105}
-\indexentry{isConverged (nirfasterff.utils.ConvergenceInfo attribute)@\spxentry{isConverged}\spxextra{nirfasterff.utils.ConvergenceInfo attribute}|hyperpage}{105}
-\indexentry{isConvergedToAbsoluteTolerance (nirfasterff.utils.ConvergenceInfo attribute)@\spxentry{isConvergedToAbsoluteTolerance}\spxextra{nirfasterff.utils.ConvergenceInfo attribute}|hyperpage}{105}
-\indexentry{iteration (nirfasterff.utils.ConvergenceInfo attribute)@\spxentry{iteration}\spxextra{nirfasterff.utils.ConvergenceInfo attribute}|hyperpage}{105}
-\indexentry{residual (nirfasterff.utils.ConvergenceInfo attribute)@\spxentry{residual}\spxextra{nirfasterff.utils.ConvergenceInfo attribute}|hyperpage}{105}
-\indexentry{\_\_init\_\_() (nirfasterff.utils.ConvergenceInfo method)@\spxentry{\_\_init\_\_()}\spxextra{nirfasterff.utils.ConvergenceInfo method}|hyperpage}{105}
-\indexentry{MeshingParams (class in nirfasterff.utils)@\spxentry{MeshingParams}\spxextra{class in nirfasterff.utils}|hyperpage}{106}
-\indexentry{xPixelSpacing (nirfasterff.utils.MeshingParams attribute)@\spxentry{xPixelSpacing}\spxextra{nirfasterff.utils.MeshingParams attribute}|hyperpage}{106}
-\indexentry{yPixelSpacing (nirfasterff.utils.MeshingParams attribute)@\spxentry{yPixelSpacing}\spxextra{nirfasterff.utils.MeshingParams attribute}|hyperpage}{106}
-\indexentry{SliceThickness (nirfasterff.utils.MeshingParams attribute)@\spxentry{SliceThickness}\spxextra{nirfasterff.utils.MeshingParams attribute}|hyperpage}{106}
-\indexentry{facet\_angle (nirfasterff.utils.MeshingParams attribute)@\spxentry{facet\_angle}\spxextra{nirfasterff.utils.MeshingParams attribute}|hyperpage}{106}
-\indexentry{facet\_size (nirfasterff.utils.MeshingParams attribute)@\spxentry{facet\_size}\spxextra{nirfasterff.utils.MeshingParams attribute}|hyperpage}{106}
-\indexentry{facet\_distance (nirfasterff.utils.MeshingParams attribute)@\spxentry{facet\_distance}\spxextra{nirfasterff.utils.MeshingParams attribute}|hyperpage}{106}
-\indexentry{cell\_radius\_edge (nirfasterff.utils.MeshingParams attribute)@\spxentry{cell\_radius\_edge}\spxextra{nirfasterff.utils.MeshingParams attribute}|hyperpage}{106}
-\indexentry{general\_cell\_size (nirfasterff.utils.MeshingParams attribute)@\spxentry{general\_cell\_size}\spxextra{nirfasterff.utils.MeshingParams attribute}|hyperpage}{107}
-\indexentry{subdomain (nirfasterff.utils.MeshingParams attribute)@\spxentry{subdomain}\spxextra{nirfasterff.utils.MeshingParams attribute}|hyperpage}{107}
-\indexentry{lloyd\_smooth (nirfasterff.utils.MeshingParams attribute)@\spxentry{lloyd\_smooth}\spxextra{nirfasterff.utils.MeshingParams attribute}|hyperpage}{107}
-\indexentry{offset (nirfasterff.utils.MeshingParams attribute)@\spxentry{offset}\spxextra{nirfasterff.utils.MeshingParams attribute}|hyperpage}{107}
-\indexentry{\_\_init\_\_() (nirfasterff.utils.MeshingParams method)@\spxentry{\_\_init\_\_()}\spxextra{nirfasterff.utils.MeshingParams method}|hyperpage}{107}
-\indexentry{SolverOptions (class in nirfasterff.utils)@\spxentry{SolverOptions}\spxextra{class in nirfasterff.utils}|hyperpage}{108}
-\indexentry{max\_iter (nirfasterff.utils.SolverOptions attribute)@\spxentry{max\_iter}\spxextra{nirfasterff.utils.SolverOptions attribute}|hyperpage}{108}
-\indexentry{AbsoluteTolerance (nirfasterff.utils.SolverOptions attribute)@\spxentry{AbsoluteTolerance}\spxextra{nirfasterff.utils.SolverOptions attribute}|hyperpage}{108}
-\indexentry{RelativeTolerance (nirfasterff.utils.SolverOptions attribute)@\spxentry{RelativeTolerance}\spxextra{nirfasterff.utils.SolverOptions attribute}|hyperpage}{108}
-\indexentry{divergence (nirfasterff.utils.SolverOptions attribute)@\spxentry{divergence}\spxextra{nirfasterff.utils.SolverOptions attribute}|hyperpage}{108}
-\indexentry{GPU (nirfasterff.utils.SolverOptions attribute)@\spxentry{GPU}\spxextra{nirfasterff.utils.SolverOptions attribute}|hyperpage}{108}
-\indexentry{\_\_init\_\_() (nirfasterff.utils.SolverOptions method)@\spxentry{\_\_init\_\_()}\spxextra{nirfasterff.utils.SolverOptions method}|hyperpage}{108}
-\indexentry{module@\spxentry{module}!nirfasterff.visualize@\spxentry{nirfasterff.visualize}|hyperpage}{108}
-\indexentry{nirfasterff.visualize@\spxentry{nirfasterff.visualize}!module@\spxentry{module}|hyperpage}{108}
-\indexentry{plot3dmesh() (in module nirfasterff.visualize)@\spxentry{plot3dmesh()}\spxextra{in module nirfasterff.visualize}|hyperpage}{109}
-\indexentry{plotimage() (in module nirfasterff.visualize)@\spxentry{plotimage()}\spxextra{in module nirfasterff.visualize}|hyperpage}{110}
+\indexentry{readMEDIT() (in module nirfasterff.io)@\spxentry{readMEDIT()}\spxextra{in module nirfasterff.io}|hyperpage}{72}
+\indexentry{saveinr() (in module nirfasterff.io)@\spxentry{saveinr()}\spxextra{in module nirfasterff.io}|hyperpage}{72}
+\indexentry{module@\spxentry{module}!nirfasterff.lib@\spxentry{nirfasterff.lib}|hyperpage}{73}
+\indexentry{nirfasterff.lib@\spxentry{nirfasterff.lib}!module@\spxentry{module}|hyperpage}{73}
+\indexentry{module@\spxentry{module}!nirfasterff.lib.nirfasterff\_cpu@\spxentry{nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{73}
+\indexentry{nirfasterff.lib.nirfasterff\_cpu@\spxentry{nirfasterff.lib.nirfasterff\_cpu}!module@\spxentry{module}|hyperpage}{73}
+\indexentry{IntGradGrid() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{IntGradGrid()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{73}
+\indexentry{IntGrid() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{IntGrid()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{74}
+\indexentry{ele\_area() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{ele\_area()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{74}
+\indexentry{gen\_mass\_matrix() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{gen\_mass\_matrix()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{74}
+\indexentry{gen\_source\_fl() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{gen\_source\_fl()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{75}
+\indexentry{get\_field\_CW() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{get\_field\_CW()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{75}
+\indexentry{get\_field\_FD() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{get\_field\_FD()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{75}
+\indexentry{get\_field\_TR() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{get\_field\_TR()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{75}
+\indexentry{get\_field\_TRFL() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{get\_field\_TRFL()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{76}
+\indexentry{get\_field\_TRFL\_moments() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{get\_field\_TRFL\_moments()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{76}
+\indexentry{get\_field\_TR\_moments() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{get\_field\_TR\_moments()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{77}
+\indexentry{gradientIntfunc() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{gradientIntfunc()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{77}
+\indexentry{gradientIntfunc2() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{gradientIntfunc2()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{77}
+\indexentry{isCUDA() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{isCUDA()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{77}
+\indexentry{mesh\_support() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{mesh\_support()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{77}
+\indexentry{pointLocation() (in module nirfasterff.lib.nirfasterff\_cpu)@\spxentry{pointLocation()}\spxextra{in module nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{78}
+\indexentry{ConvergenceInfoCPU (class in nirfasterff.lib.nirfasterff\_cpu)@\spxentry{ConvergenceInfoCPU}\spxextra{class in nirfasterff.lib.nirfasterff\_cpu}|hyperpage}{78}
+\indexentry{\_\_init\_\_() (nirfasterff.lib.nirfasterff\_cpu.ConvergenceInfoCPU method)@\spxentry{\_\_init\_\_()}\spxextra{nirfasterff.lib.nirfasterff\_cpu.ConvergenceInfoCPU method}|hyperpage}{78}
+\indexentry{module@\spxentry{module}!nirfasterff.lib.nirfasterff\_cuda@\spxentry{nirfasterff.lib.nirfasterff\_cuda}|hyperpage}{78}
+\indexentry{nirfasterff.lib.nirfasterff\_cuda@\spxentry{nirfasterff.lib.nirfasterff\_cuda}!module@\spxentry{module}|hyperpage}{78}
+\indexentry{gen\_mass\_matrix() (in module nirfasterff.lib.nirfasterff\_cuda)@\spxentry{gen\_mass\_matrix()}\spxextra{in module nirfasterff.lib.nirfasterff\_cuda}|hyperpage}{79}
+\indexentry{gen\_source\_fl() (in module nirfasterff.lib.nirfasterff\_cuda)@\spxentry{gen\_source\_fl()}\spxextra{in module nirfasterff.lib.nirfasterff\_cuda}|hyperpage}{79}
+\indexentry{get\_field\_CW() (in module nirfasterff.lib.nirfasterff\_cuda)@\spxentry{get\_field\_CW()}\spxextra{in module nirfasterff.lib.nirfasterff\_cuda}|hyperpage}{80}
+\indexentry{get\_field\_FD() (in module nirfasterff.lib.nirfasterff\_cuda)@\spxentry{get\_field\_FD()}\spxextra{in module nirfasterff.lib.nirfasterff\_cuda}|hyperpage}{80}
+\indexentry{get\_field\_TR() (in module nirfasterff.lib.nirfasterff\_cuda)@\spxentry{get\_field\_TR()}\spxextra{in module nirfasterff.lib.nirfasterff\_cuda}|hyperpage}{80}
+\indexentry{get\_field\_TRFL() (in module nirfasterff.lib.nirfasterff\_cuda)@\spxentry{get\_field\_TRFL()}\spxextra{in module nirfasterff.lib.nirfasterff\_cuda}|hyperpage}{81}
+\indexentry{get\_field\_TRFL\_moments() (in module nirfasterff.lib.nirfasterff\_cuda)@\spxentry{get\_field\_TRFL\_moments()}\spxextra{in module nirfasterff.lib.nirfasterff\_cuda}|hyperpage}{81}
+\indexentry{get\_field\_TR\_moments() (in module nirfasterff.lib.nirfasterff\_cuda)@\spxentry{get\_field\_TR\_moments()}\spxextra{in module nirfasterff.lib.nirfasterff\_cuda}|hyperpage}{81}
+\indexentry{ConvergenceInfoGPU (class in nirfasterff.lib.nirfasterff\_cuda)@\spxentry{ConvergenceInfoGPU}\spxextra{class in nirfasterff.lib.nirfasterff\_cuda}|hyperpage}{82}
+\indexentry{\_\_init\_\_() (nirfasterff.lib.nirfasterff\_cuda.ConvergenceInfoGPU method)@\spxentry{\_\_init\_\_()}\spxextra{nirfasterff.lib.nirfasterff\_cuda.ConvergenceInfoGPU method}|hyperpage}{82}
+\indexentry{module@\spxentry{module}!nirfasterff.math@\spxentry{nirfasterff.math}|hyperpage}{82}
+\indexentry{nirfasterff.math@\spxentry{nirfasterff.math}!module@\spxentry{module}|hyperpage}{82}
+\indexentry{gen\_mass\_matrix() (in module nirfasterff.math)@\spxentry{gen\_mass\_matrix()}\spxextra{in module nirfasterff.math}|hyperpage}{83}
+\indexentry{gen\_sources() (in module nirfasterff.math)@\spxentry{gen\_sources()}\spxextra{in module nirfasterff.math}|hyperpage}{84}
+\indexentry{gen\_sources\_fl() (in module nirfasterff.math)@\spxentry{gen\_sources\_fl()}\spxextra{in module nirfasterff.math}|hyperpage}{84}
+\indexentry{get\_boundary\_data() (in module nirfasterff.math)@\spxentry{get\_boundary\_data()}\spxextra{in module nirfasterff.math}|hyperpage}{84}
+\indexentry{get\_field\_CW() (in module nirfasterff.math)@\spxentry{get\_field\_CW()}\spxextra{in module nirfasterff.math}|hyperpage}{85}
+\indexentry{get\_field\_FD() (in module nirfasterff.math)@\spxentry{get\_field\_FD()}\spxextra{in module nirfasterff.math}|hyperpage}{86}
+\indexentry{get\_field\_TR() (in module nirfasterff.math)@\spxentry{get\_field\_TR()}\spxextra{in module nirfasterff.math}|hyperpage}{87}
+\indexentry{get\_field\_TRFL() (in module nirfasterff.math)@\spxentry{get\_field\_TRFL()}\spxextra{in module nirfasterff.math}|hyperpage}{88}
+\indexentry{get\_field\_TRFLmoments() (in module nirfasterff.math)@\spxentry{get\_field\_TRFLmoments()}\spxextra{in module nirfasterff.math}|hyperpage}{89}
+\indexentry{get\_field\_TRmoments() (in module nirfasterff.math)@\spxentry{get\_field\_TRmoments()}\spxextra{in module nirfasterff.math}|hyperpage}{90}
+\indexentry{module@\spxentry{module}!nirfasterff.meshing@\spxentry{nirfasterff.meshing}|hyperpage}{91}
+\indexentry{nirfasterff.meshing@\spxentry{nirfasterff.meshing}!module@\spxentry{module}|hyperpage}{91}
+\indexentry{module@\spxentry{module}!nirfasterff.meshing.auxiliary@\spxentry{nirfasterff.meshing.auxiliary}|hyperpage}{91}
+\indexentry{nirfasterff.meshing.auxiliary@\spxentry{nirfasterff.meshing.auxiliary}!module@\spxentry{module}|hyperpage}{91}
+\indexentry{check\_facearea() (in module nirfasterff.meshing.auxiliary)@\spxentry{check\_facearea()}\spxextra{in module nirfasterff.meshing.auxiliary}|hyperpage}{91}
+\indexentry{check\_tetrahedron\_faces() (in module nirfasterff.meshing.auxiliary)@\spxentry{check\_tetrahedron\_faces()}\spxextra{in module nirfasterff.meshing.auxiliary}|hyperpage}{92}
+\indexentry{checkedges() (in module nirfasterff.meshing.auxiliary)@\spxentry{checkedges()}\spxextra{in module nirfasterff.meshing.auxiliary}|hyperpage}{92}
+\indexentry{quality\_triangle\_radius() (in module nirfasterff.meshing.auxiliary)@\spxentry{quality\_triangle\_radius()}\spxextra{in module nirfasterff.meshing.auxiliary}|hyperpage}{92}
+\indexentry{simpqual() (in module nirfasterff.meshing.auxiliary)@\spxentry{simpqual()}\spxextra{in module nirfasterff.meshing.auxiliary}|hyperpage}{93}
+\indexentry{vector\_vector\_angle() (in module nirfasterff.meshing.auxiliary)@\spxentry{vector\_vector\_angle()}\spxextra{in module nirfasterff.meshing.auxiliary}|hyperpage}{93}
+\indexentry{module@\spxentry{module}!nirfasterff.meshing.meshutils@\spxentry{nirfasterff.meshing.meshutils}|hyperpage}{93}
+\indexentry{nirfasterff.meshing.meshutils@\spxentry{nirfasterff.meshing.meshutils}!module@\spxentry{module}|hyperpage}{93}
+\indexentry{CheckMesh2D() (in module nirfasterff.meshing.meshutils)@\spxentry{CheckMesh2D()}\spxextra{in module nirfasterff.meshing.meshutils}|hyperpage}{94}
+\indexentry{CheckMesh3D() (in module nirfasterff.meshing.meshutils)@\spxentry{CheckMesh3D()}\spxextra{in module nirfasterff.meshing.meshutils}|hyperpage}{94}
+\indexentry{RunCGALMeshGenerator() (in module nirfasterff.meshing.meshutils)@\spxentry{RunCGALMeshGenerator()}\spxextra{in module nirfasterff.meshing.meshutils}|hyperpage}{95}
+\indexentry{boundfaces() (in module nirfasterff.meshing.meshutils)@\spxentry{boundfaces()}\spxextra{in module nirfasterff.meshing.meshutils}|hyperpage}{96}
+\indexentry{checkmesh3d\_solid() (in module nirfasterff.meshing.meshutils)@\spxentry{checkmesh3d\_solid()}\spxextra{in module nirfasterff.meshing.meshutils}|hyperpage}{96}
+\indexentry{checkmesh3d\_surface() (in module nirfasterff.meshing.meshutils)@\spxentry{checkmesh3d\_surface()}\spxextra{in module nirfasterff.meshing.meshutils}|hyperpage}{97}
+\indexentry{module@\spxentry{module}!nirfasterff.utils@\spxentry{nirfasterff.utils}|hyperpage}{97}
+\indexentry{nirfasterff.utils@\spxentry{nirfasterff.utils}!module@\spxentry{module}|hyperpage}{97}
+\indexentry{boundary\_attenuation() (in module nirfasterff.utils)@\spxentry{boundary\_attenuation()}\spxextra{in module nirfasterff.utils}|hyperpage}{98}
+\indexentry{check\_element\_orientation\_2d() (in module nirfasterff.utils)@\spxentry{check\_element\_orientation\_2d()}\spxextra{in module nirfasterff.utils}|hyperpage}{99}
+\indexentry{compress\_coo() (in module nirfasterff.utils)@\spxentry{compress\_coo()}\spxextra{in module nirfasterff.utils}|hyperpage}{99}
+\indexentry{gen\_intmat\_impl() (in module nirfasterff.utils)@\spxentry{gen\_intmat\_impl()}\spxextra{in module nirfasterff.utils}|hyperpage}{99}
+\indexentry{get\_nthread() (in module nirfasterff.utils)@\spxentry{get\_nthread()}\spxextra{in module nirfasterff.utils}|hyperpage}{100}
+\indexentry{get\_solver() (in module nirfasterff.utils)@\spxentry{get\_solver()}\spxextra{in module nirfasterff.utils}|hyperpage}{100}
+\indexentry{isCUDA() (in module nirfasterff.utils)@\spxentry{isCUDA()}\spxextra{in module nirfasterff.utils}|hyperpage}{100}
+\indexentry{pointLineDistance() (in module nirfasterff.utils)@\spxentry{pointLineDistance()}\spxextra{in module nirfasterff.utils}|hyperpage}{100}
+\indexentry{pointLocation() (in module nirfasterff.utils)@\spxentry{pointLocation()}\spxextra{in module nirfasterff.utils}|hyperpage}{101}
+\indexentry{pointTriangleDistance() (in module nirfasterff.utils)@\spxentry{pointTriangleDistance()}\spxextra{in module nirfasterff.utils}|hyperpage}{101}
+\indexentry{uncompress\_coo() (in module nirfasterff.utils)@\spxentry{uncompress\_coo()}\spxextra{in module nirfasterff.utils}|hyperpage}{102}
+\indexentry{ConvergenceInfo (class in nirfasterff.utils)@\spxentry{ConvergenceInfo}\spxextra{class in nirfasterff.utils}|hyperpage}{102}
+\indexentry{isConverged (nirfasterff.utils.ConvergenceInfo attribute)@\spxentry{isConverged}\spxextra{nirfasterff.utils.ConvergenceInfo attribute}|hyperpage}{102}
+\indexentry{isConvergedToAbsoluteTolerance (nirfasterff.utils.ConvergenceInfo attribute)@\spxentry{isConvergedToAbsoluteTolerance}\spxextra{nirfasterff.utils.ConvergenceInfo attribute}|hyperpage}{102}
+\indexentry{iteration (nirfasterff.utils.ConvergenceInfo attribute)@\spxentry{iteration}\spxextra{nirfasterff.utils.ConvergenceInfo attribute}|hyperpage}{102}
+\indexentry{residual (nirfasterff.utils.ConvergenceInfo attribute)@\spxentry{residual}\spxextra{nirfasterff.utils.ConvergenceInfo attribute}|hyperpage}{102}
+\indexentry{\_\_init\_\_() (nirfasterff.utils.ConvergenceInfo method)@\spxentry{\_\_init\_\_()}\spxextra{nirfasterff.utils.ConvergenceInfo method}|hyperpage}{102}
+\indexentry{MeshingParams (class in nirfasterff.utils)@\spxentry{MeshingParams}\spxextra{class in nirfasterff.utils}|hyperpage}{103}
+\indexentry{xPixelSpacing (nirfasterff.utils.MeshingParams attribute)@\spxentry{xPixelSpacing}\spxextra{nirfasterff.utils.MeshingParams attribute}|hyperpage}{103}
+\indexentry{yPixelSpacing (nirfasterff.utils.MeshingParams attribute)@\spxentry{yPixelSpacing}\spxextra{nirfasterff.utils.MeshingParams attribute}|hyperpage}{103}
+\indexentry{SliceThickness (nirfasterff.utils.MeshingParams attribute)@\spxentry{SliceThickness}\spxextra{nirfasterff.utils.MeshingParams attribute}|hyperpage}{103}
+\indexentry{facet\_angle (nirfasterff.utils.MeshingParams attribute)@\spxentry{facet\_angle}\spxextra{nirfasterff.utils.MeshingParams attribute}|hyperpage}{103}
+\indexentry{facet\_size (nirfasterff.utils.MeshingParams attribute)@\spxentry{facet\_size}\spxextra{nirfasterff.utils.MeshingParams attribute}|hyperpage}{103}
+\indexentry{facet\_distance (nirfasterff.utils.MeshingParams attribute)@\spxentry{facet\_distance}\spxextra{nirfasterff.utils.MeshingParams attribute}|hyperpage}{103}
+\indexentry{cell\_radius\_edge (nirfasterff.utils.MeshingParams attribute)@\spxentry{cell\_radius\_edge}\spxextra{nirfasterff.utils.MeshingParams attribute}|hyperpage}{103}
+\indexentry{general\_cell\_size (nirfasterff.utils.MeshingParams attribute)@\spxentry{general\_cell\_size}\spxextra{nirfasterff.utils.MeshingParams attribute}|hyperpage}{103}
+\indexentry{subdomain (nirfasterff.utils.MeshingParams attribute)@\spxentry{subdomain}\spxextra{nirfasterff.utils.MeshingParams attribute}|hyperpage}{104}
+\indexentry{lloyd\_smooth (nirfasterff.utils.MeshingParams attribute)@\spxentry{lloyd\_smooth}\spxextra{nirfasterff.utils.MeshingParams attribute}|hyperpage}{104}
+\indexentry{offset (nirfasterff.utils.MeshingParams attribute)@\spxentry{offset}\spxextra{nirfasterff.utils.MeshingParams attribute}|hyperpage}{104}
+\indexentry{\_\_init\_\_() (nirfasterff.utils.MeshingParams method)@\spxentry{\_\_init\_\_()}\spxextra{nirfasterff.utils.MeshingParams method}|hyperpage}{104}
+\indexentry{SolverOptions (class in nirfasterff.utils)@\spxentry{SolverOptions}\spxextra{class in nirfasterff.utils}|hyperpage}{104}
+\indexentry{max\_iter (nirfasterff.utils.SolverOptions attribute)@\spxentry{max\_iter}\spxextra{nirfasterff.utils.SolverOptions attribute}|hyperpage}{104}
+\indexentry{AbsoluteTolerance (nirfasterff.utils.SolverOptions attribute)@\spxentry{AbsoluteTolerance}\spxextra{nirfasterff.utils.SolverOptions attribute}|hyperpage}{105}
+\indexentry{RelativeTolerance (nirfasterff.utils.SolverOptions attribute)@\spxentry{RelativeTolerance}\spxextra{nirfasterff.utils.SolverOptions attribute}|hyperpage}{105}
+\indexentry{divergence (nirfasterff.utils.SolverOptions attribute)@\spxentry{divergence}\spxextra{nirfasterff.utils.SolverOptions attribute}|hyperpage}{105}
+\indexentry{GPU (nirfasterff.utils.SolverOptions attribute)@\spxentry{GPU}\spxextra{nirfasterff.utils.SolverOptions attribute}|hyperpage}{105}
+\indexentry{\_\_init\_\_() (nirfasterff.utils.SolverOptions method)@\spxentry{\_\_init\_\_()}\spxextra{nirfasterff.utils.SolverOptions method}|hyperpage}{105}
+\indexentry{module@\spxentry{module}!nirfasterff.visualize@\spxentry{nirfasterff.visualize}|hyperpage}{105}
+\indexentry{nirfasterff.visualize@\spxentry{nirfasterff.visualize}!module@\spxentry{module}|hyperpage}{105}
+\indexentry{plot3dmesh() (in module nirfasterff.visualize)@\spxentry{plot3dmesh()}\spxextra{in module nirfasterff.visualize}|hyperpage}{105}
+\indexentry{plotimage() (in module nirfasterff.visualize)@\spxentry{plotimage()}\spxextra{in module nirfasterff.visualize}|hyperpage}{106}

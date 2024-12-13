@@ -2,7 +2,7 @@
 
 Public repository for the **Fast and Furious** version of NIRFASTer
 
-- Version: 1.1.0
+- Version: 1.1.1
 - Authors: Jiaming Cao, MILab@UoB
 - License: BSD
 
@@ -88,7 +88,19 @@ The head model is adapted from the examples in the [NeuroDOT toolbox](https://gi
 
 You may still continue to use the old Matlab version, available [here](https://github.com/nirfaster/NIRFASTer). However, please be noted that we are slowly dropping support, which means that should you run into any bugs, we may not have the capacity to fix it for you.
 
+
+
+## The Micro version
+
+A compact version, supporting only CW/FD forward modeling on standard mesh is available [here](https://github.com/milabuob/nirfaster-uFF)).
+
 ## Changelog
+
+1.1.1
+
+- Fixed a bug in TPSF calculation, which caused the result to scale with step size
+
+- Fixed a bug in utils.pointLineDistance
 
 1.1.0
 

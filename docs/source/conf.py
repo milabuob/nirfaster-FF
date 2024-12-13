@@ -12,7 +12,7 @@ sys.path.insert(0, os.path.abspath('../..'))
 project = 'NIRFASTerFF'
 copyright = '2024, Jiaming Cao, MILAB@UoB'
 author = 'Jiaming Cao, MILAB@UoB'
-release = '1.1.0'
+release = '1.1.1'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

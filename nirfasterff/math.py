@@ -299,7 +299,7 @@ def get_field_TR(csrI, csrJ, csrV, qvec, dt, max_step, opt = utils.SolverOptions
     
     References
     -------
-    Arridges et al., Med. Phys,, 1993. doi:10.1118/1.597069
+    Arridge et al., Med. Phys,, 1993. doi:10.1118/1.597069
 
     """
    
@@ -331,7 +331,7 @@ def get_field_TR(csrI, csrJ, csrV, qvec, dt, max_step, opt = utils.SolverOptions
     else:
         raise TypeError('Error: Solver should be ''GPU'' or ''CPU''')
         
-    return phi, utils.ConvergenceInfo(info)
+    return phi/dt, utils.ConvergenceInfo(info)
 
 def get_field_TRmoments(csrI, csrJ, csrV, qvec, max_moment, opt = utils.SolverOptions(), solver=utils.get_solver()):
     """
@@ -514,7 +514,7 @@ def get_field_TRFL(csrI, csrJ, csrV, qvec_m, dt, max_step, opt = utils.SolverOpt
     else:
         raise TypeError('Error: Solver should be ''GPU'' or ''CPU''')
         
-    return phi, utils.ConvergenceInfo(info)
+    return phi/dt, utils.ConvergenceInfo(info)
 
 def get_field_TRFLmoments(csrI, csrJ, csrV, csrV2, mx, gamma, tau, max_moment, opt = utils.SolverOptions(), solver=utils.get_solver()):
     """

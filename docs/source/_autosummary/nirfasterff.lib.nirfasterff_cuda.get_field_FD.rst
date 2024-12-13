@@ -1,0 +1,6 @@
+nirfasterff.lib.nirfasterff\_cuda.get\_field\_FD
+================================================
+
+.. currentmodule:: nirfasterff.lib.nirfasterff_cuda
+
+.. autofunction:: get_field_FD

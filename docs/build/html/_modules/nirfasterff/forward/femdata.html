@@ -5,15 +5,15 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nirfasterff.forward.femdata &mdash; NIRFASTerFF 1.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=92fd9be5" />
+  <title>nirfasterff.forward.femdata &mdash; NIRFASTerFF 1.1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=fc837d61"></script>
-      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/documentation_options.js?v=58fbf978"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -890,7 +890,7 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">decay</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">time</span><span class="o">/</span><span class="n">mesh</span><span class="o">.</span><span class="n">tau</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
                     <span class="n">tmp_qm</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">src</span><span class="p">::</span><span class="n">n_src</span><span class="p">]</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">lfilter</span><span class="p">(</span><span class="n">decay</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="n">phix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">src</span><span class="p">::</span><span class="n">n_src</span><span class="p">]</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span> <span class="o">*</span> <span class="n">eta_muaf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">dt</span><span class="o">/</span><span class="n">mesh</span><span class="o">.</span><span class="n">tau</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-
+    <span class="n">tmp_qm</span> <span class="o">*=</span> <span class="n">dt</span>
     <span class="c1"># Must perform the FEM integration: the matrix happens to be a CW MASS matrix when kappa=0, mua=1, and bndvtx=0 every where</span>
     <span class="n">nnodes</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">bndvtx</span><span class="o">.</span><span class="n">size</span>
     <span class="n">dummymesh</span><span class="o">.</span><span class="n">bndvtx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nnodes</span><span class="p">)</span>

@@ -5,15 +5,15 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nirfasterff.math &mdash; NIRFASTerFF 1.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=92fd9be5" />
+  <title>nirfasterff.math &mdash; NIRFASTerFF 1.1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=fc837d61"></script>
-      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/documentation_options.js?v=58fbf978"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -380,7 +380,7 @@
 <span class="sd">    </span>
 <span class="sd">    References</span>
 <span class="sd">    -------</span>
-<span class="sd">    Arridges et al., Med. Phys,, 1993. doi:10.1118/1.597069</span>
+<span class="sd">    Arridge et al., Med. Phys,, 1993. doi:10.1118/1.597069</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
    
@@ -412,7 +412,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Error: Solver should be &#39;&#39;GPU&#39;&#39; or &#39;&#39;CPU&#39;&#39;&#39;</span><span class="p">)</span>
         
-    <span class="k">return</span> <span class="n">phi</span><span class="p">,</span> <span class="n">utils</span><span class="o">.</span><span class="n">ConvergenceInfo</span><span class="p">(</span><span class="n">info</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">phi</span><span class="o">/</span><span class="n">dt</span><span class="p">,</span> <span class="n">utils</span><span class="o">.</span><span class="n">ConvergenceInfo</span><span class="p">(</span><span class="n">info</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="get_field_TRmoments">
@@ -601,7 +601,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Error: Solver should be &#39;&#39;GPU&#39;&#39; or &#39;&#39;CPU&#39;&#39;&#39;</span><span class="p">)</span>
         
-    <span class="k">return</span> <span class="n">phi</span><span class="p">,</span> <span class="n">utils</span><span class="o">.</span><span class="n">ConvergenceInfo</span><span class="p">(</span><span class="n">info</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">phi</span><span class="o">/</span><span class="n">dt</span><span class="p">,</span> <span class="n">utils</span><span class="o">.</span><span class="n">ConvergenceInfo</span><span class="p">(</span><span class="n">info</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="get_field_TRFLmoments">
@@ -736,9 +736,6 @@
     <span class="n">dim</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">dimension</span>
     <span class="n">qvec</span> <span class="o">=</span> <span class="n">sparse</span><span class="o">.</span><span class="n">csc_matrix</span><span class="p">((</span><span class="n">int_func</span><span class="p">[</span><span class="n">active</span><span class="p">,:]</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="n">ind</span><span class="p">,:]</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">active</span><span class="o">.</span><span class="n">size</span><span class="p">),</span><span class="n">dim</span><span class="o">+</span><span class="mi">1</span><span class="p">))),</span>
                              <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">active</span><span class="o">.</span><span class="n">size</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">)</span>
-    <span class="c1"># for i in range(active.size):</span>
-    <span class="c1">#     src = active[i]</span>
-    <span class="c1">#     qvec[np.int32(mesh.elements[ind[src],:]-1), i] = int_func[src,:]</span>
     <span class="k">return</span> <span class="n">qvec</span></div>
 
 
