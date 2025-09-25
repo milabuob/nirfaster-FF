@@ -38,6 +38,7 @@ nirfasterff.utils
    
       ConvergenceInfo
       MeshingParams
+      MeshingParams2D
       SolverOptions
    
    

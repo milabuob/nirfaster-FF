@@ -1,20 +1,20 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../../../">
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nirfasterff.base.dcs_mesh &mdash; NIRFASTerFF 1.1.0 documentation</title>
+  <title>nirfasterff.base.dcs_mesh &mdash; NIRFASTerFF 1.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=92fd9be5" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=fc837d61"></script>
-      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=7a812f30"></script>
+      <script src="../../../_static/doctools.js?v=888ff710"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -82,9 +82,7 @@
 <span class="kn">from</span> <span class="nn">nirfasterff</span> <span class="kn">import</span> <span class="n">inverse</span>
 <span class="kn">import</span> <span class="nn">scipy.io</span> <span class="k">as</span> <span class="nn">sio</span>
 
-<div class="viewcode-block" id="dcsmesh">
-<a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.dcs_mesh.dcsmesh.html#nirfasterff.base.dcs_mesh.dcsmesh">[docs]</a>
-<span class="k">class</span> <span class="nc">dcsmesh</span><span class="p">:</span>
+<div class="viewcode-block" id="dcsmesh"><a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.dcs_mesh.dcsmesh.html#nirfasterff.base.dcs_mesh.dcsmesh">[docs]</a><span class="k">class</span> <span class="nc">dcsmesh</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Main class for standard mesh. The methods should cover most of the commonly-used functionalities</span>
 <span class="sd">    </span>
@@ -143,9 +141,7 @@
 <span class="sd">        </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
-<div class="viewcode-block" id="dcsmesh.__init__">
-<a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.dcs_mesh.dcsmesh.html#nirfasterff.base.dcs_mesh.dcsmesh.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="dcsmesh.__init__"><a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.dcs_mesh.dcsmesh.html#nirfasterff.base.dcs_mesh.dcsmesh.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;EmptyMesh&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bndvtx</span> <span class="o">=</span> <span class="p">[]</span>
@@ -169,11 +165,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">element_area</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">support</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vol</span> <span class="o">=</span> <span class="n">meshvol</span><span class="p">()</span></div>
-
     
-<div class="viewcode-block" id="dcsmesh.from_copy">
-<a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.dcs_mesh.dcsmesh.html#nirfasterff.base.dcs_mesh.dcsmesh.from_copy">[docs]</a>
-    <span class="k">def</span> <span class="nf">from_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">):</span>
+<div class="viewcode-block" id="dcsmesh.from_copy"><a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.dcs_mesh.dcsmesh.html#nirfasterff.base.dcs_mesh.dcsmesh.from_copy">[docs]</a>    <span class="k">def</span> <span class="nf">from_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Deep copy all fields from another mesh.</span>
 
@@ -209,11 +202,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">element_area</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">element_area</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">support</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">support</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vol</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="p">)</span></div>
-
     
-<div class="viewcode-block" id="dcsmesh.from_file">
-<a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.dcs_mesh.dcsmesh.html#nirfasterff.base.dcs_mesh.dcsmesh.from_file">[docs]</a>
-    <span class="k">def</span> <span class="nf">from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">):</span>
+<div class="viewcode-block" id="dcsmesh.from_file"><a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.dcs_mesh.dcsmesh.html#nirfasterff.base.dcs_mesh.dcsmesh.from_file">[docs]</a>    <span class="k">def</span> <span class="nf">from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Read from classic NIRFAST mesh (ASCII) format, not checking the correctness of the loaded integration functions.</span>
 <span class="sd">        </span>
@@ -458,11 +448,8 @@
         <span class="c1"># area and support for each element</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">element_area</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">cpulib</span><span class="o">.</span><span class="n">ele_area</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">support</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">cpulib</span><span class="o">.</span><span class="n">mesh_support</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">element_area</span><span class="p">)</span></div>
-
     
-<div class="viewcode-block" id="dcsmesh.from_mat">
-<a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.dcs_mesh.dcsmesh.html#nirfasterff.base.dcs_mesh.dcsmesh.from_mat">[docs]</a>
-    <span class="k">def</span> <span class="nf">from_mat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matfile</span><span class="p">,</span> <span class="n">varname</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="dcsmesh.from_mat"><a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.dcs_mesh.dcsmesh.html#nirfasterff.base.dcs_mesh.dcsmesh.from_mat">[docs]</a>    <span class="k">def</span> <span class="nf">from_mat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matfile</span><span class="p">,</span> <span class="n">varname</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Read from Matlab .mat file that contains a NIRFASTer mesh struct. All fields copied as is without error checking.</span>
 
@@ -554,11 +541,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">res</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">grid2mesh</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">grid2mesh</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">meshingrid</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">meshingrid</span></div>
-
             
-<div class="viewcode-block" id="dcsmesh.from_solid">
-<a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.dcs_mesh.dcsmesh.html#nirfasterff.base.dcs_mesh.dcsmesh.from_solid">[docs]</a>
-    <span class="k">def</span> <span class="nf">from_solid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ele</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">prop</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">src</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">det</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">link</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="dcsmesh.from_solid"><a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.dcs_mesh.dcsmesh.html#nirfasterff.base.dcs_mesh.dcsmesh.from_solid">[docs]</a>    <span class="k">def</span> <span class="nf">from_solid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ele</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">prop</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">src</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">det</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">link</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a NIRFASTer mesh from a 3D solid mesh generated by a mesher. Similar to the solidmesh2nirfast function in Matlab version.</span>
 <span class="sd">        </span>
@@ -654,11 +638,8 @@
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: link in wrong format. Ignored.&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: no link specified&#39;</span><span class="p">)</span></div>
-
     
-<div class="viewcode-block" id="dcsmesh.from_volume">
-<a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.dcs_mesh.dcsmesh.html#nirfasterff.base.dcs_mesh.dcsmesh.from_volume">[docs]</a>
-    <span class="k">def</span> <span class="nf">from_volume</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vol</span><span class="p">,</span> <span class="n">param</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">MeshingParams</span><span class="p">(),</span> <span class="n">prop</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">src</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">det</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">link</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="dcsmesh.from_volume"><a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.dcs_mesh.dcsmesh.html#nirfasterff.base.dcs_mesh.dcsmesh.from_volume">[docs]</a>    <span class="k">def</span> <span class="nf">from_volume</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vol</span><span class="p">,</span> <span class="n">param</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">MeshingParams</span><span class="p">(),</span> <span class="n">prop</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">src</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">det</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">link</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct mesh from a segmented 3D volume using the built-in CGAL mesher. Calls stndmesh.from_solid after meshing step.</span>
 
@@ -702,11 +683,147 @@
         <span class="n">ele</span><span class="p">,</span> <span class="n">nodes</span> <span class="o">=</span> <span class="n">meshing</span><span class="o">.</span><span class="n">RunCGALMeshGenerator</span><span class="p">(</span><span class="n">vol</span><span class="p">,</span> <span class="n">param</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Converting to NIRFAST format&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">from_solid</span><span class="p">(</span><span class="n">ele</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">prop</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="n">det</span><span class="p">,</span> <span class="n">link</span><span class="p">)</span></div>
+        
+<div class="viewcode-block" id="dcsmesh.from_triangle"><a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.dcs_mesh.dcsmesh.html#nirfasterff.base.dcs_mesh.dcsmesh.from_triangle">[docs]</a>    <span class="k">def</span> <span class="nf">from_triangle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tri</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">prop</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">src</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">det</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">link</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct a NIRFASTer mesh from a 2D triangularization. </span>
+<span class="sd">        </span>
+<span class="sd">        Can also set the optical properties and optodes if supplied</span>
 
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        tri : int/double NumPy array</span>
+<span class="sd">            triangulation in one-based indexing. If three columns, all nodes will be labeled as region 1</span>
+<span class="sd">            </span>
+<span class="sd">            If four columns, the last column will be used for region labeling.</span>
+<span class="sd">        nodes : double NumPy array</span>
+<span class="sd">            node locations in the mesh. Unit: mm. Size (NNodes,2).</span>
+<span class="sd">        prop : double NumPy array, optional</span>
+<span class="sd">            If not `None`, calls `dcsmesh.set_prop()` and sets the optical properties in the mesh. The default is None.</span>
+<span class="sd">            </span>
+<span class="sd">            See :func:`~nirfasterff.base.dcs_mesh.dcsmesh.set_prop()` for details. </span>
+<span class="sd">        src : nirfasterff.base.optode, optional</span>
+<span class="sd">            If not `None`, sets the sources and moves them to the appropriate locations. The default is None.</span>
+<span class="sd">            </span>
+<span class="sd">            See :func:`~nirfasterff.base.optodes.optode.touch_sources()` for details.</span>
+<span class="sd">        det : nirfasterff.base.optode, optional</span>
+<span class="sd">            If not `None`, sets the detectors and moves them to the appropriate locations. The default is None.</span>
+<span class="sd">            </span>
+<span class="sd">            See :func:`~nirfasterff.base.optodes.optode.touch_detectors()` for details.</span>
+<span class="sd">        link : int32 NumPy array, optional</span>
+<span class="sd">            If not `None`, sets the channel information. Uses one-based indexing. The default is None.</span>
+<span class="sd">            </span>
+<span class="sd">            Each row represents a channel, in the form of `[src, det, active]`, where `active` is 0 or 1</span>
+<span class="sd">            </span>
+<span class="sd">            If `link` contains only two columns, all channels are considered active.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="n">num_nodes</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">tri</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="c1"># no region label</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">elements</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">tri</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">region</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">num_nodes</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">tri</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">region</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_nodes</span><span class="p">)</span>
+            <span class="c1"># convert element label to node label</span>
+            <span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">tri</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)):</span>
+                <span class="n">tmp</span> <span class="o">=</span> <span class="n">tri</span><span class="p">[</span><span class="n">tri</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">region</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">elements</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">tri</span><span class="p">[:,:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Error: elements in wrong format&#39;</span><span class="p">)</span>
+
+        <span class="c1"># find the boundary nodes: find faces that are referred to only once</span>
+        <span class="n">faces</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="n">tri</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]],</span> 
+                      <span class="n">tri</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]],</span>
+                      <span class="n">tri</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]]]</span>
+        
+        <span class="n">faces</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">faces</span><span class="p">)</span>
+        <span class="n">unique_faces</span><span class="p">,</span> <span class="n">cnt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">faces</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">return_counts</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">bnd_faces</span> <span class="o">=</span> <span class="n">unique_faces</span><span class="p">[</span><span class="n">cnt</span><span class="o">==</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">bndvtx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">bnd_faces</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bndvtx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nodes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bndvtx</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">bndvtx</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="c1"># area and support for each element</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">element_area</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">cpulib</span><span class="o">.</span><span class="n">ele_area</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">support</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">cpulib</span><span class="o">.</span><span class="n">mesh_support</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">element_area</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dimension</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">prop</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_prop</span><span class="p">(</span><span class="n">prop</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: optical properties not specified&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">src</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">touch_sources</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: no sources specified&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">det</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">meas</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">det</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">meas</span><span class="o">.</span><span class="n">touch_detectors</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: no detectors specified&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">link</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">link</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="mi">3</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">link</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">link</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">link</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">link</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: link in wrong format. Ignored.&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: no link specified&#39;</span><span class="p">)</span></div>
     
-<div class="viewcode-block" id="dcsmesh.set_prop">
-<a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.dcs_mesh.dcsmesh.html#nirfasterff.base.dcs_mesh.dcsmesh.set_prop">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prop</span><span class="p">):</span>
+<div class="viewcode-block" id="dcsmesh.from_image"><a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.dcs_mesh.dcsmesh.html#nirfasterff.base.dcs_mesh.dcsmesh.from_image">[docs]</a>    <span class="k">def</span> <span class="nf">from_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">img</span><span class="p">,</span> <span class="n">param</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">MeshingParams2D</span><span class="p">(),</span> <span class="n">prop</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">src</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">det</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">link</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct mesh from a labeled 2D image using the Jonathan Shewchuk&#39;s Triangle. Calls stndmesh.from_triangle after meshing step.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        img : integer (any type of integer) NumPy array</span>
+<span class="sd">            2D labeled image to be meshed. 0 is considered as outside. Regions labeled using unique, continuous integers (1,2,3...).</span>
+<span class="sd">        param : nirfasterff.utils.MeshingParams2D, optional</span>
+<span class="sd">            parameters used in Triangle. If not specified, uses the default parameters defined in nirfasterff.utils.MeshingParams2D().</span>
+<span class="sd">                        </span>
+<span class="sd">            See :func:`~nirfasterff.utils.MeshingParams2D()` for details.</span>
+<span class="sd">        prop : double NumPy array, optional</span>
+<span class="sd">            If not `None`, calls `dcsmesh.set_prop()` and sets the optical properties in the mesh. The default is None.</span>
+<span class="sd">            </span>
+<span class="sd">            See :func:`~nirfasterff.base.dcs_mesh.dcsmesh.set_prop()` for details. </span>
+<span class="sd">        src : nirfasterff.base.optode, optional</span>
+<span class="sd">            If not `None`, sets the sources and moves them to the appropriate locations. The default is None.</span>
+<span class="sd">            </span>
+<span class="sd">            See :func:`~nirfasterff.base.optodes.optode.touch_sources()` for details.</span>
+<span class="sd">        det : nirfasterff.base.optode, optional</span>
+<span class="sd">            If not `None`, sets the detectors and moves them to the appropriate locations. The default is None.</span>
+<span class="sd">            </span>
+<span class="sd">            See :func:`~nirfasterff.base.optodes.optode.touch_detectors()` for details.</span>
+<span class="sd">        link : int32 NumPy array, optional</span>
+<span class="sd">            If not `None`, sets the channel information. Uses one-based indexing. The default is None.</span>
+<span class="sd">            </span>
+<span class="sd">            Each row represents a channel, in the form of `[src, det, active]`, where `active` is 0 or 1</span>
+<span class="sd">            </span>
+<span class="sd">            If `link` contains only two columns, all channels are considered active.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Error: img should be a 2D integer matrix&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Running Triangle&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">tri</span><span class="p">,</span> <span class="n">nodes</span> <span class="o">=</span> <span class="n">meshing</span><span class="o">.</span><span class="n">img2mesh</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">param</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Converting to NIRFAST format&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">from_triangle</span><span class="p">(</span><span class="n">tri</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">prop</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="n">det</span><span class="p">,</span> <span class="n">link</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="dcsmesh.set_prop"><a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.dcs_mesh.dcsmesh.html#nirfasterff.base.dcs_mesh.dcsmesh.set_prop">[docs]</a>    <span class="k">def</span> <span class="nf">set_prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prop</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set optical properties of the whole mesh, using information provided in prop.</span>
 
@@ -759,11 +876,8 @@
             <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="n">n</span><span class="p">)</span>
             <span class="n">A</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.0</span><span class="o">/</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">R0</span><span class="p">)</span> <span class="o">-</span><span class="mf">1.</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ksi</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">A</span><span class="p">)</span></div>
-
             
-<div class="viewcode-block" id="dcsmesh.change_prop">
-<a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.dcs_mesh.dcsmesh.html#nirfasterff.base.dcs_mesh.dcsmesh.change_prop">[docs]</a>
-    <span class="k">def</span> <span class="nf">change_prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">prop</span><span class="p">):</span>
+<div class="viewcode-block" id="dcsmesh.change_prop"><a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.dcs_mesh.dcsmesh.html#nirfasterff.base.dcs_mesh.dcsmesh.change_prop">[docs]</a>    <span class="k">def</span> <span class="nf">change_prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">prop</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Change optical properties (mua, musp, ri, alpha and Db) at nodes specified in idx, and automatically change fields kappa, c, and ksi as well</span>
 
@@ -799,11 +913,8 @@
         <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="n">n</span><span class="p">)</span>
         <span class="n">A</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.0</span><span class="o">/</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">R0</span><span class="p">)</span> <span class="o">-</span><span class="mf">1.</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ksi</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">A</span><span class="p">)</span></div>
-
     
-<div class="viewcode-block" id="dcsmesh.touch_optodes">
-<a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.dcs_mesh.dcsmesh.html#nirfasterff.base.dcs_mesh.dcsmesh.touch_optodes">[docs]</a>
-    <span class="k">def</span> <span class="nf">touch_optodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="dcsmesh.touch_optodes"><a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.dcs_mesh.dcsmesh.html#nirfasterff.base.dcs_mesh.dcsmesh.touch_optodes">[docs]</a>    <span class="k">def</span> <span class="nf">touch_optodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Moves all optodes (if non fixed) and recalculate the integration functions (i.e. barycentric coordinates). </span>
 <span class="sd">        </span>
@@ -819,11 +930,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">touch_sources</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;touching detectors&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">meas</span><span class="o">.</span><span class="n">touch_detectors</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
-
     
-<div class="viewcode-block" id="dcsmesh.save_nirfast">
-<a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.dcs_mesh.dcsmesh.html#nirfasterff.base.dcs_mesh.dcsmesh.save_nirfast">[docs]</a>
-    <span class="k">def</span> <span class="nf">save_nirfast</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+<div class="viewcode-block" id="dcsmesh.save_nirfast"><a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.dcs_mesh.dcsmesh.html#nirfasterff.base.dcs_mesh.dcsmesh.save_nirfast">[docs]</a>    <span class="k">def</span> <span class="nf">save_nirfast</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Save mesh in the classic NIRFASTer ASCII format, which is directly compatible with the Matlab version</span>
 
@@ -894,11 +1002,8 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">hdr</span> <span class="o">=</span> <span class="s1">&#39;source detector active&#39;</span>
             <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">filename</span><span class="o">+</span><span class="s1">&#39;.link&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">link</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%g</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="n">hdr</span><span class="p">,</span> <span class="n">comments</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span></div>
-
     
-<div class="viewcode-block" id="dcsmesh.femdata">
-<a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.dcs_mesh.dcsmesh.html#nirfasterff.base.dcs_mesh.dcsmesh.femdata">[docs]</a>
-    <span class="k">def</span> <span class="nf">femdata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tvec</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span><span class="o">=</span><span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">()):</span>
+<div class="viewcode-block" id="dcsmesh.femdata"><a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.dcs_mesh.dcsmesh.html#nirfasterff.base.dcs_mesh.dcsmesh.femdata">[docs]</a>    <span class="k">def</span> <span class="nf">femdata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tvec</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span><span class="o">=</span><span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">()):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculates steady-state fluences and G1/g1 curves for each source using a FEM solver, and then the boudary measurables for each channel </span>
 <span class="sd">        </span>
@@ -934,11 +1039,8 @@
 
         <span class="n">data</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">forward</span><span class="o">.</span><span class="n">femdata_DCS</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tvec</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">opt</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">info</span></div>
-
     
-<div class="viewcode-block" id="dcsmesh.jacobian">
-<a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.dcs_mesh.dcsmesh.html#nirfasterff.base.dcs_mesh.dcsmesh.jacobian">[docs]</a>
-    <span class="k">def</span> <span class="nf">jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tvec</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">()):</span>
+<div class="viewcode-block" id="dcsmesh.jacobian"><a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.dcs_mesh.dcsmesh.html#nirfasterff.base.dcs_mesh.dcsmesh.jacobian">[docs]</a>    <span class="k">def</span> <span class="nf">jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tvec</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">()):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculates the Jacobian matrix</span>
 <span class="sd">        </span>
@@ -975,11 +1077,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">J</span><span class="p">,</span> <span class="n">data1</span><span class="p">,</span> <span class="n">data2</span> <span class="o">=</span> <span class="n">inverse</span><span class="o">.</span><span class="n">jacobian_DCS</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tvec</span><span class="p">,</span> <span class="n">normalize</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">opt</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">J</span><span class="p">,</span> <span class="n">data1</span><span class="p">,</span> <span class="n">data2</span></div>
-
         
-<div class="viewcode-block" id="dcsmesh.isvol">
-<a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.dcs_mesh.dcsmesh.html#nirfasterff.base.dcs_mesh.dcsmesh.isvol">[docs]</a>
-    <span class="k">def</span> <span class="nf">isvol</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="dcsmesh.isvol"><a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.dcs_mesh.dcsmesh.html#nirfasterff.base.dcs_mesh.dcsmesh.isvol">[docs]</a>    <span class="k">def</span> <span class="nf">isvol</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if convertion matrices between mesh and volumetric spaces are calculated</span>
 
@@ -993,11 +1092,8 @@
             <span class="k">return</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span></div>
-
     
-<div class="viewcode-block" id="dcsmesh.gen_intmat">
-<a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.dcs_mesh.dcsmesh.html#nirfasterff.base.dcs_mesh.dcsmesh.gen_intmat">[docs]</a>
-    <span class="k">def</span> <span class="nf">gen_intmat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xgrid</span><span class="p">,</span> <span class="n">ygrid</span><span class="p">,</span> <span class="n">zgrid</span><span class="o">=</span><span class="p">[]):</span>
+<div class="viewcode-block" id="dcsmesh.gen_intmat"><a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.dcs_mesh.dcsmesh.html#nirfasterff.base.dcs_mesh.dcsmesh.gen_intmat">[docs]</a>    <span class="k">def</span> <span class="nf">gen_intmat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xgrid</span><span class="p">,</span> <span class="n">ygrid</span><span class="p">,</span> <span class="n">zgrid</span><span class="o">=</span><span class="p">[]):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate the information needed to convert data between mesh and volumetric space, specified by x, y, z (if 3D) grids.</span>
 <span class="sd">        </span>
@@ -1056,9 +1152,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">xgrid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">xgrid</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ygrid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">ygrid</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
         
         
-        <span class="bp">self</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">gridinmesh</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">meshingrid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">mesh2grid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">grid2mesh</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">gen_intmat_impl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xgrid</span><span class="p">,</span> <span class="n">ygrid</span><span class="p">,</span> <span class="n">zgrid</span><span class="p">)</span></div>
-</div>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">gridinmesh</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">meshingrid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">mesh2grid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vol</span><span class="o">.</span><span class="n">grid2mesh</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">gen_intmat_impl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xgrid</span><span class="p">,</span> <span class="n">ygrid</span><span class="p">,</span> <span class="n">zgrid</span><span class="p">)</span></div></div>
         
 </pre></div>
 

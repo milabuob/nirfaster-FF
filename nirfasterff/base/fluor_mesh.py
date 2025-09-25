@@ -622,6 +622,145 @@ class fluormesh:
         print('Converting to NIRFAST format', flush=1)
         self.from_solid(ele, nodes, prop, src, det, link)
     
+    def from_triangle(self, tri, nodes, prop = None, src = None, det = None, link = None):
+        """
+        Construct a NIRFASTer mesh from a 2D triangularization. 
+        
+        Can also set the optical properties and optodes if supplied
+
+        Parameters
+        ----------
+        tri : int/double NumPy array
+            triangulation in one-based indexing. If three columns, all nodes will be labeled as region 1
+            
+            If four columns, the last column will be used for region labeling.
+        nodes : double NumPy array
+            node locations in the mesh. Unit: mm. Size (NNodes,2).
+        prop : double NumPy array, optional
+            If not `None`, calls `fluormesh.set_prop()` and sets the optical properties in the mesh. The default is None.
+            
+            See :func:`~nirfasterff.base.fluor_mesh.fluormesh.set_prop()` for details. 
+        src : nirfasterff.base.optode, optional
+            If not `None`, sets the sources and moves them to the appropriate locations. The default is None.
+            
+            See :func:`~nirfasterff.base.optodes.optode.touch_sources()` for details.
+        det : nirfasterff.base.optode, optional
+            If not `None`, sets the detectors and moves them to the appropriate locations. The default is None.
+            
+            See :func:`~nirfasterff.base.optodes.optode.touch_detectors()` for details.
+        link : int32 NumPy array, optional
+            If not `None`, sets the channel information. Uses one-based indexing. The default is None.
+            
+            Each row represents a channel, in the form of `[src, det, active]`, where `active` is 0 or 1
+            
+            If `link` contains only two columns, all channels are considered active.
+
+        Returns
+        -------
+        None.
+
+        """
+        self.__init__()
+        num_nodes = nodes.shape[0]
+        self.nodes = np.ascontiguousarray(nodes, dtype=np.float64)
+        if tri.shape[1] == 3:
+            # no region label
+            self.elements = np.ascontiguousarray(np.sort(tri,axis=1), dtype=np.float64)
+            self.region = np.ones(num_nodes)
+        elif tri.shape[1] == 4:
+            self.region = np.zeros(num_nodes)
+            # convert element label to node label
+            labels = np.unique(tri[:,-1])
+            for i in range(len(labels)):
+                tmp = tri[tri[:,-1]==labels[i], :-1]
+                idx = np.int32(np.unique(tmp) - 1)
+                self.region[idx] = labels[i]
+            self.elements = np.ascontiguousarray(np.sort(tri[:,:-1],axis=1), dtype=np.float64)
+        else:
+            raise ValueError('Error: elements in wrong format')
+
+        # find the boundary nodes: find faces that are referred to only once
+        faces = np.r_[tri[:, [0,1]], 
+                      tri[:, [0,2]],
+                      tri[:, [1,2]]]
+        
+        faces = np.sort(faces)
+        unique_faces, cnt = np.unique(faces, axis=0, return_counts=1)
+        bnd_faces = unique_faces[cnt==1, :]
+        bndvtx = np.unique(bnd_faces)
+        self.bndvtx = np.zeros(nodes.shape[0])
+        self.bndvtx[np.int32(bndvtx-1)] = 1
+        # area and support for each element
+        self.element_area = utils.cpulib.ele_area(self.nodes, self.elements)
+        self.support = utils.cpulib.mesh_support(self.nodes, self.elements, self.element_area)
+        self.dimension = 2
+        if np.any(prop != None):
+            self.set_prop(prop)
+        else:
+            print('Warning: optical properties not specified')
+        if src != None:
+            self.source = copy.deepcopy(src)
+            self.source.touch_sources(self)
+        else:
+            print('Warning: no sources specified')
+        if det != None:
+            self.meas = copy.deepcopy(det)
+            self.meas.touch_detectors(self)
+        else:
+            print('Warning: no detectors specified')
+        if np.all(link != None):
+            if link.shape[1]==3:
+                self.link = copy.deepcopy(np.ascontiguousarray(link, dtype=np.int32))
+            elif link.shape[1]==2:
+                self.link = copy.deepcopy(np.ascontiguousarray(np.c_[link, np.ones(link.shape[0])], dtype=np.int32))
+            else:
+                print('Warning: link in wrong format. Ignored.')
+        else:
+            print('Warning: no link specified')
+    
+    def from_image(self, img, param = utils.MeshingParams2D(), prop = None, src = None, det = None, link = None):
+        """
+        Construct mesh from a labeled 2D image using the Jonathan Shewchuk's Triangle. Calls fluormesh.from_triangle after meshing step.
+
+        Parameters
+        ----------
+        img : integer (any type of integer) NumPy array
+            2D labeled image to be meshed. 0 is considered as outside. Regions labeled using unique, continuous integers (1,2,3...).
+        param : nirfasterff.utils.MeshingParams2D, optional
+            parameters used in Triangle. If not specified, uses the default parameters defined in nirfasterff.utils.MeshingParams2D().
+                        
+            See :func:`~nirfasterff.utils.MeshingParams2D()` for details.
+        prop : double NumPy array, optional
+            If not `None`, calls `fluormesh.set_prop()` and sets the optical properties in the mesh. The default is None.
+            
+            See :func:`~nirfasterff.base.fluor_mesh.fluormesh.set_prop()` for details. 
+        src : nirfasterff.base.optode, optional
+            If not `None`, sets the sources and moves them to the appropriate locations. The default is None.
+            
+            See :func:`~nirfasterff.base.optodes.optode.touch_sources()` for details.
+        det : nirfasterff.base.optode, optional
+            If not `None`, sets the detectors and moves them to the appropriate locations. The default is None.
+            
+            See :func:`~nirfasterff.base.optodes.optode.touch_detectors()` for details.
+        link : int32 NumPy array, optional
+            If not `None`, sets the channel information. Uses one-based indexing. The default is None.
+            
+            Each row represents a channel, in the form of `[src, det, active]`, where `active` is 0 or 1
+            
+            If `link` contains only two columns, all channels are considered active.
+
+        Returns
+        -------
+        None.
+
+        """
+        if len(img.shape) != 2:
+            raise TypeError('Error: img should be a 2D integer matrix')
+        print('Running Triangle', flush=1)
+        tri, nodes = meshing.img2mesh(img, param)
+        print('Converting to NIRFAST format', flush=1)
+        self.from_triangle(tri, nodes, prop, src, det, link)
+    
     def set_prop(self, prop):
         """
         Set optical properties of the whole mesh, using information provided in prop.

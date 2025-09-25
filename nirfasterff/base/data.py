@@ -488,10 +488,11 @@ class TPSFdata:
                 else:
                     tmp = np.reshape(mesh.vol.mesh2grid.dot(phi_mesh), (mesh.vol.ygrid.size, mesh.vol.xgrid.size, mesh.source.num.size, -1), order='F')
             else:
+                phi_tmp = np.reshape(self.phi, (mesh.nodes.shape[0], -1))
                 if len(mesh.vol.zgrid)>0:
-                    tmp = np.reshape(mesh.vol.mesh2grid.dot(self.phi), (mesh.vol.ygrid.size, mesh.vol.xgrid.size, mesh.vol.zgrid.size, mesh.source.num.size, -1), order='F')
+                    tmp = np.reshape(mesh.vol.mesh2grid.dot(phi_tmp), (mesh.vol.ygrid.size, mesh.vol.xgrid.size, mesh.vol.zgrid.size, mesh.source.num.size, -1), order='F')
                 else:
-                    tmp = np.reshape(mesh.vol.mesh2grid.dot(self.phi), (mesh.vol.ygrid.size, mesh.vol.xgrid.size, mesh.source.num.size, -1), order='F')
+                    tmp = np.reshape(mesh.vol.mesh2grid.dot(phi_tmp), (mesh.vol.ygrid.size, mesh.vol.xgrid.size, mesh.source.num.size, -1), order='F')
             
             self.phi = tmp
             self.vol = copy.deepcopy(mesh.vol)
@@ -727,12 +728,14 @@ class flTPSFdata:
                     tmpx = np.reshape(mesh.vol.mesh2grid.dot(phix_mesh), (mesh.vol.ygrid.size, mesh.vol.xgrid.size, mesh.source.num.size, -1), order='F')
                     tmpm = np.reshape(mesh.vol.mesh2grid.dot(phifl_mesh), (mesh.vol.ygrid.size, mesh.vol.xgrid.size, mesh.source.num.size, -1), order='F')
             else:
+                phix_tmp = np.reshape(self.phi, (mesh.nodes.shape[0], -1))
+                phi,_tmp = np.reshape(self.phi, (mesh.nodes.shape[0], -1))
                 if len(mesh.vol.zgrid)>0:
-                    tmpx = np.reshape(mesh.vol.mesh2grid.dot(self.phix), (mesh.vol.ygrid.size, mesh.vol.xgrid.size, mesh.vol.zgrid.size, mesh.source.num.size, -1), order='F')
-                    tmpm = np.reshape(mesh.vol.mesh2grid.dot(self.phifl), (mesh.vol.ygrid.size, mesh.vol.xgrid.size, mesh.vol.zgrid.size, mesh.source.num.size, -1), order='F')
+                    tmpx = np.reshape(mesh.vol.mesh2grid.dot(phix_tmp), (mesh.vol.ygrid.size, mesh.vol.xgrid.size, mesh.vol.zgrid.size, mesh.source.num.size, -1), order='F')
+                    tmpm = np.reshape(mesh.vol.mesh2grid.dot(tmpm), (mesh.vol.ygrid.size, mesh.vol.xgrid.size, mesh.vol.zgrid.size, mesh.source.num.size, -1), order='F')
                 else:
-                    tmpx = np.reshape(mesh.vol.mesh2grid.dot(self.phix), (mesh.vol.ygrid.size, mesh.vol.xgrid.size, mesh.source.num.size, -1), order='F')
-                    tmpm = np.reshape(mesh.vol.mesh2grid.dot(self.phifl), (mesh.vol.ygrid.size, mesh.vol.xgrid.size, mesh.source.num.size, -1), order='F')
+                    tmpx = np.reshape(mesh.vol.mesh2grid.dot(phix_tmp), (mesh.vol.ygrid.size, mesh.vol.xgrid.size, mesh.source.num.size, -1), order='F')
+                    tmpm = np.reshape(mesh.vol.mesh2grid.dot(tmpm), (mesh.vol.ygrid.size, mesh.vol.xgrid.size, mesh.source.num.size, -1), order='F')
             
             self.phix = tmpx
             self.phifl = tmpm

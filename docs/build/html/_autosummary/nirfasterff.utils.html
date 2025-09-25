@@ -1,27 +1,26 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../">
+<html class="writer-html5" lang="en">
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nirfasterff.utils &mdash; NIRFASTerFF 1.1.1 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+  <title>nirfasterff.utils &mdash; NIRFASTerFF 1.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=92fd9be5" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=58fbf978"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=4c8675c2"></script>
+      <script src="../_static/doctools.js?v=888ff710"></script>
+      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="nirfasterff.utils.boundary_attenuation" href="nirfasterff.utils.boundary_attenuation.html" />
-    <link rel="prev" title="nirfasterff.meshing.meshutils.checkmesh3d_surface" href="nirfasterff.meshing.meshutils.checkmesh3d_surface.html" /> 
+    <link rel="prev" title="nirfasterff.meshing.meshutils.img2mesh" href="nirfasterff.meshing.meshutils.img2mesh.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -66,6 +65,7 @@
 <li class="toctree-l3"><a class="reference internal" href="nirfasterff.utils.uncompress_coo.html">nirfasterff.utils.uncompress_coo</a></li>
 <li class="toctree-l3"><a class="reference internal" href="nirfasterff.utils.ConvergenceInfo.html">nirfasterff.utils.ConvergenceInfo</a></li>
 <li class="toctree-l3"><a class="reference internal" href="nirfasterff.utils.MeshingParams.html">nirfasterff.utils.MeshingParams</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.utils.MeshingParams2D.html">nirfasterff.utils.MeshingParams2D</a></li>
 <li class="toctree-l3"><a class="reference internal" href="nirfasterff.utils.SolverOptions.html">nirfasterff.utils.SolverOptions</a></li>
 </ul>
 </li>
@@ -100,7 +100,7 @@
            <div itemprop="articleBody">
              
   <section id="module-nirfasterff.utils">
-<span id="nirfasterff-utils"></span><h1>nirfasterff.utils<a class="headerlink" href="#module-nirfasterff.utils" title="Link to this heading"></a></h1>
+<span id="nirfasterff-utils"></span><h1>nirfasterff.utils<a class="headerlink" href="#module-nirfasterff.utils" title="Permalink to this heading"></a></h1>
 <p>Utility functions and auxiliary classes frequently used in the package.</p>
 <p class="rubric">Functions</p>
 <table class="autosummary longtable docutils align-default">
@@ -149,7 +149,10 @@
 <tr class="row-even"><td><p><a class="reference internal" href="nirfasterff.utils.MeshingParams.html#nirfasterff.utils.MeshingParams" title="nirfasterff.utils.MeshingParams"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MeshingParams</span></code></a>([xPixelSpacing, ...])</p></td>
 <td><p>Parameters to be used by the CGAL mesher.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="nirfasterff.utils.SolverOptions.html#nirfasterff.utils.SolverOptions" title="nirfasterff.utils.SolverOptions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SolverOptions</span></code></a>([max_iter, AbsoluteTolerance, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="nirfasterff.utils.MeshingParams2D.html#nirfasterff.utils.MeshingParams2D" title="nirfasterff.utils.MeshingParams2D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MeshingParams2D</span></code></a>([mm_per_pixel, max_area, offset])</p></td>
+<td><p>Parameters to be used by the Triangle mesher.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="nirfasterff.utils.SolverOptions.html#nirfasterff.utils.SolverOptions" title="nirfasterff.utils.SolverOptions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SolverOptions</span></code></a>([max_iter, AbsoluteTolerance, ...])</p></td>
 <td><p>Parameters used by the FEM solvers, Equivalent to 'solver_options' in the Matlab version</p></td>
 </tr>
 </tbody>
@@ -160,14 +163,14 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="nirfasterff.meshing.meshutils.checkmesh3d_surface.html" class="btn btn-neutral float-left" title="nirfasterff.meshing.meshutils.checkmesh3d_surface" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="nirfasterff.meshing.meshutils.img2mesh.html" class="btn btn-neutral float-left" title="nirfasterff.meshing.meshutils.img2mesh" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="nirfasterff.utils.boundary_attenuation.html" class="btn btn-neutral float-right" title="nirfasterff.utils.boundary_attenuation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, Jiaming Cao, MILAB@UoB.</p>
+    <p>&#169; Copyright 2025, Jiaming Cao, MILAB@UoB.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

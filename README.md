@@ -2,17 +2,17 @@
 
 Public repository for the **Fast and Furious** version of NIRFASTer
 
-- Version: 1.1.1
-- Authors: Jiaming Cao, MILab@UoB
+- Version: 1.2.0
+- Authors: Jiaming Cao (University of Macau), MILab@UoB
 - License: BSD
 
 This is the new NIRFASTer with Python interface, offering full functionality ranging from forward modeling, Jacobian calculating, analytical solutions, and simple visualization. The mesh format is fully compatible with the Matlab version.
 
 ## Requirements
 
-The toolbox can run on Linux, Mac, and Windows. To use GPU acceleration, you will need to have a NVIDIA card with compute capability between `sm_52` (i.e. the GTX9xx series) and `sm_90a`. Please be noted that GPU support is unavailable on Mac platforms for now.
+The toolbox can run on Linux, Mac, and Windows. To use GPU acceleration, you will need to have a NVIDIA card with compute capability between `sm_50` (i.e. the GTX9xx series) or later. *We do not have the hardware resources to test on all GPU generations. Please report to us if the GPU code doesn't work for you.* Please be noted that GPU support is unavailable on Mac platforms at the moment.
 
-Only Python versions 3.10, 3.11, and 3.12 are supported for now.
+Only Python versions 3.8, 3.10, 3.11, 3.12 and 3.13 are supported for now.
 
 Packages required:
 
@@ -22,6 +22,12 @@ Packages required:
 - matplotlib
 
 If you are using a Anaconda (or its alike) Python, they should already be available.
+
+### Priority of development
+
+The Python codes are exactly the same for all platforms and should have similar performance, but in terms of the CPU and GPU libraries, priority is given to Linux, most of the algorithm optimization is also done on Linux machines
+
+**On Mac, only Python versions 3.10-3.12 are supported at the moment.** We are not planning to drop support for Mac, but will be a bit behind for a short period of time.
 
 ## Functionality
 
@@ -49,6 +55,7 @@ Other components:
 
 - Simple visualizers for 2D and 3D meshes
 - A CGAL mesher (v6.0.1), enabling mesh creation from segmented volumes
+- [Jonathan Shewchuk's Triangle](https://www.cs.cmu.edu/~quake/triangle.html) (ver. 1.6), for 2D mesh creation
 
 ## How to Install
 
@@ -96,6 +103,15 @@ A compact version, supporting only CW/FD forward modeling on standard mesh is av
 
 ## Changelog
 
+1.2.0
+
+- 2D meshing is added. meshing.img2mesh is the wrapper function, and under the hood, Triangle by Jonathan Shewchuk is used.
+- Support for more Python versions
+- Support for newer (50xx series and above) GPUs
+- FullHead demo code extended
+- Fixed a bug in utils.gen_intmat, which lead to incorrect grid2mesh calculation.
+- Fixed a bug in base.data, which lead to incorrect conversion of TPSF (standard and fluorescence) to voxel space
+
 1.1.1
 
 - Fixed a bug in TPSF calculation, which caused the result to scale with step size
@@ -123,7 +139,7 @@ A compact version, supporting only CW/FD forward modeling on standard mesh is av
 
 The reason for the Mac issue: Mac automatically attaches a quarantine attribute to downloaded files, and the marked files will be checked by the Gatekeeper. Somehow (file I/O, possibly), Apple's gatekeeper is not very happy about my code and refuses to run. This checking can be bypassed by manually removing the quarantine attribute. You can view this by `ls -l@`, and you should see the `com.apple.quarantine` thing.
 
-Speed-critically functions are packed in precompiled libraries, nirfasterff_cpu and nirfasterff_cuda. The Linux and Mac versions are statically linked so there is only one file for each library plus the mesher, and no extra dependency is required. Only limited static linking could be used on Windows (e.g. the CUDA libraries), unfortunately, and consequently the necessary DLLs are also included.
+Speed-critically functions are packed in precompiled libraries, nirfasterff_cpu and nirfasterff_cuda. The Linux and Mac versions are statically linked so there is only one file for each library plus the mesher, and no extra dependency is required. Only limited static linking could be used on Windows (e.g. the CUDA libraries), unfortunately, and consequently the necessary DLLs are also included. CUDA 12.4 was used to compile this version.
 
 #### Potential pitfalls:
 

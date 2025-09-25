@@ -1,26 +1,26 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../">
+<html class="writer-html5" lang="en">
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nirfasterff.utils.SolverOptions &mdash; NIRFASTerFF 1.1.1 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+  <title>nirfasterff.utils.SolverOptions &mdash; NIRFASTerFF 1.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=92fd9be5" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=58fbf978"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=4c8675c2"></script>
+      <script src="../_static/doctools.js?v=888ff710"></script>
+      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="nirfasterff.visualize" href="nirfasterff.visualize.html" />
-    <link rel="prev" title="nirfasterff.utils.MeshingParams" href="nirfasterff.utils.MeshingParams.html" /> 
+    <link rel="prev" title="nirfasterff.utils.MeshingParams2D" href="nirfasterff.utils.MeshingParams2D.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -65,6 +65,7 @@
 <li class="toctree-l3"><a class="reference internal" href="nirfasterff.utils.uncompress_coo.html">nirfasterff.utils.uncompress_coo</a></li>
 <li class="toctree-l3"><a class="reference internal" href="nirfasterff.utils.ConvergenceInfo.html">nirfasterff.utils.ConvergenceInfo</a></li>
 <li class="toctree-l3"><a class="reference internal" href="nirfasterff.utils.MeshingParams.html">nirfasterff.utils.MeshingParams</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.utils.MeshingParams2D.html">nirfasterff.utils.MeshingParams2D</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">nirfasterff.utils.SolverOptions</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#nirfasterff.utils.SolverOptions"><code class="docutils literal notranslate"><span class="pre">SolverOptions</span></code></a></li>
 </ul>
@@ -103,15 +104,15 @@
            <div itemprop="articleBody">
              
   <section id="nirfasterff-utils-solveroptions">
-<h1>nirfasterff.utils.SolverOptions<a class="headerlink" href="#nirfasterff-utils-solveroptions" title="Link to this heading"></a></h1>
+<h1>nirfasterff.utils.SolverOptions<a class="headerlink" href="#nirfasterff-utils-solveroptions" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="nirfasterff.utils.SolverOptions">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nirfasterff.utils.</span></span><span class="sig-name descname"><span class="pre">SolverOptions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">AbsoluteTolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">RelativeTolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">divergence</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GPU</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/utils.html#SolverOptions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.utils.SolverOptions" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nirfasterff.utils.</span></span><span class="sig-name descname"><span class="pre">SolverOptions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">AbsoluteTolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">RelativeTolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">divergence</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GPU</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/utils.html#SolverOptions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.utils.SolverOptions" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Parameters used by the FEM solvers, Equivalent to ‘solver_options’ in the Matlab version</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.utils.SolverOptions.max_iter">
-<span class="sig-name descname"><span class="pre">max_iter</span></span><a class="headerlink" href="#nirfasterff.utils.SolverOptions.max_iter" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">max_iter</span></span><a class="headerlink" href="#nirfasterff.utils.SolverOptions.max_iter" title="Permalink to this definition"></a></dt>
 <dd><p>maximum number of iterations allowed. Default: 1000</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -122,7 +123,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.utils.SolverOptions.AbsoluteTolerance">
-<span class="sig-name descname"><span class="pre">AbsoluteTolerance</span></span><a class="headerlink" href="#nirfasterff.utils.SolverOptions.AbsoluteTolerance" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">AbsoluteTolerance</span></span><a class="headerlink" href="#nirfasterff.utils.SolverOptions.AbsoluteTolerance" title="Permalink to this definition"></a></dt>
 <dd><p>Absolute tolerance for convergence. Default: 1e-12</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -133,7 +134,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.utils.SolverOptions.RelativeTolerance">
-<span class="sig-name descname"><span class="pre">RelativeTolerance</span></span><a class="headerlink" href="#nirfasterff.utils.SolverOptions.RelativeTolerance" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">RelativeTolerance</span></span><a class="headerlink" href="#nirfasterff.utils.SolverOptions.RelativeTolerance" title="Permalink to this definition"></a></dt>
 <dd><p>Relative (to the initial residual norm) tolerance for convergence. Default: 1e-12</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -144,7 +145,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.utils.SolverOptions.divergence">
-<span class="sig-name descname"><span class="pre">divergence</span></span><a class="headerlink" href="#nirfasterff.utils.SolverOptions.divergence" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">divergence</span></span><a class="headerlink" href="#nirfasterff.utils.SolverOptions.divergence" title="Permalink to this definition"></a></dt>
 <dd><p>Stop the solver when residual norm greater than this value. Default: 1e8</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -155,7 +156,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.utils.SolverOptions.GPU">
-<span class="sig-name descname"><span class="pre">GPU</span></span><a class="headerlink" href="#nirfasterff.utils.SolverOptions.GPU" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">GPU</span></span><a class="headerlink" href="#nirfasterff.utils.SolverOptions.GPU" title="Permalink to this definition"></a></dt>
 <dd><p>GPU selection. -1 for automatic, 0, 1, … for manual selection on multi-GPU systems. Default: -1</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -166,7 +167,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nirfasterff.utils.SolverOptions.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">AbsoluteTolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">RelativeTolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">divergence</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GPU</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/utils.html#SolverOptions.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.utils.SolverOptions.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">AbsoluteTolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">RelativeTolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">divergence</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GPU</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/utils.html#SolverOptions.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.utils.SolverOptions.__init__" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <p class="rubric">Methods</p>
@@ -185,14 +186,14 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="nirfasterff.utils.MeshingParams.html" class="btn btn-neutral float-left" title="nirfasterff.utils.MeshingParams" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="nirfasterff.utils.MeshingParams2D.html" class="btn btn-neutral float-left" title="nirfasterff.utils.MeshingParams2D" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="nirfasterff.visualize.html" class="btn btn-neutral float-right" title="nirfasterff.visualize" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, Jiaming Cao, MILAB@UoB.</p>
+    <p>&#169; Copyright 2025, Jiaming Cao, MILAB@UoB.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

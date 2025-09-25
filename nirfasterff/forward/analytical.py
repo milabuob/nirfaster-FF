@@ -9,7 +9,7 @@ import copy
 from scipy import special
 from scipy import integrate
 
-def semi_infinite_FD(mua, musp, n, freq, rho, z=0, boundary = 'exact', n_air = 1.0):
+def semi_infinite_FD(mua, musp, n, freq, rho, z=0, boundary = 'EBC-exact', n_air = 1.0):
     """
     Calculates the frequency-domain fluence in space using the analytical solution to the diffusion equation in semi-infinite media.
 
@@ -34,9 +34,15 @@ def semi_infinite_FD(mua, musp, n, freq, rho, z=0, boundary = 'exact', n_air = 1
         
         The default is 0.
     boundary : str, optional
-        type of the boundary condition, which can be 'robin', 'approx', or 'exact'. The default is 'exact'.
+        type of the boundary condition, which can be 'EBC-robin', 'EBC-approx', 'EBC-exact', 'PCB-robin', 'PCB-approx', 'PCB-exact', or 'ZBC'. 
+
+        EBC: extrapolated boundary condition; PCB: partial current boundary; ZBC: zero boundary condition.
+
+        The part after the hypen determines how it is calculated. 
+        See :func:`~nirfasterff.utils.boundary_attenuation()`, :func:`~nirfasterff.forward.semi_infinite_TR()` for details.
+
+        The default is 'EBC-exact'.
         
-        See :func:`~nirfasterff.utils.boundary_attenuation()` for details.
     n_air : double, optional
         refratcive index outside of the semi-infinite space, which is typically assumed to be air. The default is 1.0.
 
@@ -62,19 +68,42 @@ def semi_infinite_FD(mua, musp, n, freq, rho, z=0, boundary = 'exact', n_air = 1
     phi = np.zeros((np.size(rho), np.size(omega)), dtype=np.complex128)
 
     # get boundary attenuation
-    A = utils.boundary_attenuation(n, n_air, boundary)
+    boundary = boundary.lower()
+    if boundary not in ['ebc-robin', 'ebc-approx', 'ebc-exact', 'pcb-robin', 'pcb-approx', 'pcb-exact', 'zbc']:
+        raise ValueError('Unknown boundary type')
+
+    if boundary=='zbc':
+        bnd_type = 'zbc'
+    else:
+        bnd_type, bnd_calc = boundary.split('-')
+        A = utils.boundary_attenuation(n, n_air, bnd_calc)
     
     r1 = np.sqrt((z - z0)**2 + rho**2)
-    zb = 2.0 * z0 * A / 3.0
-    rb = np.sqrt((z + 2*zb + z0)**2 + rho**2)
-    
-    for i in range(omega.size):
-        k = np.sqrt((mua - 1j*omega[i]/cm) / D)
-        phi[:,i] = (np.exp(-k*r1)/r1 - np.exp(-k*rb)/rb) / (4*np.pi*D)
+    if bnd_type == 'zbc':
+        zb = 0.0
+    else:
+        zb = 2.0 * z0 * A / 3.0
+    if bnd_type == 'zbc' or bnd_type == 'ebc':
+        rb = np.sqrt((z + 2*zb + z0)**2 + rho**2)
+        for i in range(omega.size):
+            k = np.sqrt((mua - 1j*omega[i]/cm) / D)
+            phi[:,i] = (np.exp(-k*r1)/r1 - np.exp(-k*rb)/rb) / (4*np.pi*D)
+    else:
+        r1 = np.atleast_1d(r1)
+        r2 = np.atleast_1d(np.sqrt((z + z0)**2 + rho**2))
+        rho = np.atleast_1d(rho)
+        for i in range(omega.size):
+            k = np.sqrt((mua - 1j*omega[i]/cm) / D)
+            for j in range(rho.size):
+                if np.size(z)==1:
+                    bnd,_ = integrate.quad(lambda l,zb,zz0,r:np.exp(-l/zb)*np.exp(-k*np.sqrt((zz0+l)**2+r**2))/np.sqrt((zz0+l)**2+r**2), 0, np.Inf, args=(zb,z+z0,rho[j]), complex_func=np.iscomplex(k))
+                else:
+                    bnd,_ = integrate.quad(lambda l,zb,zz0,r:np.exp(-l/zb)*np.exp(-k*np.sqrt((zz0+l)**2+r**2))/np.sqrt((zz0+l)**2+r**2), 0, np.Inf, args=(zb,z[j]+z0,rho[j]), complex_func=np.iscomplex(k))
+                phi[j,i] = (np.exp(-k*r1[j])/r1[j] + np.exp(-k*r2[j])/r2[j] - (2.0/zb)*bnd) / (4*np.pi*D)
     
     return phi.squeeze()
 
-def semi_infinite_CW(mua, musp, n, rho, z=0, boundary = 'exact', n_air = 1.0):
+def semi_infinite_CW(mua, musp, n, rho, z=0, boundary = 'EBC-exact', n_air = 1.0):
     """
     Calculates the continuous-wave fluence in space using the analytical solution to the diffusion equation in semi-infinite media.
     
@@ -99,9 +128,14 @@ def semi_infinite_CW(mua, musp, n, rho, z=0, boundary = 'exact', n_air = 1.0):
         
         The default is 0.
     boundary : str, optional
-        type of the boundary condition, which can be 'robin', 'approx', or 'exact'. The default is 'exact'.
-        
-        See :func:`~nirfasterff.utils.boundary_attenuation()` for details.
+        type of the boundary condition, which can be 'EBC-robin', 'EBC-approx', 'EBC-exact', 'PCB-robin', 'PCB-approx', 'PCB-exact', or 'ZBC'. 
+
+        EBC: extrapolated boundary condition; PCB: partial current boundary; ZBC: zero boundary condition.
+
+        The part after the hypen determines how it is calculated.
+        See :func:`~nirfasterff.utils.boundary_attenuation()`, :func:`~nirfasterff.forward.semi_infinite_TR()` for details.
+
+        The default is 'EBC-exact'.
     n_air : double, optional
         refratcive index outside of the semi-infinite space, which is typically assumed to be air. The default is 1.0.
 
@@ -115,9 +149,9 @@ def semi_infinite_CW(mua, musp, n, rho, z=0, boundary = 'exact', n_air = 1.0):
     Durduran et al, 2010, Rep. Prog. Phys. doi:10.1088/0034-4885/73/7/076701
 
     """
-    return np.real(semi_infinite_FD(mua, musp, n, 0., rho, z=0, boundary = 'exact', n_air = 1.0))
+    return np.real(semi_infinite_FD(mua, musp, n, 0., rho, z, boundary, n_air))
 
-def semi_infinite_DCS(mua, musp, n, rho, aDb, wvlength, tvec, z=0, boundary = 'exact', n_air = 1.0, normalize=0):
+def semi_infinite_DCS(mua, musp, n, rho, aDb, wvlength, tvec, z=0, boundary = 'EBC-exact', n_air = 1.0, normalize=0):
     """
     Calculates DCS G1 curve using the analytical solution to the correlation diffusion equation in semi-infinite media
     
@@ -142,9 +176,14 @@ def semi_infinite_DCS(mua, musp, n, rho, aDb, wvlength, tvec, z=0, boundary = 'e
     z : double, optional
         depth of the location of interest. 0 for boundary measurement. The default is 0.
     boundary : str, optional
-        type of the boundary condition, which can be 'robin', 'approx', or 'exact'. The default is 'exact'.
-        
-        See :func:`~nirfasterff.utils.boundary_attenuation()` for details.
+        type of the boundary condition, which can be 'EBC-robin', 'EBC-approx', 'EBC-exact', 'PCB-robin', 'PCB-approx', 'PCB-exact', or 'ZBC'. 
+
+        EBC: extrapolated boundary condition; PCB: partial current boundary; ZBC: zero boundary condition.
+
+        The part after the hypen determines how it is calculated.
+        See :func:`~nirfasterff.utils.boundary_attenuation()`, :func:`~nirfasterff.forward.semi_infinite_TR()` for details.
+
+        The default is 'EBC-exact'.
     n_air : double, optional
         refratcive index outside of the semi-infinite space, which is typically assumed to be air. The default is 1.0.
     normalize : bool, optional

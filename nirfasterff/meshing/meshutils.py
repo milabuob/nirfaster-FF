@@ -9,6 +9,7 @@ from . import auxiliary
 import os
 import platform
 import subprocess
+from skimage import measure
 
 def RunCGALMeshGenerator(mask, opt = utils.MeshingParams()):
     """
@@ -35,7 +36,7 @@ def RunCGALMeshGenerator(mask, opt = utils.MeshingParams()):
         element list calculated by the mesher, in mm.
     
     References
-    -------
+    ----------
     https://doc.cgal.org/latest/Mesh_3/index.html#Chapter_3D_Mesh_Generation
 
     """
@@ -85,7 +86,7 @@ def RunCGALMeshGenerator(mask, opt = utils.MeshingParams()):
     # read result and cleanup
     ele_raw, nodes_raw, _, _ = io.readMEDIT(tmpmeshfn)
     if np.all(opt.offset != None):
-        nodes_raw = nodes_raw + opt.offset
+        nodes_raw = nodes_raw + np.array(opt.offset)
     
     ele_tmp = ele_raw[:,:-1]
     nids, ele = np.unique(ele_tmp, return_inverse=1)
@@ -99,6 +100,119 @@ def RunCGALMeshGenerator(mask, opt = utils.MeshingParams()):
     os.remove(tmpinrfn)
     os.remove(tmpcritfn)
     return ele, nodes
+
+def img2mesh(img, opt = utils.MeshingParams2D()):
+    """
+    Creates 2D mesh from a labeled image. Using Jonathan Shewchuk's Triangle, with arguments -pPqQaA.
+    
+    The different regions are labeled using continuously ascending integers starting from 1. 0 pixels are background.
+
+    Parameters
+    ----------
+    img : integer Numpy array
+        2D image defining the space to mesh. Regions defined by different integers. 0 is background.
+    opt : nirfasterff.utils.MeshingParams, optional
+        meshing parameters used. Default values will be used if not specified.
+        
+        See :func:`nirfasterff.utils.MeshingParams2D` for details
+
+    Raises
+    ------
+    ValueError
+        if the specified max areas mismatch with number of levels, or if the labels are not continuous.
+
+    Returns
+    -------
+    mesh_e : int NumPy array
+        element list calculated by the mesher, one-based. Last column indicates the region each element belongs to
+    mesh_n : double NumPy array
+        element list calculated by the mesher, in mm.
+    
+    References
+    -----------
+    https://www.cs.cmu.edu/~quake/triangle.html
+
+    """
+    if not np.all(np.int32(img)==img):
+        print('Warning: input mask must be integer. I am doing the conversion now, but this can lead to unexpected errors!', flush=1)
+        img = np.int32(img)
+    
+    tmppolyfn = '._input.poly'
+    tmpresultfn = '._input.1'
+
+    levels = np.unique(img).squeeze()
+    if levels.min()==0:
+        levels = levels[1:]
+    nlevels = np.size(levels)
+    if np.size(opt.max_area)==1:
+        params = np.c_[np.arange(nlevels)+1, opt.max_area*np.ones(nlevels)]
+    else:
+        if opt.max_area.shape[0]!=nlevels:
+            raise ValueError('Specified max areas mismatch with number of levels')
+        elif not np.all(np.arange(nlevels)+1 == levels):
+            raise ValueError('Labels must be continuously ascending, i.e. 1,2,3...')
+        params = opt.max_area
+    
+    allnodes = np.empty((0,2))
+    allele = np.empty((0,2))
+    node_cnt = 0
+    for iso in range(nlevels):
+        # get contour line per level
+        cs = measure.find_contours(img, iso+1-0.1)
+        ncontours = len(cs)
+
+        for i in range(ncontours):
+            allnodes = np.r_[allnodes, cs[i][:-1,:]]
+            nnodes = cs[i].shape[0]-1
+            ele = np.r_[np.array([[nnodes,1]]), np.c_[np.arange(nnodes-1)+1, np.arange(nnodes-1)+2]]
+            ele += node_cnt
+            node_cnt += nnodes
+            allele = np.r_[allele, ele]
+    labels, nlabel = measure.label(img, return_num=1) # connected components in the image, so we can label the regions
+    # now write to a poly file
+    fp = open(tmppolyfn, 'w')
+    # nodes
+    fp.write('%d 2 0 0\n'%node_cnt)
+    for i in range(node_cnt):
+        fp.write('%d\t%.12f\t%.12f\n'%(i+1, allnodes[i,0], allnodes[i,1]))
+    # now elements
+    fp.write('%d 0\n'%allele.shape[0])
+    for i in range(allele.shape[0]):
+        fp.write('%d\t%d\t%d\n'%(i+1, allele[i,0], allele[i,1]))
+    fp.write('0\n')
+    fp.write('%d\n'%nlabel)
+    for i in range(nlabel):
+        tmp = np.argwhere(labels==i+1)
+        region_img = img[tmp[0,0], tmp[0,1]] # using the first pixel. Any would do
+        fp.write('%d %.12f %.12f %d %f\n'%(i+1, tmp[0,0], tmp[0,1], region_img, params[params[:,0]==region_img, 1][0]))
+    fp.close()
+    # call the mesher
+    binpath = os.path.dirname(os.path.abspath(utils.cpulib.__file__))
+    if platform.system() == 'Darwin':
+        mesherbin = binpath + '/triangleMAC'
+        status = subprocess.run([mesherbin, '-pPqQaA', tmppolyfn])
+    elif platform.system() == 'Linux':
+        mesherbin = binpath + '/triangleLINUX'
+        status = subprocess.run([mesherbin, '-pPqQaA', tmppolyfn])
+    elif platform.system() == 'Windows':
+        mesherbin = binpath + '\\triangle.exe'
+        status = subprocess.run([mesherbin, '-pPqQaA', tmppolyfn])
+    else:
+        raise TypeError('Unsupported operating system: '+platform.system())
+    status.check_returncode()
+    # read the results
+    tmp = np.genfromtxt(tmpresultfn+'.node', skip_header=1)
+    mesh_n = tmp[:,1:3]*opt.mm_per_pixel # nodes, scaled
+    if np.all(opt.offset != None):
+        mesh_n += np.array(opt.offset) # add the offset, if any
+    tmp = np.genfromtxt(tmpresultfn+'.ele', skip_header=1)
+    mesh_e = tmp[:,1:] # one-based elements, where the last column is the region label
+    # remove the tmpfiles
+    os.remove(tmppolyfn)
+    os.remove(tmpresultfn+'.node')
+    os.remove(tmpresultfn+'.ele')
+    return np.int32(mesh_e), mesh_n
+    
 
 def boundfaces(nodes, elements, base=0, renumber=True):
     """

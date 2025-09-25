@@ -20,6 +20,7 @@ nirfasterff.meshing.meshutils
       boundfaces
       checkmesh3d_solid
       checkmesh3d_surface
+      img2mesh
    
    
 

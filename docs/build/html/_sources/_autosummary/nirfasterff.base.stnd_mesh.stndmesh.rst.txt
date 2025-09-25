@@ -1,4 +1,4 @@
-nirfasterff.base.stnd\_mesh.stndmesh
+﻿nirfasterff.base.stnd\_mesh.stndmesh
 ====================================
 
 .. currentmodule:: nirfasterff.base.stnd_mesh
@@ -23,8 +23,10 @@ nirfasterff.base.stnd\_mesh.stndmesh
       ~stndmesh.femdata_tpsf
       ~stndmesh.from_copy
       ~stndmesh.from_file
+      ~stndmesh.from_image
       ~stndmesh.from_mat
       ~stndmesh.from_solid
+      ~stndmesh.from_triangle
       ~stndmesh.from_volume
       ~stndmesh.gen_intmat
       ~stndmesh.isvol

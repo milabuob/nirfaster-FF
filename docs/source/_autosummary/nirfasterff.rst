@@ -28,13 +28,13 @@
    :template: custom-module-template.rst                 
    :recursive:
 
-   base
-   forward
-   inverse
-   io
-   lib
-   math
-   meshing
-   utils
-   visualize
+   nirfasterff.base
+   nirfasterff.forward
+   nirfasterff.inverse
+   nirfasterff.io
+   nirfasterff.lib
+   nirfasterff.math
+   nirfasterff.meshing
+   nirfasterff.utils
+   nirfasterff.visualize
 

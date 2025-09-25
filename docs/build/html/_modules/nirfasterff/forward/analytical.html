@@ -1,20 +1,20 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../../../">
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nirfasterff.forward.analytical &mdash; NIRFASTerFF 1.1.0 documentation</title>
+  <title>nirfasterff.forward.analytical &mdash; NIRFASTerFF 1.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=92fd9be5" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=fc837d61"></script>
-      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=7a812f30"></script>
+      <script src="../../../_static/doctools.js?v=888ff710"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -79,9 +79,7 @@
 <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">special</span>
 <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">integrate</span>
 
-<div class="viewcode-block" id="semi_infinite_FD">
-<a class="viewcode-back" href="../../../_autosummary/nirfasterff.forward.analytical.semi_infinite_FD.html#nirfasterff.forward.analytical.semi_infinite_FD">[docs]</a>
-<span class="k">def</span> <span class="nf">semi_infinite_FD</span><span class="p">(</span><span class="n">mua</span><span class="p">,</span> <span class="n">musp</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">boundary</span> <span class="o">=</span> <span class="s1">&#39;exact&#39;</span><span class="p">,</span> <span class="n">n_air</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
+<div class="viewcode-block" id="semi_infinite_FD"><a class="viewcode-back" href="../../../_autosummary/nirfasterff.forward.analytical.semi_infinite_FD.html#nirfasterff.forward.analytical.semi_infinite_FD">[docs]</a><span class="k">def</span> <span class="nf">semi_infinite_FD</span><span class="p">(</span><span class="n">mua</span><span class="p">,</span> <span class="n">musp</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">boundary</span> <span class="o">=</span> <span class="s1">&#39;EBC-exact&#39;</span><span class="p">,</span> <span class="n">n_air</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates the frequency-domain fluence in space using the analytical solution to the diffusion equation in semi-infinite media.</span>
 
@@ -106,9 +104,15 @@
 <span class="sd">        </span>
 <span class="sd">        The default is 0.</span>
 <span class="sd">    boundary : str, optional</span>
-<span class="sd">        type of the boundary condition, which can be &#39;robin&#39;, &#39;approx&#39;, or &#39;exact&#39;. The default is &#39;exact&#39;.</span>
+<span class="sd">        type of the boundary condition, which can be &#39;EBC-robin&#39;, &#39;EBC-approx&#39;, &#39;EBC-exact&#39;, &#39;PCB-robin&#39;, &#39;PCB-approx&#39;, &#39;PCB-exact&#39;, or &#39;ZBC&#39;. </span>
+
+<span class="sd">        EBC: extrapolated boundary condition; PCB: partial current boundary; ZBC: zero boundary condition.</span>
+
+<span class="sd">        The part after the hypen determines how it is calculated. </span>
+<span class="sd">        See :func:`~nirfasterff.utils.boundary_attenuation()`, :func:`~nirfasterff.forward.semi_infinite_TR()` for details.</span>
+
+<span class="sd">        The default is &#39;EBC-exact&#39;.</span>
 <span class="sd">        </span>
-<span class="sd">        See :func:`~nirfasterff.utils.boundary_attenuation()` for details.</span>
 <span class="sd">    n_air : double, optional</span>
 <span class="sd">        refratcive index outside of the semi-infinite space, which is typically assumed to be air. The default is 1.0.</span>
 
@@ -134,22 +138,42 @@
     <span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">rho</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">omega</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">)</span>
 
     <span class="c1"># get boundary attenuation</span>
-    <span class="n">A</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">boundary_attenuation</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">n_air</span><span class="p">,</span> <span class="n">boundary</span><span class="p">)</span>
+    <span class="n">boundary</span> <span class="o">=</span> <span class="n">boundary</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">boundary</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;ebc-robin&#39;</span><span class="p">,</span> <span class="s1">&#39;ebc-approx&#39;</span><span class="p">,</span> <span class="s1">&#39;ebc-exact&#39;</span><span class="p">,</span> <span class="s1">&#39;pcb-robin&#39;</span><span class="p">,</span> <span class="s1">&#39;pcb-approx&#39;</span><span class="p">,</span> <span class="s1">&#39;pcb-exact&#39;</span><span class="p">,</span> <span class="s1">&#39;zbc&#39;</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown boundary type&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">boundary</span><span class="o">==</span><span class="s1">&#39;zbc&#39;</span><span class="p">:</span>
+        <span class="n">bnd_type</span> <span class="o">=</span> <span class="s1">&#39;zbc&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">bnd_type</span><span class="p">,</span> <span class="n">bnd_calc</span> <span class="o">=</span> <span class="n">boundary</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">boundary_attenuation</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">n_air</span><span class="p">,</span> <span class="n">bnd_calc</span><span class="p">)</span>
     
     <span class="n">r1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">z</span> <span class="o">-</span> <span class="n">z0</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">rho</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-    <span class="n">zb</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">z0</span> <span class="o">*</span> <span class="n">A</span> <span class="o">/</span> <span class="mf">3.0</span>
-    <span class="n">rb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">z</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">zb</span> <span class="o">+</span> <span class="n">z0</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">rho</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-    
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">omega</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
-        <span class="n">k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">mua</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">omega</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">/</span><span class="n">cm</span><span class="p">)</span> <span class="o">/</span> <span class="n">D</span><span class="p">)</span>
-        <span class="n">phi</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">k</span><span class="o">*</span><span class="n">r1</span><span class="p">)</span><span class="o">/</span><span class="n">r1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">k</span><span class="o">*</span><span class="n">rb</span><span class="p">)</span><span class="o">/</span><span class="n">rb</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">D</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">bnd_type</span> <span class="o">==</span> <span class="s1">&#39;zbc&#39;</span><span class="p">:</span>
+        <span class="n">zb</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">zb</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">z0</span> <span class="o">*</span> <span class="n">A</span> <span class="o">/</span> <span class="mf">3.0</span>
+    <span class="k">if</span> <span class="n">bnd_type</span> <span class="o">==</span> <span class="s1">&#39;zbc&#39;</span> <span class="ow">or</span> <span class="n">bnd_type</span> <span class="o">==</span> <span class="s1">&#39;ebc&#39;</span><span class="p">:</span>
+        <span class="n">rb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">z</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">zb</span> <span class="o">+</span> <span class="n">z0</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">rho</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">omega</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">mua</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">omega</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">/</span><span class="n">cm</span><span class="p">)</span> <span class="o">/</span> <span class="n">D</span><span class="p">)</span>
+            <span class="n">phi</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">k</span><span class="o">*</span><span class="n">r1</span><span class="p">)</span><span class="o">/</span><span class="n">r1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">k</span><span class="o">*</span><span class="n">rb</span><span class="p">)</span><span class="o">/</span><span class="n">rb</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">D</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">r1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">r1</span><span class="p">)</span>
+        <span class="n">r2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">z</span> <span class="o">+</span> <span class="n">z0</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">rho</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+        <span class="n">rho</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">rho</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">omega</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">mua</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">omega</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">/</span><span class="n">cm</span><span class="p">)</span> <span class="o">/</span> <span class="n">D</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">rho</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">z</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+                    <span class="n">bnd</span><span class="p">,</span><span class="n">_</span> <span class="o">=</span> <span class="n">integrate</span><span class="o">.</span><span class="n">quad</span><span class="p">(</span><span class="k">lambda</span> <span class="n">l</span><span class="p">,</span><span class="n">zb</span><span class="p">,</span><span class="n">zz0</span><span class="p">,</span><span class="n">r</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">l</span><span class="o">/</span><span class="n">zb</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">k</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">zz0</span><span class="o">+</span><span class="n">l</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="n">r</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">zz0</span><span class="o">+</span><span class="n">l</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="n">r</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">zb</span><span class="p">,</span><span class="n">z</span><span class="o">+</span><span class="n">z0</span><span class="p">,</span><span class="n">rho</span><span class="p">[</span><span class="n">j</span><span class="p">]),</span> <span class="n">complex_func</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">iscomplex</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">bnd</span><span class="p">,</span><span class="n">_</span> <span class="o">=</span> <span class="n">integrate</span><span class="o">.</span><span class="n">quad</span><span class="p">(</span><span class="k">lambda</span> <span class="n">l</span><span class="p">,</span><span class="n">zb</span><span class="p">,</span><span class="n">zz0</span><span class="p">,</span><span class="n">r</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">l</span><span class="o">/</span><span class="n">zb</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">k</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">zz0</span><span class="o">+</span><span class="n">l</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="n">r</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">zz0</span><span class="o">+</span><span class="n">l</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="n">r</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">zb</span><span class="p">,</span><span class="n">z</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">+</span><span class="n">z0</span><span class="p">,</span><span class="n">rho</span><span class="p">[</span><span class="n">j</span><span class="p">]),</span> <span class="n">complex_func</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">iscomplex</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
+                <span class="n">phi</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">k</span><span class="o">*</span><span class="n">r1</span><span class="p">[</span><span class="n">j</span><span class="p">])</span><span class="o">/</span><span class="n">r1</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">k</span><span class="o">*</span><span class="n">r2</span><span class="p">[</span><span class="n">j</span><span class="p">])</span><span class="o">/</span><span class="n">r2</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="mf">2.0</span><span class="o">/</span><span class="n">zb</span><span class="p">)</span><span class="o">*</span><span class="n">bnd</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">D</span><span class="p">)</span>
     
     <span class="k">return</span> <span class="n">phi</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span></div>
 
-
-<div class="viewcode-block" id="semi_infinite_CW">
-<a class="viewcode-back" href="../../../_autosummary/nirfasterff.forward.analytical.semi_infinite_CW.html#nirfasterff.forward.analytical.semi_infinite_CW">[docs]</a>
-<span class="k">def</span> <span class="nf">semi_infinite_CW</span><span class="p">(</span><span class="n">mua</span><span class="p">,</span> <span class="n">musp</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">boundary</span> <span class="o">=</span> <span class="s1">&#39;exact&#39;</span><span class="p">,</span> <span class="n">n_air</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
+<div class="viewcode-block" id="semi_infinite_CW"><a class="viewcode-back" href="../../../_autosummary/nirfasterff.forward.analytical.semi_infinite_CW.html#nirfasterff.forward.analytical.semi_infinite_CW">[docs]</a><span class="k">def</span> <span class="nf">semi_infinite_CW</span><span class="p">(</span><span class="n">mua</span><span class="p">,</span> <span class="n">musp</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">boundary</span> <span class="o">=</span> <span class="s1">&#39;EBC-exact&#39;</span><span class="p">,</span> <span class="n">n_air</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates the continuous-wave fluence in space using the analytical solution to the diffusion equation in semi-infinite media.</span>
 <span class="sd">    </span>
@@ -174,9 +198,14 @@
 <span class="sd">        </span>
 <span class="sd">        The default is 0.</span>
 <span class="sd">    boundary : str, optional</span>
-<span class="sd">        type of the boundary condition, which can be &#39;robin&#39;, &#39;approx&#39;, or &#39;exact&#39;. The default is &#39;exact&#39;.</span>
-<span class="sd">        </span>
-<span class="sd">        See :func:`~nirfasterff.utils.boundary_attenuation()` for details.</span>
+<span class="sd">        type of the boundary condition, which can be &#39;EBC-robin&#39;, &#39;EBC-approx&#39;, &#39;EBC-exact&#39;, &#39;PCB-robin&#39;, &#39;PCB-approx&#39;, &#39;PCB-exact&#39;, or &#39;ZBC&#39;. </span>
+
+<span class="sd">        EBC: extrapolated boundary condition; PCB: partial current boundary; ZBC: zero boundary condition.</span>
+
+<span class="sd">        The part after the hypen determines how it is calculated.</span>
+<span class="sd">        See :func:`~nirfasterff.utils.boundary_attenuation()`, :func:`~nirfasterff.forward.semi_infinite_TR()` for details.</span>
+
+<span class="sd">        The default is &#39;EBC-exact&#39;.</span>
 <span class="sd">    n_air : double, optional</span>
 <span class="sd">        refratcive index outside of the semi-infinite space, which is typically assumed to be air. The default is 1.0.</span>
 
@@ -190,12 +219,9 @@
 <span class="sd">    Durduran et al, 2010, Rep. Prog. Phys. doi:10.1088/0034-4885/73/7/076701</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">semi_infinite_FD</span><span class="p">(</span><span class="n">mua</span><span class="p">,</span> <span class="n">musp</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">boundary</span> <span class="o">=</span> <span class="s1">&#39;exact&#39;</span><span class="p">,</span> <span class="n">n_air</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">semi_infinite_FD</span><span class="p">(</span><span class="n">mua</span><span class="p">,</span> <span class="n">musp</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">boundary</span><span class="p">,</span> <span class="n">n_air</span><span class="p">))</span></div>
 
-
-<div class="viewcode-block" id="semi_infinite_DCS">
-<a class="viewcode-back" href="../../../_autosummary/nirfasterff.forward.analytical.semi_infinite_DCS.html#nirfasterff.forward.analytical.semi_infinite_DCS">[docs]</a>
-<span class="k">def</span> <span class="nf">semi_infinite_DCS</span><span class="p">(</span><span class="n">mua</span><span class="p">,</span> <span class="n">musp</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">aDb</span><span class="p">,</span> <span class="n">wvlength</span><span class="p">,</span> <span class="n">tvec</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">boundary</span> <span class="o">=</span> <span class="s1">&#39;exact&#39;</span><span class="p">,</span> <span class="n">n_air</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<div class="viewcode-block" id="semi_infinite_DCS"><a class="viewcode-back" href="../../../_autosummary/nirfasterff.forward.analytical.semi_infinite_DCS.html#nirfasterff.forward.analytical.semi_infinite_DCS">[docs]</a><span class="k">def</span> <span class="nf">semi_infinite_DCS</span><span class="p">(</span><span class="n">mua</span><span class="p">,</span> <span class="n">musp</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">aDb</span><span class="p">,</span> <span class="n">wvlength</span><span class="p">,</span> <span class="n">tvec</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">boundary</span> <span class="o">=</span> <span class="s1">&#39;EBC-exact&#39;</span><span class="p">,</span> <span class="n">n_air</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates DCS G1 curve using the analytical solution to the correlation diffusion equation in semi-infinite media</span>
 <span class="sd">    </span>
@@ -220,9 +246,14 @@
 <span class="sd">    z : double, optional</span>
 <span class="sd">        depth of the location of interest. 0 for boundary measurement. The default is 0.</span>
 <span class="sd">    boundary : str, optional</span>
-<span class="sd">        type of the boundary condition, which can be &#39;robin&#39;, &#39;approx&#39;, or &#39;exact&#39;. The default is &#39;exact&#39;.</span>
-<span class="sd">        </span>
-<span class="sd">        See :func:`~nirfasterff.utils.boundary_attenuation()` for details.</span>
+<span class="sd">        type of the boundary condition, which can be &#39;EBC-robin&#39;, &#39;EBC-approx&#39;, &#39;EBC-exact&#39;, &#39;PCB-robin&#39;, &#39;PCB-approx&#39;, &#39;PCB-exact&#39;, or &#39;ZBC&#39;. </span>
+
+<span class="sd">        EBC: extrapolated boundary condition; PCB: partial current boundary; ZBC: zero boundary condition.</span>
+
+<span class="sd">        The part after the hypen determines how it is calculated.</span>
+<span class="sd">        See :func:`~nirfasterff.utils.boundary_attenuation()`, :func:`~nirfasterff.forward.semi_infinite_TR()` for details.</span>
+
+<span class="sd">        The default is &#39;EBC-exact&#39;.</span>
 <span class="sd">    n_air : double, optional</span>
 <span class="sd">        refratcive index outside of the semi-infinite space, which is typically assumed to be air. The default is 1.0.</span>
 <span class="sd">    normalize : bool, optional</span>
@@ -250,10 +281,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">G1</span></div>
 
-
-<div class="viewcode-block" id="semi_infinite_TR">
-<a class="viewcode-back" href="../../../_autosummary/nirfasterff.forward.analytical.semi_infinite_TR.html#nirfasterff.forward.analytical.semi_infinite_TR">[docs]</a>
-<span class="k">def</span> <span class="nf">semi_infinite_TR</span><span class="p">(</span><span class="n">mua</span><span class="p">,</span> <span class="n">musp</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">boundary</span><span class="o">=</span><span class="s1">&#39;EBC-Robin&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="semi_infinite_TR"><a class="viewcode-back" href="../../../_autosummary/nirfasterff.forward.analytical.semi_infinite_TR.html#nirfasterff.forward.analytical.semi_infinite_TR">[docs]</a><span class="k">def</span> <span class="nf">semi_infinite_TR</span><span class="p">(</span><span class="n">mua</span><span class="p">,</span> <span class="n">musp</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">boundary</span><span class="o">=</span><span class="s1">&#39;EBC-Robin&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates TPSF at a given location using the analytical solution to the diffusion equation in semi-infinite media</span>
 <span class="sd">    </span>
@@ -409,7 +437,6 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown boundary type&#39;</span><span class="p">)</span>
     <span class="n">phi</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">*=</span> <span class="n">dt</span>
     <span class="k">return</span> <span class="n">phi</span></div>
-
 </pre></div>
 
            </div>

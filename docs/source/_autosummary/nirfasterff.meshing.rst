@@ -28,6 +28,6 @@ nirfasterff.meshing
    :template: custom-module-template.rst                 
    :recursive:
 
-   auxiliary
-   meshutils
+   nirfasterff.meshing.auxiliary
+   nirfasterff.meshing.meshutils
 

@@ -1,21 +1,21 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../">
+<html class="writer-html5" lang="en">
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nirfasterff.base.optodes.optode &mdash; NIRFASTerFF 1.1.1 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+  <title>nirfasterff.base.optodes.optode &mdash; NIRFASTerFF 1.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=92fd9be5" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=58fbf978"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=4c8675c2"></script>
+      <script src="../_static/doctools.js?v=888ff710"></script>
+      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
       <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -96,16 +96,16 @@
            <div itemprop="articleBody">
              
   <section id="nirfasterff-base-optodes-optode">
-<h1>nirfasterff.base.optodes.optode<a class="headerlink" href="#nirfasterff-base-optodes-optode" title="Link to this heading"></a></h1>
+<h1>nirfasterff.base.optodes.optode<a class="headerlink" href="#nirfasterff-base-optodes-optode" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="nirfasterff.base.optodes.optode">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nirfasterff.base.optodes.</span></span><span class="sig-name descname"><span class="pre">optode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coord</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/optodes.html#optode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.optodes.optode" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nirfasterff.base.optodes.</span></span><span class="sig-name descname"><span class="pre">optode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coord</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/optodes.html#optode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.optodes.optode" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class for NIRFASTer optodes, which can be either a group of sources or a group of detectors.</p>
 <p>Note: The field fwhm for sources in the Matlab version has been dropped.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.optodes.optode.fixed">
-<span class="sig-name descname"><span class="pre">fixed</span></span><a class="headerlink" href="#nirfasterff.base.optodes.optode.fixed" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">fixed</span></span><a class="headerlink" href="#nirfasterff.base.optodes.optode.fixed" title="Permalink to this definition"></a></dt>
 <dd><p>whether an optode is fixed.</p>
 <p>If not, it will be moved to one scattering length inside the surface (source) or on the surface (detector).</p>
 <p>Default: 0</p>
@@ -118,7 +118,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.optodes.optode.num">
-<span class="sig-name descname"><span class="pre">num</span></span><a class="headerlink" href="#nirfasterff.base.optodes.optode.num" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">num</span></span><a class="headerlink" href="#nirfasterff.base.optodes.optode.num" title="Permalink to this definition"></a></dt>
 <dd><p>indexing of the optodes, starting from one (1,2,3,…)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -129,7 +129,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.optodes.optode.coord">
-<span class="sig-name descname"><span class="pre">coord</span></span><a class="headerlink" href="#nirfasterff.base.optodes.optode.coord" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">coord</span></span><a class="headerlink" href="#nirfasterff.base.optodes.optode.coord" title="Permalink to this definition"></a></dt>
 <dd><p>each row is the location of an optode. Unit: mm</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -140,7 +140,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.optodes.optode.int_func">
-<span class="sig-name descname"><span class="pre">int_func</span></span><a class="headerlink" href="#nirfasterff.base.optodes.optode.int_func" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">int_func</span></span><a class="headerlink" href="#nirfasterff.base.optodes.optode.int_func" title="Permalink to this definition"></a></dt>
 <dd><p>First column is the index (one-based) of the element each optode is in.</p>
 <p>The subsequent columns are the barycentric coordinates (i.e. integration function) in the correponding elements. Size (N, dim+2).</p>
 <dl class="field-list simple">
@@ -152,7 +152,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nirfasterff.base.optodes.optode.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coord</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/optodes.html#optode.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.optodes.optode.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coord</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/optodes.html#optode.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.optodes.optode.__init__" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <p class="rubric">Methods</p>
@@ -177,7 +177,7 @@
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="nirfasterff.base.optodes.optode.move_detectors">
-<span class="sig-name descname"><span class="pre">move_detectors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/optodes.html#optode.move_detectors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.optodes.optode.move_detectors" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">move_detectors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/optodes.html#optode.move_detectors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.optodes.optode.move_detectors" title="Permalink to this definition"></a></dt>
 <dd><p>Moves detector to the appropriate locations in the mesh.</p>
 <p>For each detector, first move it to the closest point on the surface of the mesh.</p>
 <p>Integration functions are NOT calculated after moving, to be consistent with the Matlab version.</p>
@@ -196,7 +196,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nirfasterff.base.optodes.optode.move_sources">
-<span class="sig-name descname"><span class="pre">move_sources</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/optodes.html#optode.move_sources"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.optodes.optode.move_sources" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">move_sources</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/optodes.html#optode.move_sources"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.optodes.optode.move_sources" title="Permalink to this definition"></a></dt>
 <dd><p>Moves sources to the appropriate locations in the mesh.</p>
 <p>For each source, first move it to the closest point on the surface of the mesh, and then move inside by one scattering length along surface normal.</p>
 <p>where scattering length is <span class="math notranslate nohighlight">\(1/\mu_s'\)</span> for stnd and dcs mesh, and <span class="math notranslate nohighlight">\(1/\mu_{sx}'\)</span> for fluor mesh</p>
@@ -219,7 +219,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nirfasterff.base.optodes.optode.touch_detectors">
-<span class="sig-name descname"><span class="pre">touch_detectors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/optodes.html#optode.touch_detectors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.optodes.optode.touch_detectors" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">touch_detectors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/optodes.html#optode.touch_detectors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.optodes.optode.touch_detectors" title="Permalink to this definition"></a></dt>
 <dd><p>Recalculate/fill in all other fields based on ‘fixed’ and ‘coord’.</p>
 <p>This is useful when a set of detectors are manually added and only the locations are specified.</p>
 <p>For non-fixed detectors, function ‘move_detectors’ is first called, and integration functions are calculated subsequentely.</p>
@@ -237,7 +237,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nirfasterff.base.optodes.optode.touch_sources">
-<span class="sig-name descname"><span class="pre">touch_sources</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/optodes.html#optode.touch_sources"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.optodes.optode.touch_sources" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">touch_sources</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/optodes.html#optode.touch_sources"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.optodes.optode.touch_sources" title="Permalink to this definition"></a></dt>
 <dd><p>Recalculate/fill in all other fields based on ‘fixed’ and ‘coord’.</p>
 <p>This is useful when a set of sources are manually added and only the locations are specified.</p>
 <p>For non-fixed sources, function ‘move_sources’ is called, otherwise recalculates integration functions directly</p>
@@ -267,7 +267,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, Jiaming Cao, MILAB@UoB.</p>
+    <p>&#169; Copyright 2025, Jiaming Cao, MILAB@UoB.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

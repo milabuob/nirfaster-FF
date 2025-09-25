@@ -1,25 +1,25 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../">
+<html class="writer-html5" lang="en">
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nirfasterff.utils.MeshingParams &mdash; NIRFASTerFF 1.1.1 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+  <title>nirfasterff.utils.MeshingParams &mdash; NIRFASTerFF 1.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=92fd9be5" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=58fbf978"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=4c8675c2"></script>
+      <script src="../_static/doctools.js?v=888ff710"></script>
+      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="nirfasterff.utils.SolverOptions" href="nirfasterff.utils.SolverOptions.html" />
+    <link rel="next" title="nirfasterff.utils.MeshingParams2D" href="nirfasterff.utils.MeshingParams2D.html" />
     <link rel="prev" title="nirfasterff.utils.ConvergenceInfo" href="nirfasterff.utils.ConvergenceInfo.html" /> 
 </head>
 
@@ -68,6 +68,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#nirfasterff.utils.MeshingParams"><code class="docutils literal notranslate"><span class="pre">MeshingParams</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.utils.MeshingParams2D.html">nirfasterff.utils.MeshingParams2D</a></li>
 <li class="toctree-l3"><a class="reference internal" href="nirfasterff.utils.SolverOptions.html">nirfasterff.utils.SolverOptions</a></li>
 </ul>
 </li>
@@ -103,15 +104,15 @@
            <div itemprop="articleBody">
              
   <section id="nirfasterff-utils-meshingparams">
-<h1>nirfasterff.utils.MeshingParams<a class="headerlink" href="#nirfasterff-utils-meshingparams" title="Link to this heading"></a></h1>
+<h1>nirfasterff.utils.MeshingParams<a class="headerlink" href="#nirfasterff-utils-meshingparams" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="nirfasterff.utils.MeshingParams">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nirfasterff.utils.</span></span><span class="sig-name descname"><span class="pre">MeshingParams</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xPixelSpacing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yPixelSpacing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SliceThickness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">facet_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25.</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">facet_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">facet_distance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_radius_edge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">general_cell_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdomain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">np.array([0.,</span> <span class="pre">0.])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lloyd_smooth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/utils.html#MeshingParams"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.utils.MeshingParams" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nirfasterff.utils.</span></span><span class="sig-name descname"><span class="pre">MeshingParams</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xPixelSpacing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yPixelSpacing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SliceThickness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">facet_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25.</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">facet_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">facet_distance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_radius_edge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">general_cell_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdomain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">np.array([0.,</span> <span class="pre">0.])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lloyd_smooth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/utils.html#MeshingParams"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.utils.MeshingParams" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Parameters to be used by the CGAL mesher. Note: they should all be double</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.utils.MeshingParams.xPixelSpacing">
-<span class="sig-name descname"><span class="pre">xPixelSpacing</span></span><a class="headerlink" href="#nirfasterff.utils.MeshingParams.xPixelSpacing" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">xPixelSpacing</span></span><a class="headerlink" href="#nirfasterff.utils.MeshingParams.xPixelSpacing" title="Permalink to this definition"></a></dt>
 <dd><p>voxel distance in x direction. Default: 1.0</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -122,7 +123,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.utils.MeshingParams.yPixelSpacing">
-<span class="sig-name descname"><span class="pre">yPixelSpacing</span></span><a class="headerlink" href="#nirfasterff.utils.MeshingParams.yPixelSpacing" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">yPixelSpacing</span></span><a class="headerlink" href="#nirfasterff.utils.MeshingParams.yPixelSpacing" title="Permalink to this definition"></a></dt>
 <dd><p>voxel distance in y direction. Default: 1.0</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -133,7 +134,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.utils.MeshingParams.SliceThickness">
-<span class="sig-name descname"><span class="pre">SliceThickness</span></span><a class="headerlink" href="#nirfasterff.utils.MeshingParams.SliceThickness" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">SliceThickness</span></span><a class="headerlink" href="#nirfasterff.utils.MeshingParams.SliceThickness" title="Permalink to this definition"></a></dt>
 <dd><p>voxel distance in z direction. Default: 1.0</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -144,7 +145,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.utils.MeshingParams.facet_angle">
-<span class="sig-name descname"><span class="pre">facet_angle</span></span><a class="headerlink" href="#nirfasterff.utils.MeshingParams.facet_angle" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">facet_angle</span></span><a class="headerlink" href="#nirfasterff.utils.MeshingParams.facet_angle" title="Permalink to this definition"></a></dt>
 <dd><p>lower bound for the angle (in degrees) of surface facets. Default: 25.0</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -155,7 +156,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.utils.MeshingParams.facet_size">
-<span class="sig-name descname"><span class="pre">facet_size</span></span><a class="headerlink" href="#nirfasterff.utils.MeshingParams.facet_size" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">facet_size</span></span><a class="headerlink" href="#nirfasterff.utils.MeshingParams.facet_size" title="Permalink to this definition"></a></dt>
 <dd><p>upper bound for the radii of surface Delaunay balls circumscribing the facets. Default: 3.0</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -166,7 +167,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.utils.MeshingParams.facet_distance">
-<span class="sig-name descname"><span class="pre">facet_distance</span></span><a class="headerlink" href="#nirfasterff.utils.MeshingParams.facet_distance" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">facet_distance</span></span><a class="headerlink" href="#nirfasterff.utils.MeshingParams.facet_distance" title="Permalink to this definition"></a></dt>
 <dd><p>upper bound for the distance between the circumcenter of a surface facet and the center of its surface Delaunay ball. Default: 2.0</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -177,7 +178,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.utils.MeshingParams.cell_radius_edge">
-<span class="sig-name descname"><span class="pre">cell_radius_edge</span></span><a class="headerlink" href="#nirfasterff.utils.MeshingParams.cell_radius_edge" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">cell_radius_edge</span></span><a class="headerlink" href="#nirfasterff.utils.MeshingParams.cell_radius_edge" title="Permalink to this definition"></a></dt>
 <dd><p>upper bound for the ratio between the circumradius of a mesh tetrahedron and its shortest edge. Default: 3.0</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -188,7 +189,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.utils.MeshingParams.general_cell_size">
-<span class="sig-name descname"><span class="pre">general_cell_size</span></span><a class="headerlink" href="#nirfasterff.utils.MeshingParams.general_cell_size" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">general_cell_size</span></span><a class="headerlink" href="#nirfasterff.utils.MeshingParams.general_cell_size" title="Permalink to this definition"></a></dt>
 <dd><p>upper bound on the circumradii of the mesh tetrahedra, when no region-specific parameters (see below) are provided. Default: 3.0</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -199,7 +200,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.utils.MeshingParams.subdomain">
-<span class="sig-name descname"><span class="pre">subdomain</span></span><a class="headerlink" href="#nirfasterff.utils.MeshingParams.subdomain" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">subdomain</span></span><a class="headerlink" href="#nirfasterff.utils.MeshingParams.subdomain" title="Permalink to this definition"></a></dt>
 <dd><p>Specify cell size for each region, in format:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">region_label1</span><span class="p">,</span> <span class="n">cell_size1</span><span class="p">]</span>
 <span class="p">[</span><span class="n">region_label2</span><span class="p">,</span> <span class="n">cell_size2</span><span class="p">]</span>
@@ -216,7 +217,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.utils.MeshingParams.lloyd_smooth">
-<span class="sig-name descname"><span class="pre">lloyd_smooth</span></span><a class="headerlink" href="#nirfasterff.utils.MeshingParams.lloyd_smooth" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">lloyd_smooth</span></span><a class="headerlink" href="#nirfasterff.utils.MeshingParams.lloyd_smooth" title="Permalink to this definition"></a></dt>
 <dd><p>Switch for Lloyd smoother before local optimization. This can take up to 120s (hard limit set) but improves mesh quality. Default: True</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -227,7 +228,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.utils.MeshingParams.offset">
-<span class="sig-name descname"><span class="pre">offset</span></span><a class="headerlink" href="#nirfasterff.utils.MeshingParams.offset" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">offset</span></span><a class="headerlink" href="#nirfasterff.utils.MeshingParams.offset" title="Permalink to this definition"></a></dt>
 <dd><p>offset value to be added to the nodes after meshing. Size (3,). Defualt: None</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -241,7 +242,7 @@
 <p><a class="reference external" href="https://doc.cgal.org/latest/Mesh_3/index.html#Chapter_3D_Mesh_Generation">https://doc.cgal.org/latest/Mesh_3/index.html#Chapter_3D_Mesh_Generation</a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="nirfasterff.utils.MeshingParams.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xPixelSpacing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yPixelSpacing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SliceThickness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">facet_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25.</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">facet_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">facet_distance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_radius_edge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">general_cell_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdomain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">np.array([0.,</span> <span class="pre">0.])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lloyd_smooth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/utils.html#MeshingParams.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.utils.MeshingParams.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xPixelSpacing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yPixelSpacing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SliceThickness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">facet_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25.</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">facet_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">facet_distance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_radius_edge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">general_cell_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdomain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">np.array([0.,</span> <span class="pre">0.])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lloyd_smooth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/utils.html#MeshingParams.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.utils.MeshingParams.__init__" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <p class="rubric">Methods</p>
@@ -261,13 +262,13 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="nirfasterff.utils.ConvergenceInfo.html" class="btn btn-neutral float-left" title="nirfasterff.utils.ConvergenceInfo" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="nirfasterff.utils.SolverOptions.html" class="btn btn-neutral float-right" title="nirfasterff.utils.SolverOptions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="nirfasterff.utils.MeshingParams2D.html" class="btn btn-neutral float-right" title="nirfasterff.utils.MeshingParams2D" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, Jiaming Cao, MILAB@UoB.</p>
+    <p>&#169; Copyright 2025, Jiaming Cao, MILAB@UoB.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

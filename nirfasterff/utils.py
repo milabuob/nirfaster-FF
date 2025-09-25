@@ -125,6 +125,36 @@ class MeshingParams:
         self.smooth = lloyd_smooth
         self.offset = offset
 
+class MeshingParams2D:
+    """
+    Parameters to be used by the Triangle mesher. Note: they should all be double
+    
+    Attributes
+    ----------
+        mm_per_pixel: double
+            pixel size in both directions, in millimeter. Default: 1.0
+        max_area: double scalar or Numpy array
+            maximum area per triangle, before scaling with mm_per_pixel. If scalar, same value is applied to all triangles
+            
+            If Numpy array, it must follow this format::
+                
+                [1 area1]
+                [2 area2]
+                ...
+            
+            where max area for each labeled region is specified individually. ALL regions must be given a value
+            
+            Default: 1.0
+        offset: Numpy array or list
+            offset to be added (in mm) at the very end of the meshing (that is, after scaling). Size must be 2
+            
+            Default: None, i.e. no offset to be added
+    """
+    def __init__(self, mm_per_pixel = 1.0, max_area = 2.0, offset = None):
+        self.mm_per_pixel = mm_per_pixel
+        self.max_area = max_area
+        self.offset = offset
+
 def isCUDA():
     """
     Checks if system has a CUDA device with compute capability >=5.2
@@ -255,7 +285,7 @@ def pointLineDistance(A, B, p):
         t = 1
     
     point = A + (B-A)*t
-    dist = np.linalg.norm(p - point)
+    dist = np.linalg.norm(p - point)     
     return dist, point
 
 def pointTriangleDistance(TRI, P):
@@ -525,7 +555,7 @@ def gen_intmat_impl(mesh, xgrid, ygrid, zgrid):
             rel_idx = (tet_vtx - start) / res
             raw_idx[i,:] = rel_idx[:,2]*len(xgrid)*len(ygrid) + rel_idx[:,0]*len(ygrid) + rel_idx[:,1] # zero-based
         
-        outvec = (loweridx[:,0]<0) | (loweridx[:,1]<0) | (loweridx[:,2]<0)
+        outvec = np.sum(mesh.nodes<np.array([xgrid.min(), ygrid.min(), zgrid.min()]), axis=1) | np.sum(mesh.nodes>np.array([xgrid.max(), ygrid.max(), zgrid.max()]), axis=1)
         meshingrid = np.flatnonzero(~outvec)
         # if any of the queried nodes was not asigned a value in the previous step,
         # treat it as an outside node and extrapolate. Otherwise the boundary elements will have smaller values than they should
@@ -552,7 +582,7 @@ def gen_intmat_impl(mesh, xgrid, ygrid, zgrid):
             rel_idx = (tet_vtx - start) / res
             raw_idx[i,:] = rel_idx[:,0]*len(ygrid) + rel_idx[:,1] # zero-based
         
-        outvec = (loweridx[:,0]<0) | (loweridx[:,1]<0)
+        outvec = np.sum(mesh.nodes<np.array([xgrid.min(), ygrid.min()]), axis=1) | np.sum(mesh.nodes>np.array([xgrid.max(), ygrid.max()]), axis=1)
         meshingrid = np.flatnonzero(~outvec)
         # if any of the queried nodes was not asigned a value in the previous step,
         # treat it as an outside node and extrapolate. Otherwise the boundary elements will have smaller values than they should
@@ -653,6 +683,8 @@ def boundary_attenuation(n_incidence, n_transmission=1.0, method='robin'):
     References
     -------
     Durduran et al, 2010, Rep. Prog. Phys. doi:10.1088/0034-4885/73/7/076701
+
+    Farrel et al, 1992, Med Phys. doi: 10.1118/1.596777
 
     """
     if np.size(n_incidence)>1 and np.size(n_transmission)==1:

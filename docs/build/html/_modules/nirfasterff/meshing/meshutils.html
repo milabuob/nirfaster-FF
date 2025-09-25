@@ -1,20 +1,20 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../../../">
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nirfasterff.meshing.meshutils &mdash; NIRFASTerFF 1.1.0 documentation</title>
+  <title>nirfasterff.meshing.meshutils &mdash; NIRFASTerFF 1.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=92fd9be5" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=fc837d61"></script>
-      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=7a812f30"></script>
+      <script src="../../../_static/doctools.js?v=888ff710"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -79,10 +79,9 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">platform</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">from</span> <span class="nn">skimage</span> <span class="kn">import</span> <span class="n">measure</span>
 
-<div class="viewcode-block" id="RunCGALMeshGenerator">
-<a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.meshutils.RunCGALMeshGenerator.html#nirfasterff.meshing.meshutils.RunCGALMeshGenerator">[docs]</a>
-<span class="k">def</span> <span class="nf">RunCGALMeshGenerator</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">MeshingParams</span><span class="p">()):</span>
+<div class="viewcode-block" id="RunCGALMeshGenerator"><a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.meshutils.RunCGALMeshGenerator.html#nirfasterff.meshing.meshutils.RunCGALMeshGenerator">[docs]</a><span class="k">def</span> <span class="nf">RunCGALMeshGenerator</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">MeshingParams</span><span class="p">()):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generate a tetrahedral mesh from a volume using CGAL 6.0.1 mesher, where different regions are labeled used a distinct integer.</span>
 <span class="sd">    </span>
@@ -107,7 +106,7 @@
 <span class="sd">        element list calculated by the mesher, in mm.</span>
 <span class="sd">    </span>
 <span class="sd">    References</span>
-<span class="sd">    -------</span>
+<span class="sd">    ----------</span>
 <span class="sd">    https://doc.cgal.org/latest/Mesh_3/index.html#Chapter_3D_Mesh_Generation</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -157,7 +156,7 @@
     <span class="c1"># read result and cleanup</span>
     <span class="n">ele_raw</span><span class="p">,</span> <span class="n">nodes_raw</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">readMEDIT</span><span class="p">(</span><span class="n">tmpmeshfn</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">offset</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="n">nodes_raw</span> <span class="o">=</span> <span class="n">nodes_raw</span> <span class="o">+</span> <span class="n">opt</span><span class="o">.</span><span class="n">offset</span>
+        <span class="n">nodes_raw</span> <span class="o">=</span> <span class="n">nodes_raw</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">offset</span><span class="p">)</span>
     
     <span class="n">ele_tmp</span> <span class="o">=</span> <span class="n">ele_raw</span><span class="p">[:,:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
     <span class="n">nids</span><span class="p">,</span> <span class="n">ele</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">ele_tmp</span><span class="p">,</span> <span class="n">return_inverse</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -172,10 +171,120 @@
     <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">tmpcritfn</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">ele</span><span class="p">,</span> <span class="n">nodes</span></div>
 
+<div class="viewcode-block" id="img2mesh"><a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.meshutils.img2mesh.html#nirfasterff.meshing.meshutils.img2mesh">[docs]</a><span class="k">def</span> <span class="nf">img2mesh</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">MeshingParams2D</span><span class="p">()):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates 2D mesh from a labeled image. Using Jonathan Shewchuk&#39;s Triangle, with arguments -pPqQaA.</span>
+<span class="sd">    </span>
+<span class="sd">    The different regions are labeled using continuously ascending integers starting from 1. 0 pixels are background.</span>
 
-<div class="viewcode-block" id="boundfaces">
-<a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.meshutils.boundfaces.html#nirfasterff.meshing.meshutils.boundfaces">[docs]</a>
-<span class="k">def</span> <span class="nf">boundfaces</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">renumber</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    img : integer Numpy array</span>
+<span class="sd">        2D image defining the space to mesh. Regions defined by different integers. 0 is background.</span>
+<span class="sd">    opt : nirfasterff.utils.MeshingParams, optional</span>
+<span class="sd">        meshing parameters used. Default values will be used if not specified.</span>
+<span class="sd">        </span>
+<span class="sd">        See :func:`nirfasterff.utils.MeshingParams2D` for details</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        if the specified max areas mismatch with number of levels, or if the labels are not continuous.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    mesh_e : int NumPy array</span>
+<span class="sd">        element list calculated by the mesher, one-based. Last column indicates the region each element belongs to</span>
+<span class="sd">    mesh_n : double NumPy array</span>
+<span class="sd">        element list calculated by the mesher, in mm.</span>
+<span class="sd">    </span>
+<span class="sd">    References</span>
+<span class="sd">    -----------</span>
+<span class="sd">    https://www.cs.cmu.edu/~quake/triangle.html</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">img</span><span class="p">)</span><span class="o">==</span><span class="n">img</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: input mask must be integer. I am doing the conversion now, but this can lead to unexpected errors!&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    
+    <span class="n">tmppolyfn</span> <span class="o">=</span> <span class="s1">&#39;._input.poly&#39;</span>
+    <span class="n">tmpresultfn</span> <span class="o">=</span> <span class="s1">&#39;._input.1&#39;</span>
+
+    <span class="n">levels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">img</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">levels</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">levels</span> <span class="o">=</span> <span class="n">levels</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">nlevels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">levels</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">max_area</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nlevels</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_area</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">nlevels</span><span class="p">)]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_area</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">!=</span><span class="n">nlevels</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Specified max areas mismatch with number of levels&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nlevels</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span> <span class="o">==</span> <span class="n">levels</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Labels must be continuously ascending, i.e. 1,2,3...&#39;</span><span class="p">)</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_area</span>
+    
+    <span class="n">allnodes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">allele</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">node_cnt</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">iso</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nlevels</span><span class="p">):</span>
+        <span class="c1"># get contour line per level</span>
+        <span class="n">cs</span> <span class="o">=</span> <span class="n">measure</span><span class="o">.</span><span class="n">find_contours</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">iso</span><span class="o">+</span><span class="mi">1</span><span class="o">-</span><span class="mf">0.1</span><span class="p">)</span>
+        <span class="n">ncontours</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cs</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ncontours</span><span class="p">):</span>
+            <span class="n">allnodes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="n">allnodes</span><span class="p">,</span> <span class="n">cs</span><span class="p">[</span><span class="n">i</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">,:]]</span>
+            <span class="n">nnodes</span> <span class="o">=</span> <span class="n">cs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span>
+            <span class="n">ele</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">nnodes</span><span class="p">,</span><span class="mi">1</span><span class="p">]]),</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nnodes</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nnodes</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="mi">2</span><span class="p">]]</span>
+            <span class="n">ele</span> <span class="o">+=</span> <span class="n">node_cnt</span>
+            <span class="n">node_cnt</span> <span class="o">+=</span> <span class="n">nnodes</span>
+            <span class="n">allele</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="n">allele</span><span class="p">,</span> <span class="n">ele</span><span class="p">]</span>
+    <span class="n">labels</span><span class="p">,</span> <span class="n">nlabel</span> <span class="o">=</span> <span class="n">measure</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">return_num</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># connected components in the image, so we can label the regions</span>
+    <span class="c1"># now write to a poly file</span>
+    <span class="n">fp</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">tmppolyfn</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+    <span class="c1"># nodes</span>
+    <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%d</span><span class="s1"> 2 0 0</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="n">node_cnt</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">node_cnt</span><span class="p">):</span>
+        <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%d</span><span class="se">\t</span><span class="si">%.12f</span><span class="se">\t</span><span class="si">%.12f</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">allnodes</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">allnodes</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="c1"># now elements</span>
+    <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%d</span><span class="s1"> 0</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="n">allele</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">allele</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%d</span><span class="se">\t</span><span class="si">%d</span><span class="se">\t</span><span class="si">%d</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">allele</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">allele</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;0</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%d</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="n">nlabel</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nlabel</span><span class="p">):</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">labels</span><span class="o">==</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">region_img</span> <span class="o">=</span> <span class="n">img</span><span class="p">[</span><span class="n">tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]]</span> <span class="c1"># using the first pixel. Any would do</span>
+        <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%d</span><span class="s1"> </span><span class="si">%.12f</span><span class="s1"> </span><span class="si">%.12f</span><span class="s1"> </span><span class="si">%d</span><span class="s1"> </span><span class="si">%f</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">region_img</span><span class="p">,</span> <span class="n">params</span><span class="p">[</span><span class="n">params</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="n">region_img</span><span class="p">,</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="n">fp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="c1"># call the mesher</span>
+    <span class="n">binpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">cpulib</span><span class="o">.</span><span class="vm">__file__</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;Darwin&#39;</span><span class="p">:</span>
+        <span class="n">mesherbin</span> <span class="o">=</span> <span class="n">binpath</span> <span class="o">+</span> <span class="s1">&#39;/triangleMAC&#39;</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">mesherbin</span><span class="p">,</span> <span class="s1">&#39;-pPqQaA&#39;</span><span class="p">,</span> <span class="n">tmppolyfn</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;Linux&#39;</span><span class="p">:</span>
+        <span class="n">mesherbin</span> <span class="o">=</span> <span class="n">binpath</span> <span class="o">+</span> <span class="s1">&#39;/triangleLINUX&#39;</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">mesherbin</span><span class="p">,</span> <span class="s1">&#39;-pPqQaA&#39;</span><span class="p">,</span> <span class="n">tmppolyfn</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;Windows&#39;</span><span class="p">:</span>
+        <span class="n">mesherbin</span> <span class="o">=</span> <span class="n">binpath</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">triangle.exe&#39;</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">mesherbin</span><span class="p">,</span> <span class="s1">&#39;-pPqQaA&#39;</span><span class="p">,</span> <span class="n">tmppolyfn</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Unsupported operating system: &#39;</span><span class="o">+</span><span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">())</span>
+    <span class="n">status</span><span class="o">.</span><span class="n">check_returncode</span><span class="p">()</span>
+    <span class="c1"># read the results</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">tmpresultfn</span><span class="o">+</span><span class="s1">&#39;.node&#39;</span><span class="p">,</span> <span class="n">skip_header</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">mesh_n</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span><span class="o">*</span><span class="n">opt</span><span class="o">.</span><span class="n">mm_per_pixel</span> <span class="c1"># nodes, scaled</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">offset</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">mesh_n</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">offset</span><span class="p">)</span> <span class="c1"># add the offset, if any</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">tmpresultfn</span><span class="o">+</span><span class="s1">&#39;.ele&#39;</span><span class="p">,</span> <span class="n">skip_header</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">mesh_e</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]</span> <span class="c1"># one-based elements, where the last column is the region label</span>
+    <span class="c1"># remove the tmpfiles</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">tmppolyfn</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">tmpresultfn</span><span class="o">+</span><span class="s1">&#39;.node&#39;</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">tmpresultfn</span><span class="o">+</span><span class="s1">&#39;.ele&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">mesh_e</span><span class="p">),</span> <span class="n">mesh_n</span></div>
+    
+
+<div class="viewcode-block" id="boundfaces"><a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.meshutils.boundfaces.html#nirfasterff.meshing.meshutils.boundfaces">[docs]</a><span class="k">def</span> <span class="nf">boundfaces</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">renumber</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Finds the boundary faces of a 3D tetrahedral mesh</span>
 
@@ -225,10 +334,7 @@
         <span class="n">new_points</span> <span class="o">=</span> <span class="n">nodes</span>
     <span class="k">return</span> <span class="n">new_faces</span><span class="p">,</span> <span class="n">new_points</span></div>
 
-
-<div class="viewcode-block" id="checkmesh3d_solid">
-<a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.meshutils.checkmesh3d_solid.html#nirfasterff.meshing.meshutils.checkmesh3d_solid">[docs]</a>
-<span class="k">def</span> <span class="nf">checkmesh3d_solid</span><span class="p">(</span><span class="n">ele</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="checkmesh3d_solid"><a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.meshutils.checkmesh3d_solid.html#nirfasterff.meshing.meshutils.checkmesh3d_solid">[docs]</a><span class="k">def</span> <span class="nf">checkmesh3d_solid</span><span class="p">(</span><span class="n">ele</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates and returns the quality metrics of the tetrahedrons in a 3D tetrahedral mesh</span>
 <span class="sd">    </span>
@@ -309,10 +415,7 @@
     
     <span class="k">return</span> <span class="n">vol</span><span class="p">,</span> <span class="n">vol_ratio</span><span class="p">,</span> <span class="n">zeroflag</span><span class="p">,</span> <span class="n">faceflag</span></div>
 
-
-<div class="viewcode-block" id="checkmesh3d_surface">
-<a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.meshutils.checkmesh3d_surface.html#nirfasterff.meshing.meshutils.checkmesh3d_surface">[docs]</a>
-<span class="k">def</span> <span class="nf">checkmesh3d_surface</span><span class="p">(</span><span class="n">ele</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="checkmesh3d_surface"><a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.meshutils.checkmesh3d_surface.html#nirfasterff.meshing.meshutils.checkmesh3d_surface">[docs]</a><span class="k">def</span> <span class="nf">checkmesh3d_surface</span><span class="p">(</span><span class="n">ele</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates and returns the quality metrics of the triangles in a 3D surface mesh</span>
 <span class="sd">    </span>
@@ -399,10 +502,7 @@
     
     <span class="k">return</span> <span class="n">q_radius_ratio</span><span class="p">,</span> <span class="n">q_area_ratio</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">zeroflag</span><span class="p">,</span> <span class="n">edgeflag</span></div>
 
-
-<div class="viewcode-block" id="CheckMesh3D">
-<a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.meshutils.CheckMesh3D.html#nirfasterff.meshing.meshutils.CheckMesh3D">[docs]</a>
-<span class="k">def</span> <span class="nf">CheckMesh3D</span><span class="p">(</span><span class="n">elements</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="CheckMesh3D"><a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.meshutils.CheckMesh3D.html#nirfasterff.meshing.meshutils.CheckMesh3D">[docs]</a><span class="k">def</span> <span class="nf">CheckMesh3D</span><span class="p">(</span><span class="n">elements</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Main function that calculates and checks the quality of a 3D mesh, which can be either a solid or surface mesh</span>
 <span class="sd">    </span>
@@ -529,10 +629,7 @@
     
     <span class="k">return</span> <span class="n">vol</span><span class="p">,</span> <span class="n">vol_ratio</span><span class="p">,</span> <span class="n">q_area</span><span class="p">,</span> <span class="n">status_solid</span><span class="p">,</span> <span class="n">status_surface</span></div>
 
-
-<div class="viewcode-block" id="CheckMesh2D">
-<a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.meshutils.CheckMesh2D.html#nirfasterff.meshing.meshutils.CheckMesh2D">[docs]</a>
-<span class="k">def</span> <span class="nf">CheckMesh2D</span><span class="p">(</span><span class="n">elements</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="CheckMesh2D"><a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.meshutils.CheckMesh2D.html#nirfasterff.meshing.meshutils.CheckMesh2D">[docs]</a><span class="k">def</span> <span class="nf">CheckMesh2D</span><span class="p">(</span><span class="n">elements</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Main function that calculates and checks the quality of a 2D mesh</span>
 
@@ -611,7 +708,6 @@
         <span class="n">flag</span> <span class="o">=</span> <span class="n">flag</span> <span class="o">|</span> <span class="mi">4</span>
     
     <span class="k">return</span> <span class="n">flag</span><span class="p">,</span> <span class="n">q_radius_ratio</span><span class="p">,</span> <span class="n">area</span></div>
-
 </pre></div>
 
            </div>

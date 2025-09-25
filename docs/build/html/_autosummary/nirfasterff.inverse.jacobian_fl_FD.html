@@ -1,21 +1,21 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../">
+<html class="writer-html5" lang="en">
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nirfasterff.inverse.jacobian_fl_FD &mdash; NIRFASTerFF 1.1.1 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+  <title>nirfasterff.inverse.jacobian_fl_FD &mdash; NIRFASTerFF 1.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=92fd9be5" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=58fbf978"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=4c8675c2"></script>
+      <script src="../_static/doctools.js?v=888ff710"></script>
+      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -95,10 +95,10 @@
            <div itemprop="articleBody">
              
   <section id="nirfasterff-inverse-jacobian-fl-fd">
-<h1>nirfasterff.inverse.jacobian_fl_FD<a class="headerlink" href="#nirfasterff-inverse-jacobian-fl-fd" title="Link to this heading"></a></h1>
+<h1>nirfasterff.inverse.jacobian_fl_FD<a class="headerlink" href="#nirfasterff-inverse-jacobian-fl-fd" title="Permalink to this heading"></a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="nirfasterff.inverse.jacobian_fl_FD">
-<span class="sig-prename descclassname"><span class="pre">nirfasterff.inverse.</span></span><span class="sig-name descname"><span class="pre">jacobian_fl_FD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">utils.get_solver()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">utils.SolverOptions()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/inverse.html#jacobian_fl_FD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.inverse.jacobian_fl_FD" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">nirfasterff.inverse.</span></span><span class="sig-name descname"><span class="pre">jacobian_fl_FD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">utils.get_solver()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">utils.SolverOptions()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/inverse.html#jacobian_fl_FD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.inverse.jacobian_fl_FD" title="Permalink to this definition"></a></dt>
 <dd><p>Calculates the frequency-domain fluorescence Jacobian matrix using the adjoint method</p>
 <p>The Jacobian is structured as, suppose we have M channels and N voxels:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">d_real</span><span class="p">{</span><span class="n">A_1</span><span class="p">}</span><span class="o">/</span><span class="n">d_gamma_1</span><span class="p">,</span> <span class="n">d_real</span><span class="p">{</span><span class="n">A_1</span><span class="p">}</span><span class="o">/</span><span class="n">d_gamma_2</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="n">d_real</span><span class="p">{</span><span class="n">A_1</span><span class="p">}</span><span class="o">/</span><span class="n">d_gamma_</span><span class="p">{</span><span class="n">N</span><span class="p">},</span> <span class="n">d_real</span><span class="p">{</span><span class="n">A_1</span><span class="p">}</span><span class="o">/</span><span class="n">dtau_1</span><span class="p">,</span> <span class="n">d_real</span><span class="p">{</span><span class="n">A_1</span><span class="p">}</span><span class="o">/</span><span class="n">dtau_2</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="n">d_real</span><span class="p">{</span><span class="n">A_1</span><span class="p">}</span><span class="o">/</span><span class="n">dtau_</span><span class="p">{</span><span class="n">N</span><span class="p">}]</span>
@@ -155,7 +155,7 @@ gamma_j = mesh.eta[j]*mesh.muaf[j]</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, Jiaming Cao, MILAB@UoB.</p>
+    <p>&#169; Copyright 2025, Jiaming Cao, MILAB@UoB.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

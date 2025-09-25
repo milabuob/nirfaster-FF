@@ -1,4 +1,4 @@
-nirfasterff.base.fluor\_mesh.fluormesh
+﻿nirfasterff.base.fluor\_mesh.fluormesh
 ======================================
 
 .. currentmodule:: nirfasterff.base.fluor_mesh
@@ -23,8 +23,10 @@ nirfasterff.base.fluor\_mesh.fluormesh
       ~fluormesh.femdata_tpsf
       ~fluormesh.from_copy
       ~fluormesh.from_file
+      ~fluormesh.from_image
       ~fluormesh.from_mat
       ~fluormesh.from_solid
+      ~fluormesh.from_triangle
       ~fluormesh.from_volume
       ~fluormesh.gen_intmat
       ~fluormesh.isvol

@@ -1,21 +1,21 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../">
+<html class="writer-html5" lang="en">
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nirfasterff.base.data.meshvol &mdash; NIRFASTerFF 1.1.1 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+  <title>nirfasterff.base.data.meshvol &mdash; NIRFASTerFF 1.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=92fd9be5" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=58fbf978"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=4c8675c2"></script>
+      <script src="../_static/doctools.js?v=888ff710"></script>
+      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -102,16 +102,16 @@
            <div itemprop="articleBody">
              
   <section id="nirfasterff-base-data-meshvol">
-<h1>nirfasterff.base.data.meshvol<a class="headerlink" href="#nirfasterff-base-data-meshvol" title="Link to this heading"></a></h1>
+<h1>nirfasterff.base.data.meshvol<a class="headerlink" href="#nirfasterff-base-data-meshvol" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="nirfasterff.base.data.meshvol">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nirfasterff.base.data.</span></span><span class="sig-name descname"><span class="pre">meshvol</span></span><a class="reference internal" href="../_modules/nirfasterff/base/data.html#meshvol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.data.meshvol" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nirfasterff.base.data.</span></span><span class="sig-name descname"><span class="pre">meshvol</span></span><a class="reference internal" href="../_modules/nirfasterff/base/data.html#meshvol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.data.meshvol" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Small class holding the information needed for converting between mesh and volumetric space. Values calculated by nirfasterff.base.*mesh.gen_intmat</p>
 <p>Note that the volumetric space, defined by xgrid, ygrid, and zgrid (empty for 2D mesh), must be uniform</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.data.meshvol.xgrid">
-<span class="sig-name descname"><span class="pre">xgrid</span></span><a class="headerlink" href="#nirfasterff.base.data.meshvol.xgrid" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">xgrid</span></span><a class="headerlink" href="#nirfasterff.base.data.meshvol.xgrid" title="Permalink to this definition"></a></dt>
 <dd><p>x grid of the volumetric space. In mm</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -122,7 +122,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.data.meshvol.ygrid">
-<span class="sig-name descname"><span class="pre">ygrid</span></span><a class="headerlink" href="#nirfasterff.base.data.meshvol.ygrid" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">ygrid</span></span><a class="headerlink" href="#nirfasterff.base.data.meshvol.ygrid" title="Permalink to this definition"></a></dt>
 <dd><p>y grid of the volumetric space. In mm</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -133,7 +133,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.data.meshvol.zgrid">
-<span class="sig-name descname"><span class="pre">zgrid</span></span><a class="headerlink" href="#nirfasterff.base.data.meshvol.zgrid" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">zgrid</span></span><a class="headerlink" href="#nirfasterff.base.data.meshvol.zgrid" title="Permalink to this definition"></a></dt>
 <dd><p>z grid of the volumetric space. In mm. Empty for 2D meshes</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -144,7 +144,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.data.meshvol.mesh2grid">
-<span class="sig-name descname"><span class="pre">mesh2grid</span></span><a class="headerlink" href="#nirfasterff.base.data.meshvol.mesh2grid" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">mesh2grid</span></span><a class="headerlink" href="#nirfasterff.base.data.meshvol.mesh2grid" title="Permalink to this definition"></a></dt>
 <dd><p>matrix converting a vector in mesh space to volumetric space, done by mesh2grid.dot(data)</p>
 <p>The result is vectorized in ‘F’ (Matlab) order</p>
 <p>Size: (len(xgrid)*len(ygrid)*len(zgrid), NNodes)</p>
@@ -157,7 +157,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.data.meshvol.gridinmesh">
-<span class="sig-name descname"><span class="pre">gridinmesh</span></span><a class="headerlink" href="#nirfasterff.base.data.meshvol.gridinmesh" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">gridinmesh</span></span><a class="headerlink" href="#nirfasterff.base.data.meshvol.gridinmesh" title="Permalink to this definition"></a></dt>
 <dd><p>indices (one-based) of data points in the volumetric space that are within the mesh space, vectorized in ‘F’ order.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -168,7 +168,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.data.meshvol.res">
-<span class="sig-name descname"><span class="pre">res</span></span><a class="headerlink" href="#nirfasterff.base.data.meshvol.res" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">res</span></span><a class="headerlink" href="#nirfasterff.base.data.meshvol.res" title="Permalink to this definition"></a></dt>
 <dd><p>resolution in x, y, z (if 3D) direction, in mm. Size (2,) or (3,)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -179,7 +179,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.data.meshvol.grid2mesh">
-<span class="sig-name descname"><span class="pre">grid2mesh</span></span><a class="headerlink" href="#nirfasterff.base.data.meshvol.grid2mesh" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">grid2mesh</span></span><a class="headerlink" href="#nirfasterff.base.data.meshvol.grid2mesh" title="Permalink to this definition"></a></dt>
 <dd><p>matrix converting volumetric data, vectorized in ‘F’ order, to mesh space. Done by grid2mesh.dot(data)</p>
 <p>Size (Nnodes, len(xgrid)*len(ygrid)*len(ygrid))</p>
 <dl class="field-list simple">
@@ -191,7 +191,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.data.meshvol.meshingrid">
-<span class="sig-name descname"><span class="pre">meshingrid</span></span><a class="headerlink" href="#nirfasterff.base.data.meshvol.meshingrid" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">meshingrid</span></span><a class="headerlink" href="#nirfasterff.base.data.meshvol.meshingrid" title="Permalink to this definition"></a></dt>
 <dd><p>indices (one-based) of data points in the mesh space that are within the volumetric space</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -202,7 +202,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nirfasterff.base.data.meshvol.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/data.html#meshvol.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.data.meshvol.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/data.html#meshvol.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.data.meshvol.__init__" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <p class="rubric">Methods</p>
@@ -228,7 +228,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, Jiaming Cao, MILAB@UoB.</p>
+    <p>&#169; Copyright 2025, Jiaming Cao, MILAB@UoB.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

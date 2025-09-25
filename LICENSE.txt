@@ -28,3 +28,13 @@
 
   LGPL: http://www.gnu.org/copyleft/lesser.html
   GPL: http://www.gnu.org/copyleft/gpl.html
+  
+## TRIANGLE:
+
+  Jonathan Richard Shewchuk, Triangle: Engineering a 2D Quality Mesh Generator and Delaunay Triangulator, in ``Applied Computational Geometry: Towards Geometric Engineering'' (Ming C. Lin and Dinesh Manocha, editors), volume 1148 of Lecture Notes in Computer Science, pages 203-222, Springer-Verlag, Berlin, May 1996.
+
+  http://www.cs.cmu.edu/~quake/triangle.html
+  
+  Please note that although Triangle is freely available, it is copyrighted by the author and may not be sold or included in commercial products without a license.
+  
+  

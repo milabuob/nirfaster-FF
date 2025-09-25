@@ -1,4 +1,4 @@
-nirfasterff.base.dcs\_mesh.dcsmesh
+﻿nirfasterff.base.dcs\_mesh.dcsmesh
 ==================================
 
 .. currentmodule:: nirfasterff.base.dcs_mesh
@@ -21,8 +21,10 @@ nirfasterff.base.dcs\_mesh.dcsmesh
       ~dcsmesh.femdata
       ~dcsmesh.from_copy
       ~dcsmesh.from_file
+      ~dcsmesh.from_image
       ~dcsmesh.from_mat
       ~dcsmesh.from_solid
+      ~dcsmesh.from_triangle
       ~dcsmesh.from_volume
       ~dcsmesh.gen_intmat
       ~dcsmesh.isvol

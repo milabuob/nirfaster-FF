@@ -1,21 +1,21 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../">
+<html class="writer-html5" lang="en">
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nirfasterff.base.data.DCSdata &mdash; NIRFASTerFF 1.1.1 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+  <title>nirfasterff.base.data.DCSdata &mdash; NIRFASTerFF 1.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=92fd9be5" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=58fbf978"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=4c8675c2"></script>
+      <script src="../_static/doctools.js?v=888ff710"></script>
+      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -102,15 +102,15 @@
            <div itemprop="articleBody">
              
   <section id="nirfasterff-base-data-dcsdata">
-<h1>nirfasterff.base.data.DCSdata<a class="headerlink" href="#nirfasterff-base-data-dcsdata" title="Link to this heading"></a></h1>
+<h1>nirfasterff.base.data.DCSdata<a class="headerlink" href="#nirfasterff-base-data-dcsdata" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="nirfasterff.base.data.DCSdata">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nirfasterff.base.data.</span></span><span class="sig-name descname"><span class="pre">DCSdata</span></span><a class="reference internal" href="../_modules/nirfasterff/base/data.html#DCSdata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.data.DCSdata" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nirfasterff.base.data.</span></span><span class="sig-name descname"><span class="pre">DCSdata</span></span><a class="reference internal" href="../_modules/nirfasterff/base/data.html#DCSdata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.data.DCSdata" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class holding DCS data.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.data.DCSdata.phi">
-<span class="sig-name descname"><span class="pre">phi</span></span><a class="headerlink" href="#nirfasterff.base.data.DCSdata.phi" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">phi</span></span><a class="headerlink" href="#nirfasterff.base.data.DCSdata.phi" title="Permalink to this definition"></a></dt>
 <dd><p>steady-state fluence from each source. If mesh contains non-tempty field vol, this will be represented on the grid.</p>
 <p>Last dimension has the size of the number of sources</p>
 <p>This is the same as nirfasterff.base.FDdata.phi, when modulation frequency is zero</p>
@@ -123,7 +123,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.data.DCSdata.link">
-<span class="sig-name descname"><span class="pre">link</span></span><a class="headerlink" href="#nirfasterff.base.data.DCSdata.link" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">link</span></span><a class="headerlink" href="#nirfasterff.base.data.DCSdata.link" title="Permalink to this definition"></a></dt>
 <dd><p>Defining all the channels (i.e. source-detector pairs). Copied from mesh.link</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -134,7 +134,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.data.DCSdata.amplitude">
-<span class="sig-name descname"><span class="pre">amplitude</span></span><a class="headerlink" href="#nirfasterff.base.data.DCSdata.amplitude" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">amplitude</span></span><a class="headerlink" href="#nirfasterff.base.data.DCSdata.amplitude" title="Permalink to this definition"></a></dt>
 <dd><p>Steady-state amplitude of each channel. Size (NChannel,)</p>
 <p>This is the same as nirfasterff.base.FDdata.amplitude, when modulation frequency is zero</p>
 <dl class="field-list simple">
@@ -146,7 +146,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.data.DCSdata.tau_DCS">
-<span class="sig-name descname"><span class="pre">tau_DCS</span></span><a class="headerlink" href="#nirfasterff.base.data.DCSdata.tau_DCS" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">tau_DCS</span></span><a class="headerlink" href="#nirfasterff.base.data.DCSdata.tau_DCS" title="Permalink to this definition"></a></dt>
 <dd><p>time vector in seconds</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -157,7 +157,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.data.DCSdata.phi_DCS">
-<span class="sig-name descname"><span class="pre">phi_DCS</span></span><a class="headerlink" href="#nirfasterff.base.data.DCSdata.phi_DCS" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">phi_DCS</span></span><a class="headerlink" href="#nirfasterff.base.data.DCSdata.phi_DCS" title="Permalink to this definition"></a></dt>
 <dd><p>G1 in medium from each source at each time step . If mesh contains non-tempty field vol, this will be represented on the grid</p>
 <p>shape[-1] equals length of tau_DCS, and shape[-2] equals number of sources</p>
 <dl class="field-list simple">
@@ -169,7 +169,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.data.DCSdata.G1_DCS">
-<span class="sig-name descname"><span class="pre">G1_DCS</span></span><a class="headerlink" href="#nirfasterff.base.data.DCSdata.G1_DCS" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">G1_DCS</span></span><a class="headerlink" href="#nirfasterff.base.data.DCSdata.G1_DCS" title="Permalink to this definition"></a></dt>
 <dd><p>G1 curve as is calculated from the correlation diffusion equation. Size: (NChannel, NTime)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -180,7 +180,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.data.DCSdata.g1_DCS">
-<span class="sig-name descname"><span class="pre">g1_DCS</span></span><a class="headerlink" href="#nirfasterff.base.data.DCSdata.g1_DCS" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">g1_DCS</span></span><a class="headerlink" href="#nirfasterff.base.data.DCSdata.g1_DCS" title="Permalink to this definition"></a></dt>
 <dd><p>g1 curve, i.e. G1 normalized by amplitudes. Size: (NChannel, NTime)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -191,7 +191,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.data.DCSdata.vol">
-<span class="sig-name descname"><span class="pre">vol</span></span><a class="headerlink" href="#nirfasterff.base.data.DCSdata.vol" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">vol</span></span><a class="headerlink" href="#nirfasterff.base.data.DCSdata.vol" title="Permalink to this definition"></a></dt>
 <dd><p>Information needed to convert between volumetric and mesh space. Copied from mesh.vol</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -202,7 +202,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nirfasterff.base.data.DCSdata.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/data.html#DCSdata.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.data.DCSdata.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/data.html#DCSdata.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.data.DCSdata.__init__" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <p class="rubric">Methods</p>
@@ -224,7 +224,7 @@
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="nirfasterff.base.data.DCSdata.isvol">
-<span class="sig-name descname"><span class="pre">isvol</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/data.html#DCSdata.isvol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.data.DCSdata.isvol" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">isvol</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/data.html#DCSdata.isvol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.data.DCSdata.isvol" title="Permalink to this definition"></a></dt>
 <dd><p>Checks if data is in volumetric space.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -238,7 +238,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nirfasterff.base.data.DCSdata.togrid">
-<span class="sig-name descname"><span class="pre">togrid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/data.html#DCSdata.togrid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.data.DCSdata.togrid" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">togrid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/data.html#DCSdata.togrid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.data.DCSdata.togrid" title="Permalink to this definition"></a></dt>
 <dd><p>Convert data to volumetric space as is defined in mesh.vol. If it is empty, the function does nothing.</p>
 <p>If data is already in volumetric space, function casts data to the new volumetric space</p>
 <p>CAUTION: This OVERRIDES the fields phi and phi_DCS</p>
@@ -254,7 +254,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nirfasterff.base.data.DCSdata.tomesh">
-<span class="sig-name descname"><span class="pre">tomesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/data.html#DCSdata.tomesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.data.DCSdata.tomesh" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">tomesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/data.html#DCSdata.tomesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.data.DCSdata.tomesh" title="Permalink to this definition"></a></dt>
 <dd><p>Convert data back to mesh space using information defined in mesh.vol. If data.vol is empty, the function does nothing.</p>
 <p>CAUTION: This OVERRIDES fields phi and phi_DCS</p>
 <dl class="field-list simple">
@@ -282,7 +282,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, Jiaming Cao, MILAB@UoB.</p>
+    <p>&#169; Copyright 2025, Jiaming Cao, MILAB@UoB.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
