@@ -20,8 +20,9 @@ Packages required:
 - Scipy
 - psutil
 - matplotlib
+- scikit-image (*new from version 1.2*)
 
-If you are using a Anaconda (or its alike) Python, they should already be available.
+If you are using a Anaconda Python, they should already be available.
 
 ### Priority of development
 
@@ -95,8 +96,6 @@ The head model is adapted from the examples in the [NeuroDOT toolbox](https://gi
 
 You may still continue to use the old Matlab version, available [here](https://github.com/nirfaster/NIRFASTer). However, please be noted that we are slowly dropping support, which means that should you run into any bugs, we may not have the capacity to fix it for you.
 
-
-
 ## The Micro version
 
 A compact version, supporting only CW/FD forward modeling on standard mesh is available [here](https://github.com/milabuob/nirfaster-uFF)).
@@ -139,7 +138,7 @@ A compact version, supporting only CW/FD forward modeling on standard mesh is av
 
 The reason for the Mac issue: Mac automatically attaches a quarantine attribute to downloaded files, and the marked files will be checked by the Gatekeeper. Somehow (file I/O, possibly), Apple's gatekeeper is not very happy about my code and refuses to run. This checking can be bypassed by manually removing the quarantine attribute. You can view this by `ls -l@`, and you should see the `com.apple.quarantine` thing.
 
-Speed-critically functions are packed in precompiled libraries, nirfasterff_cpu and nirfasterff_cuda. The Linux and Mac versions are statically linked so there is only one file for each library plus the mesher, and no extra dependency is required. Only limited static linking could be used on Windows (e.g. the CUDA libraries), unfortunately, and consequently the necessary DLLs are also included. CUDA 12.4 was used to compile this version.
+Speed-critically functions are packed in precompiled libraries, nirfasterff_cpu and nirfasterff_cuda. The Linux and Mac versions are statically linked so there is only one file for each library plus the mesher, and no extra dependency is required. Only limited static linking could be used on Windows (e.g. the CUDA libraries), unfortunately, and consequently the necessary DLLs are also included. CUDA 12.9 was used to compile this version, and we expect to stick with 12.9 for some time, because it is the last version that support sm50 GPUs.
 
 #### Potential pitfalls:
 
