@@ -28,6 +28,6 @@ nirfasterff.forward
    :template: custom-module-template.rst                 
    :recursive:
 
-   nirfasterff.forward.analytical
-   nirfasterff.forward.femdata
+   analytical
+   femdata
 

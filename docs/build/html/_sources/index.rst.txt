@@ -36,6 +36,8 @@ References
 ----------
 If you use our package, please cite,
 
+J. Cao, S. Montero-Hernandez, R.C. Mesquita, A.T. Eggebrecht, and H. Dehghani, “NIRFASTerFF: An accessible, cross-platform python package for fast photon modeling,” Journal of Biomedical Optics, vol. 30, no. 11 (2025) `doi:10.1117/1.jbo.30.11.115001 <https://doi.org/10.1117/1.jbo.30.11.115001>`_
+
 H. Dehghani, M.E. Eames, P.K. Yalavarthy, S.C. Davis, S. Srinivasan, C.M. Carpenter, B.W. Pogue, and K.D. Paulsen, "Near infrared optical tomography using NIRFAST: Algorithm for numerical model and image reconstruction," Communications in Numerical Methods in Engineering, vol. 25, 711-732 (2009) `doi:10.1002/cnm.1162 <https://doi.org/10.1002/cnm.1162>`_
 
 API documentation

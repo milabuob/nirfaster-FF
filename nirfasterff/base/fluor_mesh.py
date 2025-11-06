@@ -896,7 +896,7 @@ class fluormesh:
         # save nodes
         np.savetxt(filename+'.node', np.c_[self.bndvtx, self.nodes], fmt='%.16g', delimiter='\t')
         # save elements
-        np.savetxt(filename+'.elem', self.elements, fmt='%g', delimiter='\t')
+        np.savetxt(filename+'.elem', self.elements, fmt='%d', delimiter='\t')
         # save params
         kappax = 1.0/(3.0*(self.muax + self.musx))
         kappam = 1.0/(3.0*(self.muam + self.musm))

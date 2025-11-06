@@ -1,21 +1,21 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nirfasterff.utils.ConvergenceInfo &mdash; NIRFASTerFF 1.2.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=92fd9be5" />
+  <title>nirfasterff.utils.ConvergenceInfo &mdash; NIRFASTerFF 1.2.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=4c8675c2"></script>
-      <script src="../_static/doctools.js?v=888ff710"></script>
-      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../_static/documentation_options.js?v=ca842793"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -104,16 +104,16 @@
            <div itemprop="articleBody">
              
   <section id="nirfasterff-utils-convergenceinfo">
-<h1>nirfasterff.utils.ConvergenceInfo<a class="headerlink" href="#nirfasterff-utils-convergenceinfo" title="Permalink to this heading"></a></h1>
+<h1>nirfasterff.utils.ConvergenceInfo<a class="headerlink" href="#nirfasterff-utils-convergenceinfo" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="nirfasterff.utils.ConvergenceInfo">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nirfasterff.utils.</span></span><span class="sig-name descname"><span class="pre">ConvergenceInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/utils.html#ConvergenceInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.utils.ConvergenceInfo" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nirfasterff.utils.</span></span><span class="sig-name descname"><span class="pre">ConvergenceInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/utils.html#ConvergenceInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.utils.ConvergenceInfo" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Convergence information of the FEM solvers. Only used internally as a return type of functions nirfasterff.math.get_field_*</p>
 <p>Constructed using the output of the internal C++ functions</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.utils.ConvergenceInfo.isConverged">
-<span class="sig-name descname"><span class="pre">isConverged</span></span><a class="headerlink" href="#nirfasterff.utils.ConvergenceInfo.isConverged" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">isConverged</span></span><a class="headerlink" href="#nirfasterff.utils.ConvergenceInfo.isConverged" title="Link to this definition"></a></dt>
 <dd><p>if solver converged to relative tolerance, for each rhs</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -124,7 +124,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.utils.ConvergenceInfo.isConvergedToAbsoluteTolerance">
-<span class="sig-name descname"><span class="pre">isConvergedToAbsoluteTolerance</span></span><a class="headerlink" href="#nirfasterff.utils.ConvergenceInfo.isConvergedToAbsoluteTolerance" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">isConvergedToAbsoluteTolerance</span></span><a class="headerlink" href="#nirfasterff.utils.ConvergenceInfo.isConvergedToAbsoluteTolerance" title="Link to this definition"></a></dt>
 <dd><p>if solver converged to absolute tolerance, for each rhs</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -135,7 +135,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.utils.ConvergenceInfo.iteration">
-<span class="sig-name descname"><span class="pre">iteration</span></span><a class="headerlink" href="#nirfasterff.utils.ConvergenceInfo.iteration" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">iteration</span></span><a class="headerlink" href="#nirfasterff.utils.ConvergenceInfo.iteration" title="Link to this definition"></a></dt>
 <dd><p>iterations taken to converge, for each rhs</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -146,7 +146,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.utils.ConvergenceInfo.residual">
-<span class="sig-name descname"><span class="pre">residual</span></span><a class="headerlink" href="#nirfasterff.utils.ConvergenceInfo.residual" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">residual</span></span><a class="headerlink" href="#nirfasterff.utils.ConvergenceInfo.residual" title="Link to this definition"></a></dt>
 <dd><p>final residual, for each rhs</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -157,7 +157,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nirfasterff.utils.ConvergenceInfo.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/utils.html#ConvergenceInfo.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.utils.ConvergenceInfo.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/utils.html#ConvergenceInfo.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.utils.ConvergenceInfo.__init__" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <p class="rubric">Methods</p>

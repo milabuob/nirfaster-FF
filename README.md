@@ -2,7 +2,7 @@
 
 Public repository for the **Fast and Furious** version of NIRFASTer
 
-- Version: 1.2.0
+- Version: 1.2.1
 - Authors: Jiaming Cao (University of Macau), MILab@UoB
 - License: BSD
 
@@ -76,9 +76,11 @@ xattr -c <your_library>.so
 
 ## Citation
 
-A paper on this package is currently in preperation. For now, if you are using our toolbox, please cite the original NIRFAST paper:
+If you are using our toolbox, please cite our papers:
 
-Dehghani, Hamid, et al. "Near infrared optical tomography using NIRFAST: Algorithm for numerical model and image reconstruction." Communications in numerical methods in engineering 25.6 (2009): 711-732. doi:10.1002/cnm.1162
+1. Cao, Jiaming, et al. “NIRFASTerFF: An accessible, cross-platform python package for fast photon modeling.” *Journal of Biomedical Optics*, vol. 30, no. 11, 2025, https://doi.org/10.1117/1.jbo.30.11.115001.
+
+2. Dehghani, Hamid, et al. “Near Infrared Optical Tomography using NIRFAST: Algorithm for numerical model and image reconstruction.” *Communications in Numerical Methods in Engineering*, vol. 25, no. 6, 2008, pp. 711–732, https://doi.org/10.1002/cnm.1162.
 
 ## Documentation
 
@@ -101,6 +103,10 @@ You may still continue to use the old Matlab version, available [here](https://g
 A compact version, supporting only CW/FD forward modeling on standard mesh is available [here](https://github.com/milabuob/nirfaster-uFF)).
 
 ## Changelog
+
+1.2.1
+
+- Fixed a bug in mesh.save_nirfast (all mesh types), where large numbers in mesh.elements were incorrectly truncated. (Issue #1)
 
 1.2.0
 

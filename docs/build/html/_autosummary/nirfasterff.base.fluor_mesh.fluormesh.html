@@ -1,21 +1,21 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nirfasterff.base.fluor_mesh.fluormesh &mdash; NIRFASTerFF 1.2.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=92fd9be5" />
+  <title>nirfasterff.base.fluor_mesh.fluormesh &mdash; NIRFASTerFF 1.2.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=4c8675c2"></script>
-      <script src="../_static/doctools.js?v=888ff710"></script>
-      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../_static/documentation_options.js?v=ca842793"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -95,15 +95,15 @@
            <div itemprop="articleBody">
              
   <section id="nirfasterff-base-fluor-mesh-fluormesh">
-<h1>nirfasterff.base.fluor_mesh.fluormesh<a class="headerlink" href="#nirfasterff-base-fluor-mesh-fluormesh" title="Permalink to this heading"></a></h1>
+<h1>nirfasterff.base.fluor_mesh.fluormesh<a class="headerlink" href="#nirfasterff-base-fluor-mesh-fluormesh" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nirfasterff.base.fluor_mesh.</span></span><span class="sig-name descname"><span class="pre">fluormesh</span></span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nirfasterff.base.fluor_mesh.</span></span><span class="sig-name descname"><span class="pre">fluormesh</span></span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Main class for fluorescence mesh. The methods should cover most of the commonly-used functionalities</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.name">
-<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.name" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.name" title="Link to this definition"></a></dt>
 <dd><p>name of the mesh. Default: ‘EmptyMesh’</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -114,7 +114,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.nodes">
-<span class="sig-name descname"><span class="pre">nodes</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.nodes" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">nodes</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.nodes" title="Link to this definition"></a></dt>
 <dd><p>locations of nodes in the mesh. Unit: mm. Size (NNodes, dim)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -125,7 +125,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.bndvtx">
-<span class="sig-name descname"><span class="pre">bndvtx</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.bndvtx" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">bndvtx</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.bndvtx" title="Link to this definition"></a></dt>
 <dd><p>indicator of whether a node is at boundary (1) or internal (0). Size (NNodes,)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -136,7 +136,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.type">
-<span class="sig-name descname"><span class="pre">type</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.type" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">type</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.type" title="Link to this definition"></a></dt>
 <dd><p>type of the mesh. It is always ‘fluor’.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -147,7 +147,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.muax">
-<span class="sig-name descname"><span class="pre">muax</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.muax" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">muax</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.muax" title="Link to this definition"></a></dt>
 <dd><p>intrisic absorption coefficient (mm^-1) at excitation wavelength at each node. Size (NNodes,)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -158,7 +158,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.muam">
-<span class="sig-name descname"><span class="pre">muam</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.muam" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">muam</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.muam" title="Link to this definition"></a></dt>
 <dd><p>intrisic absorption coefficient (mm^-1) at emission wavelength at each node. Size (NNodes,)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -169,7 +169,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.muaf">
-<span class="sig-name descname"><span class="pre">muaf</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.muaf" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">muaf</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.muaf" title="Link to this definition"></a></dt>
 <dd><p>intrisic absorption coefficient (mm^-1) of the fluorophores at each node. Size (NNodes,)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -180,7 +180,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.kappax">
-<span class="sig-name descname"><span class="pre">kappax</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.kappax" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">kappax</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.kappax" title="Link to this definition"></a></dt>
 <dd><p>intrisic diffusion coefficient (mm) at excitation wavelength at each node. Size (NNodes,). Defined as 1/(3*(muax + musx))</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -191,7 +191,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.kappam">
-<span class="sig-name descname"><span class="pre">kappam</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.kappam" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">kappam</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.kappam" title="Link to this definition"></a></dt>
 <dd><p>intrisic diffusion coefficient (mm) at emission wavelength at each node. Size (NNodes,). Defined as 1/(3*(muam + musm))</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -202,7 +202,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.ri">
-<span class="sig-name descname"><span class="pre">ri</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.ri" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">ri</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.ri" title="Link to this definition"></a></dt>
 <dd><p>refractive index at each node. Size (NNodes,)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -213,7 +213,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.musx">
-<span class="sig-name descname"><span class="pre">musx</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.musx" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">musx</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.musx" title="Link to this definition"></a></dt>
 <dd><p>intrisic reduced scattering coefficient (mm^-1) at excitation wavelength at each node. Size (NNodes,)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -224,7 +224,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.musm">
-<span class="sig-name descname"><span class="pre">musm</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.musm" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">musm</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.musm" title="Link to this definition"></a></dt>
 <dd><p>intrisic reduced scattering coefficient (mm^-1) at emission wavelength at each node. Size (NNodes,)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -235,7 +235,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.eta">
-<span class="sig-name descname"><span class="pre">eta</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.eta" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">eta</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.eta" title="Link to this definition"></a></dt>
 <dd><p>quantum efficiency (a.u.) of the fluorophores. Size (NNodes,)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -246,7 +246,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.tau">
-<span class="sig-name descname"><span class="pre">tau</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.tau" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">tau</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.tau" title="Link to this definition"></a></dt>
 <dd><p>time coefficient (second) of the fluorophores. Size (NNodes,)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -257,7 +257,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.elements">
-<span class="sig-name descname"><span class="pre">elements</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.elements" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">elements</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.elements" title="Link to this definition"></a></dt>
 <dd><p>triangulation (tetrahedrons or triangles) of the mesh, Size (NElements, dim+1)</p>
 <p>Row i contains the indices of the nodes that form tetrahedron/triangle i</p>
 <p>One-based indexing for direct interoperatability with the Matlab version</p>
@@ -270,7 +270,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.region">
-<span class="sig-name descname"><span class="pre">region</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.region" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">region</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.region" title="Link to this definition"></a></dt>
 <dd><p>region labeling of each node. Starting from 1. Size (NNodes,)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -281,7 +281,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.source">
-<span class="sig-name descname"><span class="pre">source</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.source" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">source</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.source" title="Link to this definition"></a></dt>
 <dd><p>information about the sources</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -292,7 +292,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.meas">
-<span class="sig-name descname"><span class="pre">meas</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.meas" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">meas</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.meas" title="Link to this definition"></a></dt>
 <dd><p>information about the the detectors</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -303,7 +303,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.link">
-<span class="sig-name descname"><span class="pre">link</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.link" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">link</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.link" title="Link to this definition"></a></dt>
 <dd><p>list of source-detector pairs, i.e. channels. Size (NChannels,3)</p>
 <p>First column: source; Second column: detector; Third column: active (1) or not (0)</p>
 <dl class="field-list simple">
@@ -315,7 +315,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.c">
-<span class="sig-name descname"><span class="pre">c</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.c" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">c</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.c" title="Link to this definition"></a></dt>
 <dd><p>light speed (mm/sec) at each node.  Size (NNodes,). Defined as c0/ri, where c0 is the light speed in vacuum</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -326,7 +326,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.ksi">
-<span class="sig-name descname"><span class="pre">ksi</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.ksi" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">ksi</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.ksi" title="Link to this definition"></a></dt>
 <dd><p>photon fluence rate scale factor on the mesh-outside_mesh boundary as derived from Fresenel’s law. Size (NNodes,)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -337,7 +337,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.element_area">
-<span class="sig-name descname"><span class="pre">element_area</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.element_area" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">element_area</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.element_area" title="Link to this definition"></a></dt>
 <dd><p>volume/area (mm^3 or mm^2) of each element. Size (NElements,)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -348,7 +348,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.support">
-<span class="sig-name descname"><span class="pre">support</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.support" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">support</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.support" title="Link to this definition"></a></dt>
 <dd><p>total volume/area of all the elements each node belongs to. Size (NNodes,)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -359,7 +359,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.vol">
-<span class="sig-name descname"><span class="pre">vol</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.vol" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">vol</span></span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.vol" title="Link to this definition"></a></dt>
 <dd><p>object holding information for converting between mesh and volumetric space.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -370,7 +370,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.__init__" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <p class="rubric">Methods</p>
@@ -428,13 +428,13 @@
 <td><p>Set optical properties of the whole mesh, using information provided in prop.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#nirfasterff.base.fluor_mesh.fluormesh.touch_optodes" title="nirfasterff.base.fluor_mesh.fluormesh.touch_optodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">touch_optodes</span></code></a>()</p></td>
-<td><p>Moves all optodes (if non fixed) and recalculate the integration functions (i.e.</p></td>
+<td><p>Moves all optodes (if non fixed) and recalculate the integration functions (i.e. barycentric coordinates).</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.change_prop">
-<span class="sig-name descname"><span class="pre">change_prop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.change_prop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.change_prop" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">change_prop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.change_prop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.change_prop" title="Link to this definition"></a></dt>
 <dd><p>Change optical properties (muax, musxp, ri, muam, musmp, muaf, eta, and tau) at nodes specified in idx, and automatically change fields kappax, kappam, c, and ksi as well</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -451,7 +451,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.femdata">
-<span class="sig-name descname"><span class="pre">femdata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">freq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">utils.get_solver()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">utils.SolverOptions()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xflag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mmflag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flflag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.femdata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.femdata" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">femdata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">freq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">utils.get_solver()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">utils.SolverOptions()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xflag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mmflag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flflag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.femdata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.femdata" title="Link to this definition"></a></dt>
 <dd><p>Calculates fluences for each source using a FEM solver, and then the boudary measurables for each channel</p>
 <p>If <cite>mesh.vol</cite> is set, fluence data will be represented in volumetric space</p>
 <p>See <a class="reference internal" href="nirfasterff.forward.femdata.femdata_fl_CW.html#nirfasterff.forward.femdata.femdata_fl_CW" title="nirfasterff.forward.femdata.femdata_fl_CW"><code class="xref py py-func docutils literal notranslate"><span class="pre">femdata_fl_CW()</span></code></a> and <a class="reference internal" href="nirfasterff.forward.femdata.femdata_fl_FD.html#nirfasterff.forward.femdata.femdata_fl_FD" title="nirfasterff.forward.femdata.femdata_fl_FD"><code class="xref py py-func docutils literal notranslate"><span class="pre">femdata_fl_FD()</span></code></a> for details</p>
@@ -490,7 +490,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.femdata_moments">
-<span class="sig-name descname"><span class="pre">femdata_moments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_moments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">savefield</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">utils.get_solver()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">utils.SolverOptions()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.femdata_moments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.femdata_moments" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">femdata_moments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_moments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">savefield</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">utils.get_solver()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">utils.SolverOptions()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.femdata_moments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.femdata_moments" title="Link to this definition"></a></dt>
 <dd><p>Calculates TR moments at each location in the mesh for each source directly using Mellin transform, and then the boudary measurables for each channel</p>
 <p>This is done for both excitation and fluorescence emission</p>
 <p>If <cite>mesh.vol</cite> is set and <cite>savefield</cite> is set to <cite>True</cite>, internal moments data will be represented in volumetric space</p>
@@ -529,7 +529,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.femdata_tpsf">
-<span class="sig-name descname"><span class="pre">femdata_tpsf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tmax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">savefield</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beautify</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">utils.get_solver()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">utils.SolverOptions()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.femdata_tpsf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.femdata_tpsf" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">femdata_tpsf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tmax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">savefield</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beautify</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">utils.get_solver()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">utils.SolverOptions()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.femdata_tpsf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.femdata_tpsf" title="Link to this definition"></a></dt>
 <dd><p>Calculates TPSF at each location in the mesh for each source using a FEM solver, and then the boudary measurables for each channel</p>
 <p>This is done for both excitation and fluorescence emission</p>
 <p>If <cite>mesh.vol</cite> is set and <cite>savefield</cite> is set to <cite>True</cite>, internal TPSF data will be represented in volumetric space</p>
@@ -570,7 +570,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.from_copy">
-<span class="sig-name descname"><span class="pre">from_copy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.from_copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.from_copy" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">from_copy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.from_copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.from_copy" title="Link to this definition"></a></dt>
 <dd><p>Deep copy all fields from another mesh.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -584,7 +584,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.from_file">
-<span class="sig-name descname"><span class="pre">from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.from_file" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.from_file" title="Link to this definition"></a></dt>
 <dd><p>Read from classic NIRFAST mesh (ASCII) format, not checking the correctness of the loaded integration functions.</p>
 <p>All fields after loading should be directly compatible with Matlab version.</p>
 <dl class="field-list simple">
@@ -604,7 +604,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.from_image">
-<span class="sig-name descname"><span class="pre">from_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">utils.MeshingParams2D()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">det</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.from_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.from_image" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">from_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">utils.MeshingParams2D()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">det</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.from_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.from_image" title="Link to this definition"></a></dt>
 <dd><p>Construct mesh from a labeled 2D image using the Jonathan Shewchuk’s Triangle. Calls fluormesh.from_triangle after meshing step.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -636,7 +636,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.from_mat">
-<span class="sig-name descname"><span class="pre">from_mat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">varname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.from_mat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.from_mat" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">from_mat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">varname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.from_mat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.from_mat" title="Link to this definition"></a></dt>
 <dd><p>Read from Matlab .mat file that contains a NIRFASTer mesh struct. All fields copied as is without error checking.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -655,7 +655,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.from_solid">
-<span class="sig-name descname"><span class="pre">from_solid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ele</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">det</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.from_solid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.from_solid" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">from_solid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ele</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">det</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.from_solid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.from_solid" title="Link to this definition"></a></dt>
 <dd><p>Construct a NIRFASTer mesh from a 3D solid mesh generated by a mesher. Similar to the solidmesh2nirfast function in Matlab version.</p>
 <p>Can also set the optical properties and optodes if supplied</p>
 <dl class="field-list simple">
@@ -688,7 +688,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.from_triangle">
-<span class="sig-name descname"><span class="pre">from_triangle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">det</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.from_triangle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.from_triangle" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">from_triangle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">det</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.from_triangle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.from_triangle" title="Link to this definition"></a></dt>
 <dd><p>Construct a NIRFASTer mesh from a 2D triangularization.</p>
 <p>Can also set the optical properties and optodes if supplied</p>
 <dl class="field-list simple">
@@ -721,7 +721,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.from_volume">
-<span class="sig-name descname"><span class="pre">from_volume</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">utils.MeshingParams()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">det</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.from_volume"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.from_volume" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">from_volume</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">utils.MeshingParams()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">det</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.from_volume"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.from_volume" title="Link to this definition"></a></dt>
 <dd><p>Construct mesh from a segmented 3D volume using the built-in CGAL mesher. Calls fluormesh.from_solid after meshing step.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -754,7 +754,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.gen_intmat">
-<span class="sig-name descname"><span class="pre">gen_intmat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xgrid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ygrid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zgrid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.gen_intmat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.gen_intmat" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">gen_intmat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xgrid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ygrid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zgrid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.gen_intmat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.gen_intmat" title="Link to this definition"></a></dt>
 <dd><p>Calculate the information needed to convert data between mesh and volumetric space, specified by x, y, z (if 3D) grids.</p>
 <p>All grids must be uniform. The results will from a nirfasterff.base.meshvol object stored in field .vol</p>
 <p>If field .vol already exists, it will be calculated again, and a warning will be thrown</p>
@@ -777,7 +777,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.isvol">
-<span class="sig-name descname"><span class="pre">isvol</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.isvol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.isvol" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">isvol</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.isvol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.isvol" title="Link to this definition"></a></dt>
 <dd><p>Check if convertion matrices between mesh and volumetric spaces are calculated</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -791,7 +791,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.jacobian">
-<span class="sig-name descname"><span class="pre">jacobian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">freq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">utils.get_solver()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">utils.SolverOptions()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.jacobian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.jacobian" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">jacobian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">freq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">utils.get_solver()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">utils.SolverOptions()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.jacobian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.jacobian" title="Link to this definition"></a></dt>
 <dd><p>Calculates the Jacobian matrix</p>
 <p>Returns the Jacobian, direct field data, and the adjoint data</p>
 <p>Structure of the Jacobian is detailed in <a class="reference internal" href="nirfasterff.inverse.jacobian_fl_CW.html#nirfasterff.inverse.jacobian_fl_CW" title="nirfasterff.inverse.jacobian_fl_CW"><code class="xref py py-func docutils literal notranslate"><span class="pre">jacobian_fl_CW()</span></code></a> and <a class="reference internal" href="nirfasterff.inverse.jacobian_fl_FD.html#nirfasterff.inverse.jacobian_fl_FD" title="nirfasterff.inverse.jacobian_fl_FD"><code class="xref py py-func docutils literal notranslate"><span class="pre">jacobian_fl_FD()</span></code></a></p>
@@ -824,7 +824,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.save_nirfast">
-<span class="sig-name descname"><span class="pre">save_nirfast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.save_nirfast"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.save_nirfast" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">save_nirfast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.save_nirfast"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.save_nirfast" title="Link to this definition"></a></dt>
 <dd><p>Save mesh in the classic NIRFASTer ASCII format, which is directly compatible with the Matlab version</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -838,7 +838,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.set_prop">
-<span class="sig-name descname"><span class="pre">set_prop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prop</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.set_prop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.set_prop" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_prop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prop</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.set_prop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.set_prop" title="Link to this definition"></a></dt>
 <dd><p>Set optical properties of the whole mesh, using information provided in prop.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -859,7 +859,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.touch_optodes">
-<span class="sig-name descname"><span class="pre">touch_optodes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.touch_optodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.touch_optodes" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">touch_optodes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.touch_optodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.touch_optodes" title="Link to this definition"></a></dt>
 <dd><p>Moves all optodes (if non fixed) and recalculate the integration functions (i.e. barycentric coordinates).</p>
 <p>See <a class="reference internal" href="nirfasterff.base.optodes.optode.html#nirfasterff.base.optodes.optode.touch_sources" title="nirfasterff.base.optodes.optode.touch_sources"><code class="xref py py-func docutils literal notranslate"><span class="pre">touch_sources()</span></code></a> and <a class="reference internal" href="nirfasterff.base.optodes.optode.html#nirfasterff.base.optodes.optode.touch_detectors" title="nirfasterff.base.optodes.optode.touch_detectors"><code class="xref py py-func docutils literal notranslate"><span class="pre">touch_detectors()</span></code></a> for details</p>
 <dl class="field-list simple">

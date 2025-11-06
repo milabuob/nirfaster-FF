@@ -28,6 +28,6 @@ nirfasterff.lib
    :template: custom-module-template.rst                 
    :recursive:
 
-   nirfasterff.lib.nirfasterff_cpu
-   nirfasterff.lib.nirfasterff_cuda
+   nirfasterff_cpu
+   nirfasterff_cuda
 

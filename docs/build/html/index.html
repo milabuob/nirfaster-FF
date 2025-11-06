@@ -1,21 +1,21 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome to NIRFASTerFF’s documentation! &mdash; NIRFASTerFF 1.2.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=92fd9be5" />
+  <title>Welcome to NIRFASTerFF’s documentation! &mdash; NIRFASTerFF 1.2.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=4c8675c2"></script>
-      <script src="_static/doctools.js?v=888ff710"></script>
-      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="_static/documentation_options.js?v=ca842793"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -70,34 +70,37 @@
            <div itemprop="articleBody">
              
   <section id="welcome-to-nirfasterff-s-documentation">
-<h1>Welcome to NIRFASTerFF’s documentation!<a class="headerlink" href="#welcome-to-nirfasterff-s-documentation" title="Permalink to this heading"></a></h1>
+<h1>Welcome to NIRFASTerFF’s documentation!<a class="headerlink" href="#welcome-to-nirfasterff-s-documentation" title="Link to this heading"></a></h1>
 <p>NIRFAST was originally developed in 2001 as a MATLAB-based package used to model near-infrared light propagation through tissue and reconstruct images of optical biomarkers. At its core, NIRFAST is tool that does finite element modeling of the medium in which the light progagates, and calculates the fluence field by solving the diffusion equation.</p>
 <p>A fully overhauled version, titled NIRFASTer, was published in 2018, thanks to the work of Dr. Stanisław Wojtkiewicz. In the new version, GPU support was added to the key algorithms, giving the software a dramatic boost in performance. The CPU versions of the algorithms were re-implemented in C++ with multithreading enabled, and the performance was improved considerably.</p>
 <p>In this version, now titled NIRFASTerFF (Fast and Furious), the entire toolbox is re-written with Python as its interfacing language, while fully inter-operatable with the original Matlab version. The algorithms, running on both GPU and CPU, are yet again improved for even better performance.</p>
 <p>This manual is a detailed documentation of all APIs in the package. Please also refer to the demos to see how the package is used in difference applications.</p>
 <section id="summary-of-the-functionalities">
-<h2>Summary of the Functionalities<a class="headerlink" href="#summary-of-the-functionalities" title="Permalink to this heading"></a></h2>
+<h2>Summary of the Functionalities<a class="headerlink" href="#summary-of-the-functionalities" title="Link to this heading"></a></h2>
 <p>Mesh types supported: standard, fluorecence, and DCS</p>
 <p>FEM solver calculates: CW fluence, FD fluence, TPSF, direct TR moments for standard and fluorecence mesh, and G1/g1 curve for DCS mesh</p>
 <p>Analytical solution in semi-infinite medium for: CW/FD fluence, TPSF, and DCS G1/g1 curves</p>
 <p>Jacobian matrices: CW for standard, fluorescence, and DCS mesh, and FD for standard and fluorescence mesh</p>
 </section>
 <section id="link-to-the-matlab-version">
-<h2>Link to the Matlab Version<a class="headerlink" href="#link-to-the-matlab-version" title="Permalink to this heading"></a></h2>
+<h2>Link to the Matlab Version<a class="headerlink" href="#link-to-the-matlab-version" title="Link to this heading"></a></h2>
 <p>The original Matlab-based NIRFAST and NIRFASTer are still avaibable for download, but we will gradually drop our support for them.</p>
 <p><a class="reference external" href="https://github.com/nirfast-admin/NIRFAST">https://github.com/nirfast-admin/NIRFAST</a></p>
 <p><a class="reference external" href="https://github.com/nirfaster/NIRFASTer">https://github.com/nirfaster/NIRFASTer</a></p>
 </section>
 <section id="references">
-<h2>References<a class="headerlink" href="#references" title="Permalink to this heading"></a></h2>
+<h2>References<a class="headerlink" href="#references" title="Link to this heading"></a></h2>
 <p>If you use our package, please cite,</p>
+<ol class="upperalpha simple" start="10">
+<li><p>Cao, S. Montero-Hernandez, R.C. Mesquita, A.T. Eggebrecht, and H. Dehghani, “NIRFASTerFF: An accessible, cross-platform python package for fast photon modeling,” Journal of Biomedical Optics, vol. 30, no. 11 (2025) <a class="reference external" href="https://doi.org/10.1117/1.jbo.30.11.115001">doi:10.1117/1.jbo.30.11.115001</a></p></li>
+</ol>
 <ol class="upperalpha simple" start="8">
 <li><p>Dehghani, M.E. Eames, P.K. Yalavarthy, S.C. Davis, S. Srinivasan, C.M. Carpenter, B.W. Pogue, and K.D. Paulsen, “Near infrared optical tomography using NIRFAST: Algorithm for numerical model and image reconstruction,” Communications in Numerical Methods in Engineering, vol. 25, 711-732 (2009) <a class="reference external" href="https://doi.org/10.1002/cnm.1162">doi:10.1002/cnm.1162</a></p></li>
 </ol>
 </section>
 </section>
 <section id="api-documentation">
-<h1>API documentation<a class="headerlink" href="#api-documentation" title="Permalink to this heading"></a></h1>
+<h1>API documentation<a class="headerlink" href="#api-documentation" title="Link to this heading"></a></h1>
 <div class="toctree-wrapper compound">
 </div>
 </section>

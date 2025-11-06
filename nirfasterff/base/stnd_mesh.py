@@ -847,7 +847,7 @@ class stndmesh:
         # save nodes
         np.savetxt(filename+'.node', np.c_[self.bndvtx, self.nodes], fmt='%.16g', delimiter='\t')
         # save elements
-        np.savetxt(filename+'.elem', self.elements, fmt='%g', delimiter='\t')
+        np.savetxt(filename+'.elem', self.elements, fmt='%d', delimiter='\t')
         # save params
         kappa = 1.0/(3.0*(self.mua + self.mus))
         np.savetxt(filename+'.param', np.c_[self.mua, kappa, self.ri], fmt='%g',
