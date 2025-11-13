@@ -1196,16 +1196,16 @@ class fluormesh:
         ygrid = np.float64(np.array(ygrid).squeeze())
         zgrid = np.float64(np.array(zgrid).squeeze())
         tmp = np.diff(xgrid)
-        if np.any(tmp-tmp[0]):
+        if np.abs(tmp-tmp[0]).max()>1e-6:
             raise ValueError('xgrid must be uniform')
         tmp = np.diff(ygrid)
-        if np.any(tmp-tmp[0]):
+        if np.abs(tmp-tmp[0]).max()>1e-6:
             raise ValueError('ygrid must be uniform')
         if self.dimension ==3 and np.size(zgrid)==0:
             raise ValueError('zgrid must be non-empty for 3D mesh')
         if len(zgrid)>0:
             tmp = np.diff(zgrid)
-            if np.any(tmp-tmp[0]):
+            if np.abs(tmp-tmp[0]).max()>1e-6:
                 raise ValueError('zgrid must be uniform')
             
         if self.isvol():
