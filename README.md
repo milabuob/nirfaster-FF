@@ -24,6 +24,14 @@ Packages required:
 
 If you are using a Anaconda Python, they should already be available.
 
+### New changes in this dev branch
+
+- Fixed a bug in mesh generation code, where pixel sizes set in the meshing parameters were not used (see Issue #1, thanks @[Arthurzhou09](https://github.com/Arthurzhou09))
+
+- Fixed a bug in DCS forward modeling (both FEM and analytical), where refractive index was not used
+
+- Fixed a typo in the reconstruction demo, where noise variance was set lower than intended (should be calculated using the absolute value of the signal amplitude, but the absolute value was missed in the previous code)
+
 ### Priority of development
 
 The Python codes are exactly the same for all platforms and should have similar performance, but in terms of the CPU and GPU libraries, priority is given to Linux, most of the algorithm optimization is also done on Linux machines

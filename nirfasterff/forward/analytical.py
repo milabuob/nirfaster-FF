@@ -199,7 +199,7 @@ def semi_infinite_DCS(mua, musp, n, rho, aDb, wvlength, tvec, z=0, boundary = 'E
     Durduran et al, 2010, Rep. Prog. Phys. doi:10.1088/0034-4885/73/7/076701
 
     """
-    k = 2*np.pi / (wvlength/1e6)
+    k = 2*np.pi*n / (wvlength/1e6)
     mua2 = mua + 2*musp*k*k*aDb*tvec
     G1 = np.zeros(np.size(tvec))
     for i in range(np.size(tvec)):

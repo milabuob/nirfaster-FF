@@ -50,7 +50,7 @@ def RunCGALMeshGenerator(mask, opt = utils.MeshingParams()):
     tmpcritfn = '._criteria.txt'
 
     # Save the tmp INRIA file
-    io.saveinr(mask, tmpinrfn)
+    io.saveinr(mask, tmpinrfn, opt.xPixelSpacing, opt.yPixelSpacing, opt.SliceThickness)
     
     # save the tmp criteria file
     fp = open(tmpcritfn, 'w')
