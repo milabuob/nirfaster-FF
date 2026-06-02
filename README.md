@@ -109,12 +109,13 @@ A compact version, supporting only CW/FD forward modeling on standard mesh is av
 - Fixed a bug in DCS forward modeling (both FEM and analytical), where refractive index was not used
 - Fixed a bug a utils.pointlocation(), where points are incorrectly identified as out of mesh when coinciding with mesh nodes
 - Fixed a bug in moving sources for 2D mesh, where the surface normal points to the wrong direction
+- Fixed a bug in TR solver which caused large meshes to crash
+- Improved TR solver
 - 3D rendering updated: now use Plotly as engine to render both mesh and volumes. This gives much more responsive figures. mesh.plot() and mesh.plotvol() methods are added to conveniently call the rendering functions.
 - Shorthand function mesh.voxelize(res) for calculating mesh.vol. The old routine of defining the grids first and then calling mesh.gen_intmat() is still available, but not longer necessary when the user wishes to voxelize the whole mesh.
 - Nearest neighbor interpolation implemented, useful when moving mesh.region to voxel space. mesh.nntogrid() is the function
 - Solvers more memory efficient. Result matrices now defined in Python and passed to cpp libraries only by reference. Makes large problems e.g. TR simulation much more efficient.
 - Same memory access change also made to Jacobian calculation
-- Fixed a bug in TR solver which caused large meshes to crash
 - Mac support is back, Linux version now compiled in AlmaLinux8 in order to support older machines (glibc>=2.28)
 
 1.2.1
