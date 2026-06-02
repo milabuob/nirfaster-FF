@@ -10,9 +10,9 @@ sys.path.insert(0, os.path.abspath('../..'))
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'NIRFASTerFF'
-copyright = '2025, Jiaming Cao, MILAB@UoB'
+copyright = '2026, Jiaming Cao and MILAB@UoB'
 author = 'Jiaming Cao (University of Macau), MILAB@UoB'
-release = '1.2.0'
+release = '1.3.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

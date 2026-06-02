@@ -6,20 +6,20 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nirfasterff.base.fluor_mesh.fluormesh &mdash; NIRFASTerFF 1.2.1 documentation</title>
+  <title>nirfasterff.base.fluor_mesh.fluormesh &mdash; NIRFASTerFF 1.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=ca842793"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/documentation_options.js?v=1f29e9d3"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="nirfasterff.base.optodes" href="nirfasterff.base.optodes.html" />
+    <link rel="next" title="nirfasterff.base.mesh" href="nirfasterff.base.mesh.html" />
     <link rel="prev" title="nirfasterff.base.fluor_mesh" href="nirfasterff.base.fluor_mesh.html" /> 
 </head>
 
@@ -51,6 +51,7 @@
 <li class="toctree-l4 current"><a class="current reference internal" href="#">nirfasterff.base.fluor_mesh.fluormesh</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.base.mesh.html">nirfasterff.base.mesh</a></li>
 <li class="toctree-l3"><a class="reference internal" href="nirfasterff.base.optodes.html">nirfasterff.base.optodes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="nirfasterff.base.stnd_mesh.html">nirfasterff.base.stnd_mesh</a></li>
 </ul>
@@ -98,8 +99,8 @@
 <h1>nirfasterff.base.fluor_mesh.fluormesh<a class="headerlink" href="#nirfasterff-base-fluor-mesh-fluormesh" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nirfasterff.base.fluor_mesh.</span></span><span class="sig-name descname"><span class="pre">fluormesh</span></span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">nirfasterff.base.fluor_mesh.</span></span><span class="sig-name descname"><span class="pre">fluormesh</span></span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="nirfasterff.base.mesh.mesh.html#nirfasterff.base.mesh.mesh" title="nirfasterff.base.mesh.mesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">mesh</span></code></a></p>
 <p>Main class for fluorescence mesh. The methods should cover most of the commonly-used functionalities</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.name">
@@ -421,14 +422,26 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#nirfasterff.base.fluor_mesh.fluormesh.jacobian" title="nirfasterff.base.fluor_mesh.fluormesh.jacobian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jacobian</span></code></a>([freq, normalize, solver, opt])</p></td>
 <td><p>Calculates the Jacobian matrix</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#nirfasterff.base.fluor_mesh.fluormesh.save_nirfast" title="nirfasterff.base.fluor_mesh.fluormesh.save_nirfast"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_nirfast</span></code></a>(filename)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#nirfasterff.base.fluor_mesh.fluormesh.nntogrid" title="nirfasterff.base.fluor_mesh.fluormesh.nntogrid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nntogrid</span></code></a>(field)</p></td>
+<td><p>Convert attributed specified by 'field' to voxel space using nearest-neighbor interpolation For example:     region = mesh.nntogrid('region') Note that mesh.gen_intmat() OR mesh.voxelize() must be called prior to this function</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nirfasterff.base.fluor_mesh.fluormesh.plot" title="nirfasterff.base.fluor_mesh.fluormesh.plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code></a>([data, selector, alpha, cmap, clim])</p></td>
+<td><p>Visualize the mesh.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#nirfasterff.base.fluor_mesh.fluormesh.plotvol" title="nirfasterff.base.fluor_mesh.fluormesh.plotvol"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plotvol</span></code></a>(data[, bnd, cmap, clim, surfcnt, ...])</p></td>
+<td><p>Renders volumetric data which is represented in the voxel space defined in mesh.vol.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nirfasterff.base.fluor_mesh.fluormesh.save_nirfast" title="nirfasterff.base.fluor_mesh.fluormesh.save_nirfast"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_nirfast</span></code></a>(filename)</p></td>
 <td><p>Save mesh in the classic NIRFASTer ASCII format, which is directly compatible with the Matlab version</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#nirfasterff.base.fluor_mesh.fluormesh.set_prop" title="nirfasterff.base.fluor_mesh.fluormesh.set_prop"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_prop</span></code></a>(prop)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#nirfasterff.base.fluor_mesh.fluormesh.set_prop" title="nirfasterff.base.fluor_mesh.fluormesh.set_prop"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_prop</span></code></a>(prop)</p></td>
 <td><p>Set optical properties of the whole mesh, using information provided in prop.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#nirfasterff.base.fluor_mesh.fluormesh.touch_optodes" title="nirfasterff.base.fluor_mesh.fluormesh.touch_optodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">touch_optodes</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nirfasterff.base.fluor_mesh.fluormesh.touch_optodes" title="nirfasterff.base.fluor_mesh.fluormesh.touch_optodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">touch_optodes</span></code></a>()</p></td>
 <td><p>Moves all optodes (if non fixed) and recalculate the integration functions (i.e. barycentric coordinates).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#nirfasterff.base.fluor_mesh.fluormesh.voxelize" title="nirfasterff.base.fluor_mesh.fluormesh.voxelize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">voxelize</span></code></a>(resolution)</p></td>
+<td><p>Calculate the information needed to convert data between mesh and volumetric space by specifying only the resolution.</p></td>
 </tr>
 </tbody>
 </table>
@@ -754,7 +767,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.gen_intmat">
-<span class="sig-name descname"><span class="pre">gen_intmat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xgrid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ygrid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zgrid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.gen_intmat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.gen_intmat" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">gen_intmat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xgrid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ygrid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zgrid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.gen_intmat" title="Link to this definition"></a></dt>
 <dd><p>Calculate the information needed to convert data between mesh and volumetric space, specified by x, y, z (if 3D) grids.</p>
 <p>All grids must be uniform. The results will from a nirfasterff.base.meshvol object stored in field .vol</p>
 <p>If field .vol already exists, it will be calculated again, and a warning will be thrown</p>
@@ -777,11 +790,11 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.isvol">
-<span class="sig-name descname"><span class="pre">isvol</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.isvol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.isvol" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">isvol</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.isvol" title="Link to this definition"></a></dt>
 <dd><p>Check if convertion matrices between mesh and volumetric spaces are calculated</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>True if attribute <cite>.vol</cite> is calculate, False if not.</p>
+<dd class="field-odd"><p>True if attribute <cite>.vol</cite> is calculated, False if not.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>bool</p>
@@ -823,6 +836,86 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.nntogrid">
+<span class="sig-name descname"><span class="pre">nntogrid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.nntogrid" title="Link to this definition"></a></dt>
+<dd><p>Convert attributed specified by ‘field’ to voxel space using nearest-neighbor interpolation
+For example:</p>
+<blockquote>
+<div><p>region = mesh.nntogrid(‘region’)</p>
+</div></blockquote>
+<p>Note that mesh.gen_intmat() OR mesh.voxelize() must be called prior to this function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>field</strong> (<em>str</em>) – an attribute of the mesh that is to be interpolated to voxel space.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>TypeError</strong> – if ‘field’ is not a string.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>result</strong> – mesh.field interpolated to voxel space. Size defined by mesh.vol
+See also: <a class="reference internal" href="nirfasterff.utils.nntogrid.html#nirfasterff.utils.nntogrid" title="nirfasterff.utils.nntogrid"><code class="xref py py-func docutils literal notranslate"><span class="pre">nntogrid()</span></code></a></p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>NumPy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.plot">
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'hot'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.plot" title="Link to this definition"></a></dt>
+<dd><p>Visualize the mesh. If no data is given, shows the mesh itself with regions represented in different colors.
+Alternatively, if mesh space data (e.g. fluence) is given, function visualizes data on the mesh</p>
+<p>Intersections are specified using ‘selector’ argument. If not given, the outer shell is shown.</p>
+<p>See <a class="reference internal" href="nirfasterff.visualize.plotimage.html#nirfasterff.visualize.plotimage" title="nirfasterff.visualize.plotimage"><code class="xref py py-func docutils literal notranslate"><span class="pre">plotimage()</span></code></a> and <a class="reference internal" href="nirfasterff.visualize.plot3dmesh_v2.html#nirfasterff.visualize.plot3dmesh_v2" title="nirfasterff.visualize.plot3dmesh_v2"><code class="xref py py-func docutils literal notranslate"><span class="pre">plot3dmesh_v2()</span></code></a> for more details.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>NumPy array</em><em>, </em><em>optional</em>) – Data to be represented on the mesh, with size (NNode,). If not given, mesh.region is used.</p></li>
+<li><p><strong>selector</strong> (<em>str</em><em>, </em><em>optional</em>) – <p>Specifies the intersection at which the data will be plotted, e.g. ‘x&gt;50’, or ‘(x&gt;50) | (y&lt;100)’, or ‘x + y + z &lt; 200’.</p>
+<p>Note that “=” is not supported. When “|” or “&amp;” are used, make sure that all conditions are put in parantheses separately</p>
+<p>If not specified, function plots the outermost shell of the mesh.</p>
+</p></li>
+<li><p><strong>alpha</strong> (<em>float</em><em>, </em><em>optional</em>) – opacity, between 0-1. The default is 1.</p></li>
+<li><p><strong>cmap</strong> (<em>str</em><em>, </em><em>optional</em>) – Colormap used to visualize the data. The default is ‘hot’.</p></li>
+<li><p><strong>clim</strong> (<em>Array-like</em><em>, </em><em>optional</em>) – colorlimit of the plot in format [cmin, cmax]. The default is None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.plotvol">
+<span class="sig-name descname"><span class="pre">plotvol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bnd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'hot'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surfcnt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surfalpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.plotvol" title="Link to this definition"></a></dt>
+<dd><p>Renders volumetric data which is represented in the voxel space defined in mesh.vol.
+Can be used to render e.g. voxels-space fluence or Jacobian bananas</p>
+<p>When ‘bnd’ is set to True, the outmost surface of the mesh is also plotted as a wire frame.
+This can take a few seconds when plotting large meshes.</p>
+<p>See <a class="reference internal" href="nirfasterff.visualize.plotvol.html#nirfasterff.visualize.plotvol" title="nirfasterff.visualize.plotvol"><code class="xref py py-func docutils literal notranslate"><span class="pre">plotvol()</span></code></a> for details.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>NumPy array</em>) – Can either be a 3D volume consistent with the volumetric space, or its vetorized representation (F order).</p></li>
+<li><p><strong>bnd</strong> (<em>bool</em><em>, </em><em>optional</em>) – If true, also plots the outer boundadry of the mesh as a wire frame. The default is False.</p></li>
+<li><p><strong>cmap</strong> (<em>str</em><em>, </em><em>optional</em>) – colormap to use. The default is ‘hot’.</p></li>
+<li><p><strong>clim</strong> (<em>array-like</em><em>, </em><em>optional</em>) – colorlimit of the plot in format [cmin, cmax]. The default is None.</p></li>
+<li><p><strong>surfcnt</strong> (<em>int</em><em>, </em><em>optional</em>) – number of isosurfaces used in volume rendering. The default is 25.</p></li>
+<li><p><strong>surfalpha</strong> (<em>float</em><em>, </em><em>optional</em>) – opacity of the isosurfaces in volume rendering (0-1). The default is 0.1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>TypeError</strong> – If <cite>mesh.vol</cite> is empty.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.save_nirfast">
 <span class="sig-name descname"><span class="pre">save_nirfast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.save_nirfast"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.save_nirfast" title="Link to this definition"></a></dt>
 <dd><p>Save mesh in the classic NIRFASTer ASCII format, which is directly compatible with the Matlab version</p>
@@ -859,12 +952,28 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.touch_optodes">
-<span class="sig-name descname"><span class="pre">touch_optodes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/base/fluor_mesh.html#fluormesh.touch_optodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.touch_optodes" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">touch_optodes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.touch_optodes" title="Link to this definition"></a></dt>
 <dd><p>Moves all optodes (if non fixed) and recalculate the integration functions (i.e. barycentric coordinates).</p>
 <p>See <a class="reference internal" href="nirfasterff.base.optodes.optode.html#nirfasterff.base.optodes.optode.touch_sources" title="nirfasterff.base.optodes.optode.touch_sources"><code class="xref py py-func docutils literal notranslate"><span class="pre">touch_sources()</span></code></a> and <a class="reference internal" href="nirfasterff.base.optodes.optode.html#nirfasterff.base.optodes.optode.touch_detectors" title="nirfasterff.base.optodes.optode.touch_detectors"><code class="xref py py-func docutils literal notranslate"><span class="pre">touch_detectors()</span></code></a> for details</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nirfasterff.base.fluor_mesh.fluormesh.voxelize">
+<span class="sig-name descname"><span class="pre">voxelize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resolution</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nirfasterff.base.fluor_mesh.fluormesh.voxelize" title="Link to this definition"></a></dt>
+<dd><p>Calculate the information needed to convert data between mesh and volumetric space by specifying only the resolution.
+Volumetric space defined by the boundaries of the mesh. A short hand of .gen_intmat if wish to voxelize the entire mesh.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>resolution</strong> (<em>float</em><em> or </em><em>float array-like</em>) – resolution of the voxel space in mm.
+if scalar, same resolution in all directions, otherwise it is defined for each direction</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -878,13 +987,13 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="nirfasterff.base.fluor_mesh.html" class="btn btn-neutral float-left" title="nirfasterff.base.fluor_mesh" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="nirfasterff.base.optodes.html" class="btn btn-neutral float-right" title="nirfasterff.base.optodes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="nirfasterff.base.mesh.html" class="btn btn-neutral float-right" title="nirfasterff.base.mesh" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025, Jiaming Cao, MILAB@UoB.</p>
+    <p>&#169; Copyright 2026, Jiaming Cao and MILAB@UoB.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

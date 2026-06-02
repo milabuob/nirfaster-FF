@@ -1,20 +1,20 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nirfasterff.utils &mdash; NIRFASTerFF 1.1.1 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=92fd9be5" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+  <title>nirfasterff.utils &mdash; NIRFASTerFF 1.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=7a812f30"></script>
-      <script src="../../_static/doctools.js?v=888ff710"></script>
-      <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../../_static/documentation_options.js?v=6efca38a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -72,17 +72,19 @@
 <span class="sd">Utility functions and auxiliary classes frequently used in the package.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">sparse</span>
-<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">spatial</span>
-<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">integrate</span>
-<span class="kn">from</span> <span class="nn">nirfasterff.lib</span> <span class="kn">import</span> <span class="n">nirfasterff_cpu</span> <span class="k">as</span> <span class="n">cpulib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">sparse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">spatial</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">integrate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nirfasterff.lib</span><span class="w"> </span><span class="kn">import</span> <span class="n">nirfasterff_cpu</span> <span class="k">as</span> <span class="n">cpulib</span>
 <span class="k">if</span> <span class="n">cpulib</span><span class="o">.</span><span class="n">isCUDA</span><span class="p">():</span>
-    <span class="kn">from</span> <span class="nn">nirfasterff.lib</span> <span class="kn">import</span> <span class="n">nirfasterff_cuda</span> <span class="k">as</span> <span class="n">cudalib</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">psutil</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">nirfasterff.lib</span><span class="w"> </span><span class="kn">import</span> <span class="n">nirfasterff_cuda</span> <span class="k">as</span> <span class="n">cudalib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">psutil</span>
 
-<div class="viewcode-block" id="SolverOptions"><a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.SolverOptions.html#nirfasterff.utils.SolverOptions">[docs]</a><span class="k">class</span> <span class="nc">SolverOptions</span><span class="p">:</span>
+<div class="viewcode-block" id="SolverOptions">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.SolverOptions.html#nirfasterff.utils.SolverOptions">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SolverOptions</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parameters used by the FEM solvers, Equivalent to &#39;solver_options&#39; in the Matlab version</span>
 <span class="sd">    </span>
@@ -100,14 +102,20 @@
 <span class="sd">        GPU selection. -1 for automatic, 0, 1, ... for manual selection on multi-GPU systems. Default: -1</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="SolverOptions.__init__"><a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.SolverOptions.html#nirfasterff.utils.SolverOptions.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_iter</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">AbsoluteTolerance</span> <span class="o">=</span> <span class="mf">1e-12</span><span class="p">,</span> <span class="n">RelativeTolerance</span> <span class="o">=</span> <span class="mf">1e-12</span><span class="p">,</span> <span class="n">divergence</span> <span class="o">=</span> <span class="mf">1e8</span><span class="p">,</span> <span class="n">GPU</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="SolverOptions.__init__">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.SolverOptions.html#nirfasterff.utils.SolverOptions.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_iter</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">AbsoluteTolerance</span> <span class="o">=</span> <span class="mf">1e-12</span><span class="p">,</span> <span class="n">RelativeTolerance</span> <span class="o">=</span> <span class="mf">1e-12</span><span class="p">,</span> <span class="n">divergence</span> <span class="o">=</span> <span class="mf">1e8</span><span class="p">,</span> <span class="n">GPU</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span> <span class="o">=</span> <span class="n">max_iter</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">AbsoluteTolerance</span> <span class="o">=</span> <span class="n">AbsoluteTolerance</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">RelativeTolerance</span> <span class="o">=</span> <span class="n">RelativeTolerance</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">divergence</span> <span class="o">=</span> <span class="n">divergence</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">GPU</span> <span class="o">=</span> <span class="n">GPU</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">GPU</span> <span class="o">=</span> <span class="n">GPU</span></div>
+</div>
+
         
-<div class="viewcode-block" id="ConvergenceInfo"><a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.ConvergenceInfo.html#nirfasterff.utils.ConvergenceInfo">[docs]</a><span class="k">class</span> <span class="nc">ConvergenceInfo</span><span class="p">:</span>
+<div class="viewcode-block" id="ConvergenceInfo">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.ConvergenceInfo.html#nirfasterff.utils.ConvergenceInfo">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ConvergenceInfo</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convergence information of the FEM solvers. Only used internally as a return type of functions nirfasterff.math.get_field_*</span>
 <span class="sd">    </span>
@@ -125,7 +133,9 @@
 <span class="sd">            final residual, for each rhs</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="ConvergenceInfo.__init__"><a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.ConvergenceInfo.html#nirfasterff.utils.ConvergenceInfo.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="ConvergenceInfo.__init__">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.ConvergenceInfo.html#nirfasterff.utils.ConvergenceInfo.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">isConverged</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">isConvergedToAbsoluteTolerance</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">iteration</span> <span class="o">=</span> <span class="p">[]</span>
@@ -135,9 +145,13 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">isConverged</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">isConverged</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">isConvergedToAbsoluteTolerance</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">isConvergedToAbsoluteTolerance</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">iteration</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">iteration</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">residual</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">residual</span><span class="p">)</span></div></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">residual</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">residual</span><span class="p">)</span></div>
+</div>
 
-<div class="viewcode-block" id="MeshingParams"><a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.MeshingParams.html#nirfasterff.utils.MeshingParams">[docs]</a><span class="k">class</span> <span class="nc">MeshingParams</span><span class="p">:</span>
+
+<div class="viewcode-block" id="MeshingParams">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.MeshingParams.html#nirfasterff.utils.MeshingParams">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MeshingParams</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parameters to be used by the CGAL mesher. Note: they should all be double</span>
 
@@ -179,7 +193,9 @@
 <span class="sd">    https://doc.cgal.org/latest/Mesh_3/index.html#Chapter_3D_Mesh_Generation</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="MeshingParams.__init__"><a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.MeshingParams.html#nirfasterff.utils.MeshingParams.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xPixelSpacing</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">yPixelSpacing</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">SliceThickness</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
+<div class="viewcode-block" id="MeshingParams.__init__">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.MeshingParams.html#nirfasterff.utils.MeshingParams.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xPixelSpacing</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">yPixelSpacing</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">SliceThickness</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
                              <span class="n">facet_angle</span> <span class="o">=</span> <span class="mf">25.</span><span class="p">,</span> <span class="n">facet_size</span> <span class="o">=</span> <span class="mf">3.</span><span class="p">,</span> <span class="n">facet_distance</span> <span class="o">=</span> <span class="mf">2.</span><span class="p">,</span>
                              <span class="n">cell_radius_edge</span> <span class="o">=</span> <span class="mf">3.</span><span class="p">,</span> <span class="n">general_cell_size</span> <span class="o">=</span> <span class="mf">3.</span><span class="p">,</span> <span class="n">subdomain</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">]),</span>
                              <span class="n">lloyd_smooth</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
@@ -193,9 +209,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">general_cell_size</span> <span class="o">=</span> <span class="n">general_cell_size</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">subdomain</span> <span class="o">=</span> <span class="n">subdomain</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">smooth</span> <span class="o">=</span> <span class="n">lloyd_smooth</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">=</span> <span class="n">offset</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">=</span> <span class="n">offset</span></div>
+</div>
 
-<div class="viewcode-block" id="MeshingParams2D"><a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.MeshingParams2D.html#nirfasterff.utils.MeshingParams2D">[docs]</a><span class="k">class</span> <span class="nc">MeshingParams2D</span><span class="p">:</span>
+
+<div class="viewcode-block" id="MeshingParams2D">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.MeshingParams2D.html#nirfasterff.utils.MeshingParams2D">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MeshingParams2D</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parameters to be used by the Triangle mesher. Note: they should all be double</span>
 <span class="sd">    </span>
@@ -220,12 +240,18 @@
 <span class="sd">            </span>
 <span class="sd">            Default: None, i.e. no offset to be added</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="MeshingParams2D.__init__"><a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.MeshingParams2D.html#nirfasterff.utils.MeshingParams2D.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mm_per_pixel</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">max_area</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="MeshingParams2D.__init__">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.MeshingParams2D.html#nirfasterff.utils.MeshingParams2D.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mm_per_pixel</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">max_area</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mm_per_pixel</span> <span class="o">=</span> <span class="n">mm_per_pixel</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_area</span> <span class="o">=</span> <span class="n">max_area</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">=</span> <span class="n">offset</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">=</span> <span class="n">offset</span></div>
+</div>
 
-<div class="viewcode-block" id="isCUDA"><a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.isCUDA.html#nirfasterff.utils.isCUDA">[docs]</a><span class="k">def</span> <span class="nf">isCUDA</span><span class="p">():</span>
+
+<div class="viewcode-block" id="isCUDA">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.isCUDA.html#nirfasterff.utils.isCUDA">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">isCUDA</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Checks if system has a CUDA device with compute capability &gt;=5.2</span>
 <span class="sd">    </span>
@@ -239,7 +265,10 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">cpulib</span><span class="o">.</span><span class="n">isCUDA</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="get_solver"><a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.get_solver.html#nirfasterff.utils.get_solver">[docs]</a><span class="k">def</span> <span class="nf">get_solver</span><span class="p">():</span>
+
+<div class="viewcode-block" id="get_solver">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.get_solver.html#nirfasterff.utils.get_solver">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_solver</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get the default solver.</span>
 
@@ -255,7 +284,10 @@
         <span class="n">solver</span> <span class="o">=</span> <span class="s1">&#39;CPU&#39;</span>     
     <span class="k">return</span> <span class="n">solver</span>            </div>
 
-<div class="viewcode-block" id="pointLocation"><a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.pointLocation.html#nirfasterff.utils.pointLocation">[docs]</a><span class="k">def</span> <span class="nf">pointLocation</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">pointlist</span><span class="p">):</span>
+
+<div class="viewcode-block" id="pointLocation">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.pointLocation.html#nirfasterff.utils.pointLocation">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">pointLocation</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">pointlist</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Similar to Matlab&#39;s pointLocation function, queries which elements in mesh the points belong to, and also calculate the barycentric coordinates.</span>
 <span class="sd">    </span>
@@ -288,7 +320,10 @@
         <span class="n">int_func</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="k">return</span> <span class="n">ind</span><span class="p">,</span> <span class="n">int_func</span></div>
 
-<div class="viewcode-block" id="check_element_orientation_2d"><a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.check_element_orientation_2d.html#nirfasterff.utils.check_element_orientation_2d">[docs]</a><span class="k">def</span> <span class="nf">check_element_orientation_2d</span><span class="p">(</span><span class="n">ele</span><span class="p">,</span> <span class="n">nodes</span><span class="p">):</span>
+
+<div class="viewcode-block" id="check_element_orientation_2d">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.check_element_orientation_2d.html#nirfasterff.utils.check_element_orientation_2d">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_element_orientation_2d</span><span class="p">(</span><span class="n">ele</span><span class="p">,</span> <span class="n">nodes</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Make sure the 2D triangular elements are oriented counter clock wise.</span>
 <span class="sd">    </span>
@@ -325,7 +360,10 @@
         <span class="n">ele</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])]</span> <span class="o">=</span> <span class="n">ele</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])]</span>
     <span class="k">return</span> <span class="n">ele</span></div>
 
-<div class="viewcode-block" id="pointLineDistance"><a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.pointLineDistance.html#nirfasterff.utils.pointLineDistance">[docs]</a><span class="k">def</span> <span class="nf">pointLineDistance</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+
+<div class="viewcode-block" id="pointLineDistance">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.pointLineDistance.html#nirfasterff.utils.pointLineDistance">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">pointLineDistance</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate the distance between a point and a line (defined by two points), and find the projection point</span>
 <span class="sd">    </span>
@@ -358,7 +396,10 @@
     <span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">p</span> <span class="o">-</span> <span class="n">point</span><span class="p">)</span>     
     <span class="k">return</span> <span class="n">dist</span><span class="p">,</span> <span class="n">point</span></div>
 
-<div class="viewcode-block" id="pointTriangleDistance"><a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.pointTriangleDistance.html#nirfasterff.utils.pointTriangleDistance">[docs]</a><span class="k">def</span> <span class="nf">pointTriangleDistance</span><span class="p">(</span><span class="n">TRI</span><span class="p">,</span> <span class="n">P</span><span class="p">):</span>
+
+<div class="viewcode-block" id="pointTriangleDistance">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.pointTriangleDistance.html#nirfasterff.utils.pointTriangleDistance">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">pointTriangleDistance</span><span class="p">(</span><span class="n">TRI</span><span class="p">,</span> <span class="n">P</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate the distance between a point and a triangle (defined by three points), and find the projection point</span>
 
@@ -550,7 +591,10 @@
     <span class="n">PP0</span> <span class="o">=</span> <span class="n">B</span> <span class="o">+</span> <span class="n">s</span> <span class="o">*</span> <span class="n">E0</span> <span class="o">+</span> <span class="n">t</span> <span class="o">*</span> <span class="n">E1</span>
     <span class="k">return</span> <span class="n">dist</span><span class="p">,</span> <span class="n">PP0</span></div>
 
-<div class="viewcode-block" id="gen_intmat_impl"><a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.gen_intmat_impl.html#nirfasterff.utils.gen_intmat_impl">[docs]</a><span class="k">def</span> <span class="nf">gen_intmat_impl</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">xgrid</span><span class="p">,</span> <span class="n">ygrid</span><span class="p">,</span> <span class="n">zgrid</span><span class="p">):</span>
+
+<div class="viewcode-block" id="gen_intmat_impl">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.gen_intmat_impl.html#nirfasterff.utils.gen_intmat_impl">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">gen_intmat_impl</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">xgrid</span><span class="p">,</span> <span class="n">ygrid</span><span class="p">,</span> <span class="n">zgrid</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    YOU SHOULD NOT USE THIS FUNCTION DIRECTLY. USE MESH.GEN_INTMAT INSTEAD.</span>
 <span class="sd">    </span>
@@ -669,9 +713,12 @@
                                  <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">meshingrid</span><span class="p">,</span> <span class="n">int_func</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">outside</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="n">nodes</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">),</span> <span class="n">gridinmesh</span><span class="p">[</span><span class="n">nn</span><span class="p">]])),</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">ind0</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">coords</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
     
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">gridinmesh</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">ind</span><span class="p">[</span><span class="n">gridinmesh</span><span class="p">]],</span> <span class="n">meshingrid</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">int_mat_mesh2grid</span><span class="p">,</span> <span class="n">int_mat_grid2mesh</span> <span class="c1"># convert to one-based</span></div>
+
     
 
-<div class="viewcode-block" id="compress_coo"><a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.compress_coo.html#nirfasterff.utils.compress_coo">[docs]</a><span class="k">def</span> <span class="nf">compress_coo</span><span class="p">(</span><span class="n">coo_idx</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
+<div class="viewcode-block" id="compress_coo">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.compress_coo.html#nirfasterff.utils.compress_coo">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compress_coo</span><span class="p">(</span><span class="n">coo_idx</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert COO indices to compressed. </span>
 
@@ -693,7 +740,10 @@
         <span class="n">cnt</span><span class="p">[</span><span class="n">coo_idx</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">+=</span> <span class="mi">1</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">cnt</span><span class="p">)]</span></div>
 
-<div class="viewcode-block" id="uncompress_coo"><a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.uncompress_coo.html#nirfasterff.utils.uncompress_coo">[docs]</a><span class="k">def</span> <span class="nf">uncompress_coo</span><span class="p">(</span><span class="n">compressed_idx</span><span class="p">):</span>
+
+<div class="viewcode-block" id="uncompress_coo">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.uncompress_coo.html#nirfasterff.utils.uncompress_coo">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">uncompress_coo</span><span class="p">(</span><span class="n">compressed_idx</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert compressed indices to COO.</span>
 
@@ -715,7 +765,10 @@
     <span class="k">return</span> <span class="n">coo_idx</span></div>
 
 
-<div class="viewcode-block" id="boundary_attenuation"><a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.boundary_attenuation.html#nirfasterff.utils.boundary_attenuation">[docs]</a><span class="k">def</span> <span class="nf">boundary_attenuation</span><span class="p">(</span><span class="n">n_incidence</span><span class="p">,</span> <span class="n">n_transmission</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;robin&#39;</span><span class="p">):</span>
+
+<div class="viewcode-block" id="boundary_attenuation">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.boundary_attenuation.html#nirfasterff.utils.boundary_attenuation">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">boundary_attenuation</span><span class="p">(</span><span class="n">n_incidence</span><span class="p">,</span> <span class="n">n_transmission</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;robin&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate the boundary attenuation factor between two media. </span>
 <span class="sd">    </span>
@@ -763,7 +816,7 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;n_incidence and n_transmission size mismatch&#39;</span><span class="p">)</span>
     <span class="n">n_incidence</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">n_incidence</span><span class="p">)</span>
     <span class="n">n_transmission</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">n_transmission</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">fresnel</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span> <span class="n">n_incid</span><span class="p">,</span> <span class="n">n_transmit</span><span class="p">):</span> 
+    <span class="k">def</span><span class="w"> </span><span class="nf">fresnel</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span> <span class="n">n_incid</span><span class="p">,</span> <span class="n">n_transmit</span><span class="p">):</span> 
         <span class="n">n</span> <span class="o">=</span> <span class="n">n_incid</span><span class="o">/</span><span class="n">n_transmit</span>
         <span class="c1"># S-polarized</span>
         <span class="n">Rs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">((</span><span class="n">n_incid</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span> <span class="o">-</span> <span class="n">n_transmit</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">emath</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_incid</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span> <span class="o">+</span> <span class="n">n_transmit</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">emath</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span><span class="p">)))</span><span class="o">**</span><span class="mi">2</span>
@@ -798,7 +851,10 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown boundary type&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">A</span></div>
 
-<div class="viewcode-block" id="get_nthread"><a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.get_nthread.html#nirfasterff.utils.get_nthread">[docs]</a><span class="k">def</span> <span class="nf">get_nthread</span><span class="p">():</span>
+
+<div class="viewcode-block" id="get_nthread">
+<a class="viewcode-back" href="../../_autosummary/nirfasterff.utils.get_nthread.html#nirfasterff.utils.get_nthread">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_nthread</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Choose the number of OpenMP threads in CPU solvers</span>
 <span class="sd">    </span>
@@ -824,6 +880,7 @@
         <span class="c1"># Use up to 8 threads to avoid memory bottleneck</span>
         <span class="n">nthread</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">((</span><span class="n">physical_core</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">nthread</span></div>
+
         
 </pre></div>
 
@@ -834,7 +891,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, Jiaming Cao, MILAB@UoB.</p>
+    <p>&#169; Copyright 2025, Jiaming Cao, MILAB@UoB.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

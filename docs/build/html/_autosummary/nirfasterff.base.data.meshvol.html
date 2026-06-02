@@ -6,16 +6,16 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nirfasterff.base.data.meshvol &mdash; NIRFASTerFF 1.2.1 documentation</title>
+  <title>nirfasterff.base.data.meshvol &mdash; NIRFASTerFF 1.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=ca842793"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/documentation_options.js?v=1f29e9d3"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -58,6 +58,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="nirfasterff.base.dcs_mesh.html">nirfasterff.base.dcs_mesh</a></li>
 <li class="toctree-l3"><a class="reference internal" href="nirfasterff.base.fluor_mesh.html">nirfasterff.base.fluor_mesh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.base.mesh.html">nirfasterff.base.mesh</a></li>
 <li class="toctree-l3"><a class="reference internal" href="nirfasterff.base.optodes.html">nirfasterff.base.optodes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="nirfasterff.base.stnd_mesh.html">nirfasterff.base.stnd_mesh</a></li>
 </ul>
@@ -105,7 +106,7 @@
 <h1>nirfasterff.base.data.meshvol<a class="headerlink" href="#nirfasterff-base-data-meshvol" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="nirfasterff.base.data.meshvol">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nirfasterff.base.data.</span></span><span class="sig-name descname"><span class="pre">meshvol</span></span><a class="reference internal" href="../_modules/nirfasterff/base/data.html#meshvol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.data.meshvol" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">nirfasterff.base.data.</span></span><span class="sig-name descname"><span class="pre">meshvol</span></span><a class="reference internal" href="../_modules/nirfasterff/base/data.html#meshvol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.base.data.meshvol" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Small class holding the information needed for converting between mesh and volumetric space. Values calculated by nirfasterff.base.*mesh.gen_intmat</p>
 <p>Note that the volumetric space, defined by xgrid, ygrid, and zgrid (empty for 2D mesh), must be uniform</p>
@@ -161,7 +162,7 @@
 <dd><p>indices (one-based) of data points in the volumetric space that are within the mesh space, vectorized in ‘F’ order.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int32 NumPy array</p>
+<dd class="field-odd"><p>int64 NumPy array</p>
 </dd>
 </dl>
 </dd></dl>
@@ -195,7 +196,19 @@
 <dd><p>indices (one-based) of data points in the mesh space that are within the volumetric space</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int32 NumPy array</p>
+<dd class="field-odd"><p>int64 NumPy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nirfasterff.base.data.meshvol.nn">
+<span class="sig-name descname"><span class="pre">nn</span></span><a class="headerlink" href="#nirfasterff.base.data.meshvol.nn" title="Link to this definition"></a></dt>
+<dd><p>Indices (one-based) of the nearest node of each voxel (flattend in F order). -1 if voxel not in mesh
+Size (NVoxels,)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int64 NumPy array</p>
 </dd>
 </dl>
 </dd></dl>
@@ -228,7 +241,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025, Jiaming Cao, MILAB@UoB.</p>
+    <p>&#169; Copyright 2026, Jiaming Cao and MILAB@UoB.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

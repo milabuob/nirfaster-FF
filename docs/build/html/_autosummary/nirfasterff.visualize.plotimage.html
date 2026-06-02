@@ -6,20 +6,21 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nirfasterff.visualize.plotimage &mdash; NIRFASTerFF 1.2.1 documentation</title>
+  <title>nirfasterff.visualize.plotimage &mdash; NIRFASTerFF 1.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=ca842793"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/documentation_options.js?v=1f29e9d3"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="nirfasterff.visualize.plot3dmesh" href="nirfasterff.visualize.plot3dmesh.html" /> 
+    <link rel="next" title="nirfasterff.visualize.plotvol" href="nirfasterff.visualize.plotvol.html" />
+    <link rel="prev" title="nirfasterff.visualize.plot3dmesh_v2" href="nirfasterff.visualize.plot3dmesh_v2.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -53,10 +54,12 @@
 <li class="toctree-l2"><a class="reference internal" href="nirfasterff.utils.html">nirfasterff.utils</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="nirfasterff.visualize.html">nirfasterff.visualize</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="nirfasterff.visualize.plot3dmesh.html">nirfasterff.visualize.plot3dmesh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.visualize.plot3dmesh_v2.html">nirfasterff.visualize.plot3dmesh_v2</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">nirfasterff.visualize.plotimage</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#nirfasterff.visualize.plotimage"><code class="docutils literal notranslate"><span class="pre">plotimage()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.visualize.plotvol.html">nirfasterff.visualize.plotvol</a></li>
 </ul>
 </li>
 </ul>
@@ -93,7 +96,7 @@
 <h1>nirfasterff.visualize.plotimage<a class="headerlink" href="#nirfasterff-visualize-plotimage" title="Link to this heading"></a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="nirfasterff.visualize.plotimage">
-<span class="sig-prename descclassname"><span class="pre">nirfasterff.visualize.</span></span><span class="sig-name descname"><span class="pre">plotimage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/visualize.html#plotimage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.visualize.plotimage" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">nirfasterff.visualize.</span></span><span class="sig-name descname"><span class="pre">plotimage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'hot'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nirfasterff/visualize.html#plotimage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nirfasterff.visualize.plotimage" title="Link to this definition"></a></dt>
 <dd><p>Fast preview of data within a 2D FEM mesh in the nirfasterff format.</p>
 <p>Plots an image of the values on the mesh. For 3D mesh, use <a class="reference internal" href="nirfasterff.visualize.plot3dmesh.html#nirfasterff.visualize.plot3dmesh" title="nirfasterff.visualize.plot3dmesh"><code class="xref py py-func docutils literal notranslate"><span class="pre">plot3dmesh()</span></code></a> instead</p>
 <dl class="field-list simple">
@@ -101,6 +104,7 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>mesh</strong> (<em>nirfasterff mesh type</em>) – a 2D nirfasterff mesh to plot the data on.</p></li>
 <li><p><strong>data</strong> (<em>double NumPy vector</em><em>, </em><em>optional</em>) – data to be plotted, with size (NNode,). If not specified, treated as all zero.</p></li>
+<li><p><strong>cmap</strong> (<em>colormap used to plot the mesh. Default is 'hot'</em>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
@@ -122,13 +126,14 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="nirfasterff.visualize.plot3dmesh.html" class="btn btn-neutral float-left" title="nirfasterff.visualize.plot3dmesh" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="nirfasterff.visualize.plot3dmesh_v2.html" class="btn btn-neutral float-left" title="nirfasterff.visualize.plot3dmesh_v2" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="nirfasterff.visualize.plotvol.html" class="btn btn-neutral float-right" title="nirfasterff.visualize.plotvol" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025, Jiaming Cao, MILAB@UoB.</p>
+    <p>&#169; Copyright 2026, Jiaming Cao and MILAB@UoB.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

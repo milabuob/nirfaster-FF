@@ -1,4 +1,4 @@
-nirfasterff.visualize
+﻿nirfasterff.visualize
 =====================
 
 .. automodule:: nirfasterff.visualize
@@ -15,7 +15,9 @@ nirfasterff.visualize
       :toctree:                                          
    
       plot3dmesh
+      plot3dmesh_v2
       plotimage
+      plotvol
    
    
 

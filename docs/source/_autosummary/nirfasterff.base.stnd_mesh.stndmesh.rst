@@ -31,9 +31,13 @@
       ~stndmesh.gen_intmat
       ~stndmesh.isvol
       ~stndmesh.jacobian
+      ~stndmesh.nntogrid
+      ~stndmesh.plot
+      ~stndmesh.plotvol
       ~stndmesh.save_nirfast
       ~stndmesh.set_prop
       ~stndmesh.touch_optodes
+      ~stndmesh.voxelize
    
    
 

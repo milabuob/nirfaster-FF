@@ -1,4 +1,4 @@
-nirfasterff.utils
+﻿nirfasterff.utils
 =================
 
 .. automodule:: nirfasterff.utils
@@ -17,10 +17,13 @@ nirfasterff.utils
       boundary_attenuation
       check_element_orientation_2d
       compress_coo
+      cudaDeviceInfo
+      cudaMemFree
       gen_intmat_impl
       get_nthread
       get_solver
       isCUDA
+      nntogrid
       pointLineDistance
       pointLocation
       pointTriangleDistance

@@ -132,7 +132,7 @@ class optode:
                 # find norm of that edge
                 a = mesh.nodes[fi[smallest, 0], :]
                 b = mesh.nodes[fi[smallest, 1], :]
-                n = np.array([b[1]-a[1], b[0]-a[0]])
+                n = np.array([b[1]-a[1], a[0]-b[0]])
                 n = n/np.linalg.norm(n)
                 
                 # move inside by 1 scattering distance

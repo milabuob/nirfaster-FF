@@ -5,16 +5,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nirfasterff.math &mdash; NIRFASTerFF 1.1.1 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+  <title>nirfasterff.math &mdash; NIRFASTerFF 1.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=58fbf978"></script>
-      <script src="../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/documentation_options.js?v=6efca38a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -73,14 +73,14 @@
 
 <span class="sd">It is usually unnecessary to use them directly and caution must be excercised, as many of them interact closely with the C++ libraries and can cause crashes if used incorrectly</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">nirfasterff</span> <span class="kn">import</span> <span class="n">utils</span>
-<span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">sparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nirfasterff</span><span class="w"> </span><span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">sparse</span>
 
 <div class="viewcode-block" id="gen_mass_matrix">
 <a class="viewcode-back" href="../../_autosummary/nirfasterff.math.gen_mass_matrix.html#nirfasterff.math.gen_mass_matrix">[docs]</a>
-<span class="k">def</span> <span class="nf">gen_mass_matrix</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">GPU</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">gen_mass_matrix</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">GPU</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate the MASS matrix, and return the coordinates in CSR format.</span>
 <span class="sd">    </span>
@@ -149,7 +149,7 @@
 
 <div class="viewcode-block" id="get_field_CW">
 <a class="viewcode-back" href="../../_autosummary/nirfasterff.math.get_field_CW.html#nirfasterff.math.get_field_CW">[docs]</a>
-<span class="k">def</span> <span class="nf">get_field_CW</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">csrV</span><span class="p">,</span> <span class="n">qvec</span><span class="p">,</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">(),</span> <span class="n">solver</span><span class="o">=</span><span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">()):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_field_CW</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">csrV</span><span class="p">,</span> <span class="n">qvec</span><span class="p">,</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">(),</span> <span class="n">solver</span><span class="o">=</span><span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">()):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Call the Preconditioned Conjugate Gradient solver with FSAI preconditioner. For CW data only.</span>
 <span class="sd">    </span>
@@ -232,7 +232,7 @@
 
 <div class="viewcode-block" id="get_field_FD">
 <a class="viewcode-back" href="../../_autosummary/nirfasterff.math.get_field_FD.html#nirfasterff.math.get_field_FD">[docs]</a>
-<span class="k">def</span> <span class="nf">get_field_FD</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">csrV</span><span class="p">,</span> <span class="n">qvec</span><span class="p">,</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">(),</span> <span class="n">solver</span><span class="o">=</span><span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">()):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_field_FD</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">csrV</span><span class="p">,</span> <span class="n">qvec</span><span class="p">,</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">(),</span> <span class="n">solver</span><span class="o">=</span><span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">()):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Call the Preconditioned BiConjugate Stablized solver with FSAI preconditioner. </span>
 <span class="sd">    </span>
@@ -317,7 +317,7 @@
 
 <div class="viewcode-block" id="get_field_TR">
 <a class="viewcode-back" href="../../_autosummary/nirfasterff.math.get_field_TR.html#nirfasterff.math.get_field_TR">[docs]</a>
-<span class="k">def</span> <span class="nf">get_field_TR</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">csrV</span><span class="p">,</span> <span class="n">qvec</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">max_step</span><span class="p">,</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">(),</span> <span class="n">solver</span><span class="o">=</span><span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">()):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_field_TR</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">csrV</span><span class="p">,</span> <span class="n">qvec</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">max_step</span><span class="p">,</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">(),</span> <span class="n">solver</span><span class="o">=</span><span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">()):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Call the Preconditioned Conjugate Gradient solver with FSAI preconditioner. Calculates TPSF data</span>
 <span class="sd">    </span>
@@ -417,7 +417,7 @@
 
 <div class="viewcode-block" id="get_field_TRmoments">
 <a class="viewcode-back" href="../../_autosummary/nirfasterff.math.get_field_TRmoments.html#nirfasterff.math.get_field_TRmoments">[docs]</a>
-<span class="k">def</span> <span class="nf">get_field_TRmoments</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">csrV</span><span class="p">,</span> <span class="n">qvec</span><span class="p">,</span> <span class="n">max_moment</span><span class="p">,</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">(),</span> <span class="n">solver</span><span class="o">=</span><span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">()):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_field_TRmoments</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">csrV</span><span class="p">,</span> <span class="n">qvec</span><span class="p">,</span> <span class="n">max_moment</span><span class="p">,</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">(),</span> <span class="n">solver</span><span class="o">=</span><span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">()):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Call the Preconditioned Conjugate Gradient solver with FSAI preconditioner. Directly calculates moments of TR data using Mellin transform</span>
 <span class="sd">    </span>
@@ -514,7 +514,7 @@
 
 <div class="viewcode-block" id="get_field_TRFL">
 <a class="viewcode-back" href="../../_autosummary/nirfasterff.math.get_field_TRFL.html#nirfasterff.math.get_field_TRFL">[docs]</a>
-<span class="k">def</span> <span class="nf">get_field_TRFL</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">csrV</span><span class="p">,</span> <span class="n">qvec_m</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">max_step</span><span class="p">,</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">(),</span> <span class="n">solver</span><span class="o">=</span><span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">()):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_field_TRFL</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">csrV</span><span class="p">,</span> <span class="n">qvec_m</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">max_step</span><span class="p">,</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">(),</span> <span class="n">solver</span><span class="o">=</span><span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">()):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Call the Preconditioned Conjugate Gradient solver with FSAI preconditioner. Calculates the TPSFs of fluorescence emission given the TPSFs of excitation</span>
 <span class="sd">    </span>
@@ -606,7 +606,7 @@
 
 <div class="viewcode-block" id="get_field_TRFLmoments">
 <a class="viewcode-back" href="../../_autosummary/nirfasterff.math.get_field_TRFLmoments.html#nirfasterff.math.get_field_TRFLmoments">[docs]</a>
-<span class="k">def</span> <span class="nf">get_field_TRFLmoments</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">csrV</span><span class="p">,</span> <span class="n">csrV2</span><span class="p">,</span> <span class="n">mx</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">max_moment</span><span class="p">,</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">(),</span> <span class="n">solver</span><span class="o">=</span><span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">()):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_field_TRFLmoments</span><span class="p">(</span><span class="n">csrI</span><span class="p">,</span> <span class="n">csrJ</span><span class="p">,</span> <span class="n">csrV</span><span class="p">,</span> <span class="n">csrV2</span><span class="p">,</span> <span class="n">mx</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">max_moment</span><span class="p">,</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">(),</span> <span class="n">solver</span><span class="o">=</span><span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">()):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Call the Preconditioned Conjugate Gradient solver with FSAI preconditioner. Directly calculates moments of re-emission using Mellin transform, given the moments of excitation</span>
 
@@ -707,7 +707,7 @@
 
 <div class="viewcode-block" id="gen_sources">
 <a class="viewcode-back" href="../../_autosummary/nirfasterff.math.gen_sources.html#nirfasterff.math.gen_sources">[docs]</a>
-<span class="k">def</span> <span class="nf">gen_sources</span><span class="p">(</span><span class="n">mesh</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">gen_sources</span><span class="p">(</span><span class="n">mesh</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate the source vectors (point source only) for the sources in mesh.source field</span>
 
@@ -741,7 +741,7 @@
 
 <div class="viewcode-block" id="gen_sources_fl">
 <a class="viewcode-back" href="../../_autosummary/nirfasterff.math.gen_sources_fl.html#nirfasterff.math.gen_sources_fl">[docs]</a>
-<span class="k">def</span> <span class="nf">gen_sources_fl</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">phix</span><span class="p">,</span> <span class="n">frequency</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">GPU</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">gen_sources_fl</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">phix</span><span class="p">,</span> <span class="n">frequency</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">GPU</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates FEM sources vector for re-emission.</span>
 <span class="sd">    </span>
@@ -816,7 +816,7 @@
 
 <div class="viewcode-block" id="get_boundary_data">
 <a class="viewcode-back" href="../../_autosummary/nirfasterff.math.get_boundary_data.html#nirfasterff.math.get_boundary_data">[docs]</a>
-<span class="k">def</span> <span class="nf">get_boundary_data</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">phi</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_boundary_data</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">phi</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates boundary data given the field data in mesh</span>
 <span class="sd">    </span>
@@ -869,7 +869,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, Jiaming Cao, MILAB@UoB.</p>
+    <p>&#169; Copyright 2025, Jiaming Cao, MILAB@UoB.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

@@ -1,20 +1,20 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nirfasterff.meshing.meshutils &mdash; NIRFASTerFF 1.1.1 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=92fd9be5" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+  <title>nirfasterff.meshing.meshutils &mdash; NIRFASTerFF 1.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=7a812f30"></script>
-      <script src="../../../_static/doctools.js?v=888ff710"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../../../_static/documentation_options.js?v=6efca38a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -71,17 +71,19 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Functions used for mesh generation and mesh quality check</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">nirfasterff</span> <span class="kn">import</span> <span class="n">utils</span>
-<span class="kn">from</span> <span class="nn">nirfasterff</span> <span class="kn">import</span> <span class="n">io</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">auxiliary</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nirfasterff</span><span class="w"> </span><span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nirfasterff</span><span class="w"> </span><span class="kn">import</span> <span class="n">io</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">auxiliary</span>
 <span class="c1"># from lib import nirfasteruff_cpu</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">platform</span>
-<span class="kn">import</span> <span class="nn">subprocess</span>
-<span class="kn">from</span> <span class="nn">skimage</span> <span class="kn">import</span> <span class="n">measure</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">platform</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">skimage</span><span class="w"> </span><span class="kn">import</span> <span class="n">measure</span>
 
-<div class="viewcode-block" id="RunCGALMeshGenerator"><a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.meshutils.RunCGALMeshGenerator.html#nirfasterff.meshing.meshutils.RunCGALMeshGenerator">[docs]</a><span class="k">def</span> <span class="nf">RunCGALMeshGenerator</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">MeshingParams</span><span class="p">()):</span>
+<div class="viewcode-block" id="RunCGALMeshGenerator">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.meshutils.RunCGALMeshGenerator.html#nirfasterff.meshing.meshutils.RunCGALMeshGenerator">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">RunCGALMeshGenerator</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">MeshingParams</span><span class="p">()):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generate a tetrahedral mesh from a volume using CGAL 6.0.1 mesher, where different regions are labeled used a distinct integer.</span>
 <span class="sd">    </span>
@@ -120,7 +122,7 @@
     <span class="n">tmpcritfn</span> <span class="o">=</span> <span class="s1">&#39;._criteria.txt&#39;</span>
 
     <span class="c1"># Save the tmp INRIA file</span>
-    <span class="n">io</span><span class="o">.</span><span class="n">saveinr</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">tmpinrfn</span><span class="p">)</span>
+    <span class="n">io</span><span class="o">.</span><span class="n">saveinr</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">tmpinrfn</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">xPixelSpacing</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">yPixelSpacing</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">SliceThickness</span><span class="p">)</span>
     
     <span class="c1"># save the tmp criteria file</span>
     <span class="n">fp</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">tmpcritfn</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
@@ -171,7 +173,10 @@
     <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">tmpcritfn</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">ele</span><span class="p">,</span> <span class="n">nodes</span></div>
 
-<div class="viewcode-block" id="img2mesh"><a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.meshutils.img2mesh.html#nirfasterff.meshing.meshutils.img2mesh">[docs]</a><span class="k">def</span> <span class="nf">img2mesh</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">MeshingParams2D</span><span class="p">()):</span>
+
+<div class="viewcode-block" id="img2mesh">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.meshutils.img2mesh.html#nirfasterff.meshing.meshutils.img2mesh">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">img2mesh</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">MeshingParams2D</span><span class="p">()):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Creates 2D mesh from a labeled image. Using Jonathan Shewchuk&#39;s Triangle, with arguments -pPqQaA.</span>
 <span class="sd">    </span>
@@ -282,9 +287,12 @@
     <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">tmpresultfn</span><span class="o">+</span><span class="s1">&#39;.node&#39;</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">tmpresultfn</span><span class="o">+</span><span class="s1">&#39;.ele&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">mesh_e</span><span class="p">),</span> <span class="n">mesh_n</span></div>
+
     
 
-<div class="viewcode-block" id="boundfaces"><a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.meshutils.boundfaces.html#nirfasterff.meshing.meshutils.boundfaces">[docs]</a><span class="k">def</span> <span class="nf">boundfaces</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">renumber</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="boundfaces">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.meshutils.boundfaces.html#nirfasterff.meshing.meshutils.boundfaces">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">boundfaces</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">renumber</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Finds the boundary faces of a 3D tetrahedral mesh</span>
 
@@ -334,7 +342,10 @@
         <span class="n">new_points</span> <span class="o">=</span> <span class="n">nodes</span>
     <span class="k">return</span> <span class="n">new_faces</span><span class="p">,</span> <span class="n">new_points</span></div>
 
-<div class="viewcode-block" id="checkmesh3d_solid"><a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.meshutils.checkmesh3d_solid.html#nirfasterff.meshing.meshutils.checkmesh3d_solid">[docs]</a><span class="k">def</span> <span class="nf">checkmesh3d_solid</span><span class="p">(</span><span class="n">ele</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+<div class="viewcode-block" id="checkmesh3d_solid">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.meshutils.checkmesh3d_solid.html#nirfasterff.meshing.meshutils.checkmesh3d_solid">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">checkmesh3d_solid</span><span class="p">(</span><span class="n">ele</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates and returns the quality metrics of the tetrahedrons in a 3D tetrahedral mesh</span>
 <span class="sd">    </span>
@@ -415,7 +426,10 @@
     
     <span class="k">return</span> <span class="n">vol</span><span class="p">,</span> <span class="n">vol_ratio</span><span class="p">,</span> <span class="n">zeroflag</span><span class="p">,</span> <span class="n">faceflag</span></div>
 
-<div class="viewcode-block" id="checkmesh3d_surface"><a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.meshutils.checkmesh3d_surface.html#nirfasterff.meshing.meshutils.checkmesh3d_surface">[docs]</a><span class="k">def</span> <span class="nf">checkmesh3d_surface</span><span class="p">(</span><span class="n">ele</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+<div class="viewcode-block" id="checkmesh3d_surface">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.meshutils.checkmesh3d_surface.html#nirfasterff.meshing.meshutils.checkmesh3d_surface">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">checkmesh3d_surface</span><span class="p">(</span><span class="n">ele</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates and returns the quality metrics of the triangles in a 3D surface mesh</span>
 <span class="sd">    </span>
@@ -502,7 +516,10 @@
     
     <span class="k">return</span> <span class="n">q_radius_ratio</span><span class="p">,</span> <span class="n">q_area_ratio</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">zeroflag</span><span class="p">,</span> <span class="n">edgeflag</span></div>
 
-<div class="viewcode-block" id="CheckMesh3D"><a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.meshutils.CheckMesh3D.html#nirfasterff.meshing.meshutils.CheckMesh3D">[docs]</a><span class="k">def</span> <span class="nf">CheckMesh3D</span><span class="p">(</span><span class="n">elements</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+<div class="viewcode-block" id="CheckMesh3D">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.meshutils.CheckMesh3D.html#nirfasterff.meshing.meshutils.CheckMesh3D">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">CheckMesh3D</span><span class="p">(</span><span class="n">elements</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Main function that calculates and checks the quality of a 3D mesh, which can be either a solid or surface mesh</span>
 <span class="sd">    </span>
@@ -629,7 +646,10 @@
     
     <span class="k">return</span> <span class="n">vol</span><span class="p">,</span> <span class="n">vol_ratio</span><span class="p">,</span> <span class="n">q_area</span><span class="p">,</span> <span class="n">status_solid</span><span class="p">,</span> <span class="n">status_surface</span></div>
 
-<div class="viewcode-block" id="CheckMesh2D"><a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.meshutils.CheckMesh2D.html#nirfasterff.meshing.meshutils.CheckMesh2D">[docs]</a><span class="k">def</span> <span class="nf">CheckMesh2D</span><span class="p">(</span><span class="n">elements</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+<div class="viewcode-block" id="CheckMesh2D">
+<a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.meshutils.CheckMesh2D.html#nirfasterff.meshing.meshutils.CheckMesh2D">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">CheckMesh2D</span><span class="p">(</span><span class="n">elements</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Main function that calculates and checks the quality of a 2D mesh</span>
 
@@ -708,6 +728,7 @@
         <span class="n">flag</span> <span class="o">=</span> <span class="n">flag</span> <span class="o">|</span> <span class="mi">4</span>
     
     <span class="k">return</span> <span class="n">flag</span><span class="p">,</span> <span class="n">q_radius_ratio</span><span class="p">,</span> <span class="n">area</span></div>
+
 </pre></div>
 
            </div>
@@ -717,7 +738,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, Jiaming Cao, MILAB@UoB.</p>
+    <p>&#169; Copyright 2025, Jiaming Cao, MILAB@UoB.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

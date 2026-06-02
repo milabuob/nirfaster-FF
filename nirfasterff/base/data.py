@@ -26,7 +26,7 @@ class meshvol:
             The result is vectorized in 'F' (Matlab) order
             
             Size: (len(xgrid)*len(ygrid)*len(zgrid), NNodes)
-        gridinmesh: int32 NumPy array
+        gridinmesh: int64 NumPy array
             indices (one-based) of data points in the volumetric space that are within the mesh space, vectorized in 'F' order.
         res: double NumPy array
             resolution in x, y, z (if 3D) direction, in mm. Size (2,) or (3,)
@@ -34,8 +34,11 @@ class meshvol:
             matrix converting volumetric data, vectorized in 'F' order, to mesh space. Done by grid2mesh.dot(data)
             
             Size (Nnodes, len(xgrid)*len(ygrid)*len(ygrid))
-        meshingrid: int32 NumPy array
+        meshingrid: int64 NumPy array
             indices (one-based) of data points in the mesh space that are within the volumetric space
+        nn: int64 NumPy array
+            Indices (one-based) of the nearest node of each voxel (flattend in F order). -1 if voxel not in mesh
+            Size (NVoxels,)
         
     """
     def __init__(self):
@@ -47,6 +50,7 @@ class meshvol:
         self.res = []
         self.grid2mesh = sparse.csc_matrix([])
         self.meshingrid = []
+        self.nn = []
 
 class FDdata:
     """

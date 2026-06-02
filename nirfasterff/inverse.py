@@ -159,7 +159,7 @@ def jacobian_stnd_FD(mesh, freq, normalize=True, mus=True, solver = utils.get_so
     if not mesh.type=='stnd':
         raise TypeError('Must be a standard mesh')
     if not mesh.isvol():
-        raise TypeError('Starting from this version of NIRFASTer, Jacobian calculation is only supported in grid space. Please run mesh.gen_intmat() first')
+        raise TypeError('Starting from this version of NIRFASTer, Jacobian calculation is only supported in grid space. Please run mesh.gen_intmat() or mesh.voxelize() first')
         
     # Let's make a duplicate of the mesh, so we don't accidentcally mess up the original
     mesh2 = base.stndmesh()
@@ -188,7 +188,9 @@ def jacobian_stnd_FD(mesh, freq, normalize=True, mus=True, solver = utils.get_so
     if freq==0 and not mus:
         J = np.empty((mesh.link.shape[0], phi.shape[1]))
         J.fill(np.nan)
-        tmp = -utils.cpulib.IntGrid(phi, aphi, link)*np.prod(mesh.vol.res)
+        tmp = np.zeros_like(J)
+        utils.cpulib.IntGrid(tmp, phi, aphi, link)
+        tmp *= -np.prod(mesh.vol.res)
         
         if not normalize:
             J[active_idx, :] = tmp
@@ -205,17 +207,21 @@ def jacobian_stnd_FD(mesh, freq, normalize=True, mus=True, solver = utils.get_so
         dx_aphi = (gradx_mesh2grid @ data2.phi).T
         dy_aphi = (grady_mesh2grid @ data2.phi).T
         kappa = mesh.vol.mesh2grid @ mesh.kappa
+        tmp1 = np.zeros((link.shape[0], dx_phi.shape[1]), dtype=dx_phi.dtype)
         if dim==2:
-            tmp1 = 3*utils.cpulib.IntGradGrid(np.ascontiguousarray(dx_phi), np.ascontiguousarray(dy_phi), np.array([], dtype=dx_phi.dtype), 
-                                             np.ascontiguousarray(dx_aphi), np.ascontiguousarray(dy_aphi), np.array([], dtype=dx_aphi.dtype), link, dim)*(kappa**2)*np.prod(mesh.vol.res)
+            utils.cpulib.IntGradGrid(tmp1, np.ascontiguousarray(dx_phi), np.ascontiguousarray(dy_phi), np.array([], dtype=dx_phi.dtype), 
+                                        np.ascontiguousarray(dx_aphi), np.ascontiguousarray(dy_aphi), np.array([], dtype=dx_aphi.dtype), link, dim)
         elif dim==3:
             gradz_mesh2grid = sparse.csc_matrix((intfunc_grad[:,2*(dim+1):3*(dim+1)].flatten('F'), (np.tile(mesh.vol.gridinmesh[:,0]-1, dim+1), nodes.flatten('F'))), shape=mesh.vol.mesh2grid.shape)
             dz_phi = (gradz_mesh2grid @ data1.phi).T
             dz_aphi = (gradz_mesh2grid @ data2.phi).T
-            tmp1 = 3*utils.cpulib.IntGradGrid(np.ascontiguousarray(dx_phi), np.ascontiguousarray(dy_phi), np.ascontiguousarray(dz_phi), 
-                                             np.ascontiguousarray(dx_aphi), np.ascontiguousarray(dy_aphi), np.ascontiguousarray(dz_aphi), link, dim)*(kappa**2)*np.prod(mesh.vol.res)
+            utils.cpulib.IntGradGrid(np.ascontiguousarray(dx_phi), np.ascontiguousarray(dy_phi), np.ascontiguousarray(dz_phi), 
+                                        np.ascontiguousarray(dx_aphi), np.ascontiguousarray(dy_aphi), np.ascontiguousarray(dz_aphi), link, dim)
         
-        tmp2 = -utils.cpulib.IntGrid(phi, aphi, link)*np.prod(mesh.vol.res)
+        tmp1 *= 3*(kappa**2)*np.prod(mesh.vol.res)
+        tmp2 = np.zeros((link.shape[0], phi.shape[1]), dtype=phi.dtype)
+        utils.cpulib.IntGrid(tmp2, phi, aphi, link)
+        tmp2 *= -np.prod(mesh.vol.res)
         
         if not normalize:
             J = np.empty((mesh.link.shape[0], phi.shape[1]*2), dtype=data1.phi.dtype)
@@ -336,7 +342,7 @@ def jacobian_fl_CW(mesh, normalize=True, solver = utils.get_solver(), opt = util
     if not mesh.type=='fluor':
         raise TypeError('Must be a fluorescence mesh')
     if not mesh.isvol():
-        raise TypeError('Starting from this version of NIRFASTer, Jacobian calculation is only supported in grid space. Please run mesh.gen_intmat() first')
+        raise TypeError('Starting from this version of NIRFASTer, Jacobian calculation is only supported in grid space. Please run mesh.gen_intmat() or mesh.voxelize() first')
     # Let's make a duplicate of the mesh, so we don't accidentcally mess up the original
     mesh2 = base.fluormesh()
     mesh2.from_copy(mesh)
@@ -362,7 +368,9 @@ def jacobian_fl_CW(mesh, normalize=True, solver = utils.get_solver(), opt = util
     aphi = np.ascontiguousarray(np.reshape(data2.phimm, (-1, data2.phimm.shape[-1]), order='F').T)
     J = np.empty((mesh.link.shape[0], phi.shape[1]))
     J.fill(np.nan)
-    tmp = utils.cpulib.IntGrid(phi, aphi, link)*np.prod(mesh.vol.res)
+    tmp = np.zeros_like(J)
+    utils.cpulib.IntGrid(tmp, phi, aphi, link)
+    tmp *= np.prod(mesh.vol.res)
     
     if not normalize:
         J[active_idx, :] = tmp
@@ -427,7 +435,7 @@ def jacobian_fl_FD(mesh, freq, normalize=True, solver = utils.get_solver(), opt 
     if not mesh.type=='fluor':
         raise TypeError('Must be a fluorescence mesh')
     if not mesh.isvol():
-        raise TypeError('Starting from this version of NIRFASTer, Jacobian calculation is only supported in grid space. Please run mesh.gen_intmat() first')
+        raise TypeError('Starting from this version of NIRFASTer, Jacobian calculation is only supported in grid space. Please run mesh.gen_intmat() or mesh.voxelize() first')
     
     if freq==0:
         return jacobian_fl_CW(mesh, normalize, solver, opt)
@@ -459,7 +467,9 @@ def jacobian_fl_FD(mesh, freq, normalize=True, solver = utils.get_solver(), opt 
     J = np.empty((mesh.link.shape[0]*2, phi.shape[1]*2))
     J.fill(np.nan)
     # The complex jacobian, wrt eta*muaf/(1+j*omega*tau)
-    tmp = utils.cpulib.IntGrid(phi, aphi, link)*np.prod(mesh.vol.res)
+    tmp = np.zeros((link.shape[0], phi.shape[1]), dtype=phi.dtype)
+    utils.cpulib.IntGrid(tmp, phi, aphi, link)
+    tmp*=np.prod(mesh.vol.res)
     tau = mesh.vol.mesh2grid @ mesh.tau
     eta_muaf = mesh.vol.mesh2grid @ (mesh.eta * mesh.muaf)
     # Jacobian for eta*muaf
@@ -515,7 +525,7 @@ def jacobian_DCS(mesh, tvec, normalize=True, solver = utils.get_solver(), opt = 
     if not mesh.type=='dcs':
         raise TypeError('Must be a DCS mesh')
     if not mesh.isvol():
-        raise TypeError('Starting from this version of NIRFASTer, Jacobian calculation is only supported in grid space. Please run mesh.gen_intmat() first')
+        raise TypeError('Starting from this version of NIRFASTer, Jacobian calculation is only supported in grid space. Please run mesh.gen_intmat() or mesh.voxelize() first')
     # Let's make a duplicate of the mesh, so we don't accidentcally mess up the original
     mesh2 = base.dcsmesh()
     mesh2.from_copy(mesh)
@@ -544,7 +554,9 @@ def jacobian_DCS(mesh, tvec, normalize=True, solver = utils.get_solver(), opt = 
     for i in range(len(tvec)):
         tmp_phi = np.ascontiguousarray(phi[:,:,i].T)
         tmp_aphi = np.ascontiguousarray(aphi[:,:,i].T)
-        tmpJ = -utils.cpulib.IntGrid(tmp_phi, tmp_aphi, link)*np.prod(mesh.vol.res)
+        tmpJ = np.zeros((link.shape[0], tmp_phi.shape[1]))
+        utils.cpulib.IntGrid(tmpJ, tmp_phi, tmp_aphi, link)
+        tmpJ *= -np.prod(mesh.vol.res)
         musp = mesh.vol.mesh2grid @ mesh.mus
         if normalize:
             J[active_idx, :, i] = tmpJ*2*k0*k0*musp*tvec[i] / np.atleast_2d(data1.G1_DCS[:,i]).T

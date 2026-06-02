@@ -31,9 +31,13 @@
       ~fluormesh.gen_intmat
       ~fluormesh.isvol
       ~fluormesh.jacobian
+      ~fluormesh.nntogrid
+      ~fluormesh.plot
+      ~fluormesh.plotvol
       ~fluormesh.save_nirfast
       ~fluormesh.set_prop
       ~fluormesh.touch_optodes
+      ~fluormesh.voxelize
    
    
 

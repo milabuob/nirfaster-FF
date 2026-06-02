@@ -29,9 +29,13 @@
       ~dcsmesh.gen_intmat
       ~dcsmesh.isvol
       ~dcsmesh.jacobian
+      ~dcsmesh.nntogrid
+      ~dcsmesh.plot
+      ~dcsmesh.plotvol
       ~dcsmesh.save_nirfast
       ~dcsmesh.set_prop
       ~dcsmesh.touch_optodes
+      ~dcsmesh.voxelize
    
    
 

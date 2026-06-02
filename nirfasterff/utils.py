@@ -488,7 +488,7 @@ def gen_intmat_impl(mesh, xgrid, ygrid, zgrid):
 
     Parameters
     ----------
-    mesh : nirfasterff.base.stndmesh or nirfasterff.base.fluormesh
+    mesh : nirfasterff.base.stndmesh or nirfasterff.base.fluormesh or nirfasterff.base.dcsmesh
         The original mesh with with FEM data is calculated.
     xgrid : float64 NumPy 1-D array
         x grid in mm. Must be regular.
@@ -499,9 +499,11 @@ def gen_intmat_impl(mesh, xgrid, ygrid, zgrid):
 
     Returns
     -------
-    gridinmesh: int32 NumPy array
+    nn_idx: int64 NumPy array
+        Nearest-neighbor nodes of each voxel (flattened in F order). One-based
+    gridinmesh: int64 NumPy array
         Col 0: indices of grid points that are in the mesh; Col 1: indeces of the elements the grid point is in. Flattened in 'F' order, one-based.
-    meshingrid: int32 NumPy array
+    meshingrid: int64 NumPy array
         Indices of mesh nodes that are in the grid. One-based.
     int_mat_mesh2grid : CSC sparse matrix, float64
         Sparse matrix converting data from mesh space to grid space. Size (NGrid, NNodes).
@@ -522,6 +524,12 @@ def gen_intmat_impl(mesh, xgrid, ygrid, zgrid):
 
     nodes = np.int32(mesh.elements[ind[gridinmesh],:] - 1)
     int_mat_mesh2grid = sparse.csc_matrix((int_func_inside.flatten('F'), (np.tile(gridinmesh, int_func.shape[1]), nodes.flatten('F'))), shape=(ind.size, mesh.nodes.shape[0]))
+    
+    # Find the nearest neighbors, useful when converting regions to voxel space
+    tmp = int_func[gridinmesh, :]
+    idxmax = np.argmax(tmp, axis=1)
+    nn_idx = np.int64(-1 * np.ones(ind.size))
+    nn_idx[gridinmesh] = np.int64(mesh.elements[ind[gridinmesh],idxmax]) # one-based
     
     # Now calculate the transformation from grid to mesh
     # We can cheat a little bit because of the regular grid: we can triangularize one voxel and replicate
@@ -598,8 +606,52 @@ def gen_intmat_impl(mesh, xgrid, ygrid, zgrid):
     int_mat_grid2mesh = sparse.csc_matrix((np.r_[int_func_inside.flatten('F'), np.ones(nn.size)], 
                                  (np.r_[np.tile(meshingrid, int_func.shape[1]), outside], np.r_[nodes.flatten('F'), gridinmesh[nn]])), shape=(ind0.size, coords.shape[0]))
     
-    return np.c_[gridinmesh+1, ind[gridinmesh]], meshingrid+1, int_mat_mesh2grid, int_mat_grid2mesh # convert to one-based
-    
+    return nn_idx, np.c_[gridinmesh+1, ind[gridinmesh]], meshingrid+1, int_mat_mesh2grid, int_mat_grid2mesh # convert to one-based
+
+def nntogrid(mesh, data):
+    '''
+    Convert data to voxel space using nearest-neighbor interpolation, as opposed to linear
+    This is useful when e.g. converting region labels to voxel space
+
+    Parameters
+    ----------
+    mesh : a nirfasterff mesh
+        mesh containing the voxel space definition, i.e. mesh.vol attribute.
+    data : 1D NumPy array
+        data in mesh space, which is the source of interpolation.
+
+    Raises
+    ------
+    TypeError
+        if mesh.vol is empty, in which case mesh.gen_intmat() or mesh.voxelize() must be run first.
+        Or if 'data' is not a vector.
+    ValueError
+        if length of 'data' is not equal to the number of nodes
+
+    Returns
+    -------
+    NumPy array
+        Data type same as 'data', size is defined by xgrid, ygrid, and zgrid
+        data interpolated into voxel space using nearest neighbor interpolation
+        
+
+    '''
+    if not mesh.isvol():
+        raise TypeError('Please run mesh.gen_intmat() or mesh.voxelize() first.')
+    if np.ndim(data)>1:
+        raise TypeError('Data must be a vector')
+    if not data.size == mesh.nodes.shape[0]:
+        raise ValueError('Length of the data vector must be the same as number of nodes')
+    if mesh.dimension == 2:
+        nvoxels = mesh.vol.xgrid.size * mesh.vol.ygrid.size
+    elif mesh.dimension == 3:
+        nvoxels = mesh.vol.xgrid.size * mesh.vol.ygrid.size * mesh.vol.zgrid.size
+    tmp = np.zeros(nvoxels)
+    tmp[mesh.vol.gridinmesh[:,0]-1] = data[mesh.vol.nn[mesh.vol.gridinmesh[:,0]-1]-1]
+    if mesh.dimension == 2:
+        return np.reshape(tmp, (mesh.vol.ygrid.size, mesh.vol.xgrid.size), order='F')
+    else:
+        return np.reshape(tmp, (mesh.vol.ygrid.size, mesh.vol.xgrid.size, mesh.vol.zgrid.size), order='F')
 
 def compress_coo(coo_idx, N):
     """
@@ -754,4 +806,65 @@ def get_nthread():
         # Use up to 8 threads to avoid memory bottleneck
         nthread = np.min((physical_core, 8))
     return nthread
+
+def cudaDeviceInfo():
+    '''
+    Prints information of all compatible CUDA devices.
+    
+    Will show 'No avaiable' if your GPUs are older than compute capability 5.2
+
+    Returns
+    -------
+    None.
+
+    '''
+    if not isCUDA():
+        print('No suitable CUDA devices avaiable', flush=1)
+        print('Only CUDA devices with compute capability >=5.2 will be shown', flush=1)
+    else:
+        cudalib.cudaDeviceInfo()
+
+def cudaMemFree(GPU = -1, silent = False, human = True):
+    '''
+    Prints and returns available memory in the selected GPU. If not specified, the default is used.
+    Returned value is always in bytes, but the printed values are by default reformatted into readable values
+    Reformatting can be turned off by setting human=False
+
+    Parameters
+    ----------
+    GPU : int, optional
+        GPU to return the free memory of. 
+        The default is -1, i.e. the one automatically chose by the same criteria as the solvers.
+    silent : bool, optional
+        If true, only returns, but does not print to screen. If False, prints result to screen
+        The default is False
+    human : bool, optional
+        If true, prints in GB/MB/KB when appropriate. If false, prints in bytes.
+        The default is True.
+
+    Returns
+    -------
+    int32
+        Available memory in bytes.
+
+    '''
+    if not isCUDA():
+        print('No suitable CUDA devices avaiable', flush=1)
+        print('Only CUDA devices with compute capability >=5.2 will be shown', flush=1)
+        return 0.0
+    else:
+        free_mem = cudalib.cudaMemFree(GPU)
+        if not silent:
+            if human:
+                if free_mem > 1e9:
+                    print('Free memory in selected GPU: %.1f GB' % (free_mem/1e9), flush=1)
+                elif free_mem > 1e6:
+                    print('Free memory in selected GPU: %.1f MB' % (free_mem/1e6), flush=1)
+                elif free_mem > 1e3:
+                    print('Free memory in selected GPU: %.1f KB' % (free_mem/1e3), flush=1)
+                else:
+                    print('Free memory in selected GPU: %d Bytes' % (free_mem), flush=1)
+            else:
+                print('Free memory in selected GPU: %d Bytes' % (free_mem), flush=1)  
+    return free_mem
         

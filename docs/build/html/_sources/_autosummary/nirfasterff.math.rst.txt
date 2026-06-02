@@ -1,4 +1,4 @@
-nirfasterff.math
+﻿nirfasterff.math
 ================
 
 .. automodule:: nirfasterff.math
@@ -21,6 +21,7 @@ nirfasterff.math
       get_field_CW
       get_field_FD
       get_field_TR
+      get_field_TR1
       get_field_TRFL
       get_field_TRFLmoments
       get_field_TRmoments

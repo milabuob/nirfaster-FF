@@ -1,4 +1,4 @@
-nirfasterff.base
+﻿nirfasterff.base
 ================
 
 .. automodule:: nirfasterff.base
@@ -28,9 +28,10 @@ nirfasterff.base
    :template: custom-module-template.rst                 
    :recursive:
 
-   nirfasterff.base.data
-   nirfasterff.base.dcs_mesh
-   nirfasterff.base.fluor_mesh
-   nirfasterff.base.optodes
-   nirfasterff.base.stnd_mesh
+   data
+   dcs_mesh
+   fluor_mesh
+   mesh
+   optodes
+   stnd_mesh
 

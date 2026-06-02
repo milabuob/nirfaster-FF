@@ -5,16 +5,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nirfasterff.base.optodes &mdash; NIRFASTerFF 1.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=92fd9be5" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+  <title>nirfasterff.base.optodes &mdash; NIRFASTerFF 1.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=fc837d61"></script>
-      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/documentation_options.js?v=6efca38a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -71,12 +71,12 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Define the optode class, an instance of which can be either a source or a detector</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">nirfasterff</span> <span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nirfasterff</span><span class="w"> </span><span class="kn">import</span> <span class="n">utils</span>
 
 <div class="viewcode-block" id="optode">
 <a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.optodes.optode.html#nirfasterff.base.optodes.optode">[docs]</a>
-<span class="k">class</span> <span class="nc">optode</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">optode</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class for NIRFASTer optodes, which can be either a group of sources or a group of detectors. </span>
 <span class="sd">    </span>
@@ -102,7 +102,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="optode.__init__">
 <a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.optodes.optode.html#nirfasterff.base.optodes.optode.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coord</span> <span class="o">=</span> <span class="p">[]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coord</span> <span class="o">=</span> <span class="p">[]):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fixed</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">coord</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
@@ -111,7 +111,7 @@
         
 <div class="viewcode-block" id="optode.move_sources">
 <a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.optodes.optode.html#nirfasterff.base.optodes.optode.move_sources">[docs]</a>
-    <span class="k">def</span> <span class="nf">move_sources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">move_sources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Moves sources to the appropriate locations in the mesh.</span>
 <span class="sd">        </span>
@@ -261,7 +261,7 @@
     
 <div class="viewcode-block" id="optode.move_detectors">
 <a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.optodes.optode.html#nirfasterff.base.optodes.optode.move_detectors">[docs]</a>
-    <span class="k">def</span> <span class="nf">move_detectors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">move_detectors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Moves detector to the appropriate locations in the mesh.</span>
 <span class="sd">        </span>
@@ -355,7 +355,7 @@
     
 <div class="viewcode-block" id="optode.touch_sources">
 <a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.optodes.optode.html#nirfasterff.base.optodes.optode.touch_sources">[docs]</a>
-    <span class="k">def</span> <span class="nf">touch_sources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">touch_sources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Recalculate/fill in all other fields based on &#39;fixed&#39; and &#39;coord&#39;. </span>
 <span class="sd">        </span>
@@ -389,7 +389,7 @@
     
 <div class="viewcode-block" id="optode.touch_detectors">
 <a class="viewcode-back" href="../../../_autosummary/nirfasterff.base.optodes.optode.html#nirfasterff.base.optodes.optode.touch_detectors">[docs]</a>
-    <span class="k">def</span> <span class="nf">touch_detectors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">touch_detectors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Recalculate/fill in all other fields based on &#39;fixed&#39; and &#39;coord&#39;. </span>
 <span class="sd">        </span>
@@ -431,7 +431,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, Jiaming Cao, MILAB@UoB.</p>
+    <p>&#169; Copyright 2025, Jiaming Cao, MILAB@UoB.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

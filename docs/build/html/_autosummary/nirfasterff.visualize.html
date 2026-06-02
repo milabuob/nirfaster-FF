@@ -6,16 +6,16 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nirfasterff.visualize &mdash; NIRFASTerFF 1.2.1 documentation</title>
+  <title>nirfasterff.visualize &mdash; NIRFASTerFF 1.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=ca842793"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/documentation_options.js?v=1f29e9d3"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -54,7 +54,9 @@
 <li class="toctree-l2"><a class="reference internal" href="nirfasterff.utils.html">nirfasterff.utils</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">nirfasterff.visualize</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="nirfasterff.visualize.plot3dmesh.html">nirfasterff.visualize.plot3dmesh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.visualize.plot3dmesh_v2.html">nirfasterff.visualize.plot3dmesh_v2</a></li>
 <li class="toctree-l3"><a class="reference internal" href="nirfasterff.visualize.plotimage.html">nirfasterff.visualize.plotimage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.visualize.plotvol.html">nirfasterff.visualize.plotvol</a></li>
 </ul>
 </li>
 </ul>
@@ -93,10 +95,16 @@
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="nirfasterff.visualize.plot3dmesh.html#nirfasterff.visualize.plot3dmesh" title="nirfasterff.visualize.plot3dmesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot3dmesh</span></code></a>(mesh[, data, selector, alpha])</p></td>
-<td><p>Fast preview of data within a 3D FEM mesh in the nirfasterff format.</p></td>
+<td><p>OLD IMPLEMENTATION USING MATPLOTLIB, CAN BE SLOW RENDERING LARGE MESHES.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="nirfasterff.visualize.plotimage.html#nirfasterff.visualize.plotimage" title="nirfasterff.visualize.plotimage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plotimage</span></code></a>(mesh[, data])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="nirfasterff.visualize.plot3dmesh_v2.html#nirfasterff.visualize.plot3dmesh_v2" title="nirfasterff.visualize.plot3dmesh_v2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot3dmesh_v2</span></code></a>(mesh[, data, selector, alpha, ...])</p></td>
+<td><p>Fast preview of data within a 3D FEM mesh in the nirfasterff format, using Plotly as engine.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="nirfasterff.visualize.plotimage.html#nirfasterff.visualize.plotimage" title="nirfasterff.visualize.plotimage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plotimage</span></code></a>(mesh[, data, cmap])</p></td>
 <td><p>Fast preview of data within a 2D FEM mesh in the nirfasterff format.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="nirfasterff.visualize.plotvol.html#nirfasterff.visualize.plotvol" title="nirfasterff.visualize.plotvol"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plotvol</span></code></a>(mesh, data[, bnd, cmap, clim, ...])</p></td>
+<td><p>Renders volumetric data which is represented in the voxel space defined in mesh.vol.</p></td>
 </tr>
 </tbody>
 </table>
@@ -113,7 +121,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025, Jiaming Cao, MILAB@UoB.</p>
+    <p>&#169; Copyright 2026, Jiaming Cao and MILAB@UoB.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

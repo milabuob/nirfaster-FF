@@ -5,16 +5,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nirfasterff.meshing.auxiliary &mdash; NIRFASTerFF 1.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=92fd9be5" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+  <title>nirfasterff.meshing.auxiliary &mdash; NIRFASTerFF 1.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=fc837d61"></script>
-      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/documentation_options.js?v=6efca38a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -75,11 +75,11 @@
 
 <span class="sd">Use with caution: no error checking mechanisms implemented</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <div class="viewcode-block" id="vector_vector_angle">
 <a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.auxiliary.vector_vector_angle.html#nirfasterff.meshing.auxiliary.vector_vector_angle">[docs]</a>
-<span class="k">def</span> <span class="nf">vector_vector_angle</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">vector_vector_angle</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates vector-vector angles, in radian</span>
 <span class="sd">    </span>
@@ -109,7 +109,7 @@
 
 <div class="viewcode-block" id="simpqual">
 <a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.auxiliary.simpqual.html#nirfasterff.meshing.auxiliary.simpqual">[docs]</a>
-<span class="k">def</span> <span class="nf">simpqual</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">ele</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">simpqual</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">ele</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    For each tetrahedron, calculates the didehedral angles and returns the smallest sine of them</span>
 
@@ -158,7 +158,7 @@
 
 <div class="viewcode-block" id="check_tetrahedron_faces">
 <a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.auxiliary.check_tetrahedron_faces.html#nirfasterff.meshing.auxiliary.check_tetrahedron_faces">[docs]</a>
-<span class="k">def</span> <span class="nf">check_tetrahedron_faces</span><span class="p">(</span><span class="n">ele</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_tetrahedron_faces</span><span class="p">(</span><span class="n">ele</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Check for faces shared by more than two tetrahedrons</span>
 
@@ -206,7 +206,7 @@
 
 <div class="viewcode-block" id="checkedges">
 <a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.auxiliary.checkedges.html#nirfasterff.meshing.auxiliary.checkedges">[docs]</a>
-<span class="k">def</span> <span class="nf">checkedges</span><span class="p">(</span><span class="n">ele</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">checkedges</span><span class="p">(</span><span class="n">ele</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Check for orphan edges and edges shared by more than two triangles</span>
 
@@ -245,7 +245,7 @@
 
 <div class="viewcode-block" id="check_facearea">
 <a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.auxiliary.check_facearea.html#nirfasterff.meshing.auxiliary.check_facearea">[docs]</a>
-<span class="k">def</span> <span class="nf">check_facearea</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">ele</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_facearea</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">ele</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates the areas of each face, and check if they are close to zero</span>
 <span class="sd">    </span>
@@ -278,7 +278,7 @@
 
 <div class="viewcode-block" id="quality_triangle_radius">
 <a class="viewcode-back" href="../../../_autosummary/nirfasterff.meshing.auxiliary.quality_triangle_radius.html#nirfasterff.meshing.auxiliary.quality_triangle_radius">[docs]</a>
-<span class="k">def</span> <span class="nf">quality_triangle_radius</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">ele</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">quality_triangle_radius</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">ele</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Radius ratio: 2*inradius / circumradius</span>
 <span class="sd">    </span>
@@ -322,7 +322,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, Jiaming Cao, MILAB@UoB.</p>
+    <p>&#169; Copyright 2025, Jiaming Cao, MILAB@UoB.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

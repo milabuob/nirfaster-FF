@@ -5,6 +5,7 @@ import numpy as np
 # from data import FDdata
 from .data import meshvol
 from .optodes import optode
+from .mesh import mesh
 import copy
 import os
 from nirfasterff import utils
@@ -13,7 +14,7 @@ from nirfasterff import forward
 from nirfasterff import inverse
 import scipy.io as sio
 
-class fluormesh:
+class fluormesh(mesh):
     """
     Main class for fluorescence mesh. The methods should cover most of the commonly-used functionalities
     
@@ -862,23 +863,6 @@ class fluormesh:
         A = (2.0/(1.0 - R0) -1. + np.abs(np.cos(theta))**3) / (1.0 - np.abs(np.cos(theta))**2)
         self.ksi = 1.0 / (2*A)
     
-    def touch_optodes(self):
-        """
-        Moves all optodes (if non fixed) and recalculate the integration functions (i.e. barycentric coordinates). 
-        
-        See :func:`~nirfasterff.base.optodes.optode.touch_sources()` and :func:`~nirfasterff.base.optodes.optode.touch_detectors()` for details
-
-        Returns
-        -------
-        None.
-
-        """
-        # make sure the optodes sit correctly: moved if needed, calculate the int func
-        print('touching sources', flush=1)
-        self.source.touch_sources(self)
-        print('touching detectors', flush=1)
-        self.meas.touch_detectors(self)
-    
     def save_nirfast(self, filename):
         """
         Save mesh in the classic NIRFASTer ASCII format, which is directly compatible with the Matlab version
@@ -1149,76 +1133,4 @@ class fluormesh:
         else:
             raise ValueError('Modulation frequency must be non-negative')
         return J, data1, data2
-        
-    def isvol(self):
-        """
-        Check if convertion matrices between mesh and volumetric spaces are calculated
-
-        Returns
-        -------
-        bool
-            True if attribute `.vol` is calculate, False if not.
-
-        """
-        if len(self.vol.xgrid):
-            return True
-        else:
-            return False
-    
-    def gen_intmat(self, xgrid, ygrid, zgrid=[]):
-        """
-        Calculate the information needed to convert data between mesh and volumetric space, specified by x, y, z (if 3D) grids.
-        
-        All grids must be uniform. The results will from a nirfasterff.base.meshvol object stored in field .vol
-        
-        If field .vol already exists, it will be calculated again, and a warning will be thrown
-
-        Parameters
-        ----------
-        xgrid : double NumPy array
-            x grid in mm.
-        ygrid : double NumPy array
-            x grid in mm.
-        zgrid : double NumPy array, optional
-            x grid in mm. Leave empty for 2D meshes. The default is [].
-        
-        Raises
-        ------
-        ValueError
-            if grids not uniform, or zgrid empty for 3D mesh
-
-        Returns
-        -------
-        None.
-
-        """
-        xgrid = np.float64(np.array(xgrid).squeeze())
-        ygrid = np.float64(np.array(ygrid).squeeze())
-        zgrid = np.float64(np.array(zgrid).squeeze())
-        tmp = np.diff(xgrid)
-        if np.abs(tmp-tmp[0]).max()>1e-6:
-            raise ValueError('xgrid must be uniform')
-        tmp = np.diff(ygrid)
-        if np.abs(tmp-tmp[0]).max()>1e-6:
-            raise ValueError('ygrid must be uniform')
-        if self.dimension ==3 and np.size(zgrid)==0:
-            raise ValueError('zgrid must be non-empty for 3D mesh')
-        if len(zgrid)>0:
-            tmp = np.diff(zgrid)
-            if np.abs(tmp-tmp[0]).max()>1e-6:
-                raise ValueError('zgrid must be uniform')
-            
-        if self.isvol():
-            print('Warning: recalculating intmat', flush=1)
-
-        self.vol.xgrid = xgrid
-        self.vol.ygrid = ygrid
-        if len(zgrid)>0:
-            self.vol.zgrid = zgrid
-            self.vol.res = np.array([xgrid[1]-xgrid[0], ygrid[1]-ygrid[0], zgrid[1]-zgrid[0]])
-        else:
-            self.vol.res = np.array([xgrid[1]-xgrid[0], ygrid[1]-ygrid[0]])
-        
-        
-        self.vol.gridinmesh, self.vol.meshingrid, self.vol.mesh2grid, self.vol.grid2mesh = utils.gen_intmat_impl(self, xgrid, ygrid, zgrid)
         

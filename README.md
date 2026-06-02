@@ -2,7 +2,7 @@
 
 Public repository for the **Fast and Furious** version of NIRFASTer
 
-- Version: 1.2.1
+- Version: 1.3.0
 - Authors: Jiaming Cao (University of Macau), MILab@UoB
 - License: BSD
 
@@ -12,7 +12,7 @@ This is the new NIRFASTer with Python interface, offering full functionality ran
 
 The toolbox can run on Linux, Mac, and Windows. To use GPU acceleration, you will need to have a NVIDIA card with compute capability between `sm_50` (i.e. the GTX9xx series) or later. *We do not have the hardware resources to test on all GPU generations. Please report to us if the GPU code doesn't work for you.* Please be noted that GPU support is unavailable on Mac platforms at the moment.
 
-Only Python versions 3.8, 3.10, 3.11, 3.12 and 3.13 are supported for now.
+Python versions 3.8 - 3.13 are supported on all platforms.
 
 Packages required:
 
@@ -21,22 +21,13 @@ Packages required:
 - psutil
 - matplotlib
 - scikit-image (*new from version 1.2*)
+- plotly (*new from version 1.3*)
 
 If you are using a Anaconda Python, they should already be available.
-
-### New changes in this dev branch
-
-- Fixed a bug in mesh generation code, where pixel sizes set in the meshing parameters were not used (see Issue #1, thanks @[Arthurzhou09](https://github.com/Arthurzhou09))
-
-- Fixed a bug in DCS forward modeling (both FEM and analytical), where refractive index was not used
-
-- Fixed a typo in the reconstruction demo, where noise variance was set lower than intended (should be calculated using the absolute value of the signal amplitude, but the absolute value was missed in the previous code)
 
 ### Priority of development
 
 The Python codes are exactly the same for all platforms and should have similar performance, but in terms of the CPU and GPU libraries, priority is given to Linux, most of the algorithm optimization is also done on Linux machines
-
-**On Mac, only Python versions 3.10-3.12 are supported at the moment.** We are not planning to drop support for Mac, but will be a bit behind for a short period of time.
 
 ## Functionality
 
@@ -72,11 +63,11 @@ Other components:
 2. Navigate to the *Release* section of the page, depending on your system and Python version, download the appropriate zip file(s) from the appropriate Release. Unzip the contents into the `nirfasterff/lib` folder
 3. You should be good to go
 
-Regardless of your setup, you will need to download the CPU library (cpu-*os*-python*). If your system is CUDA-enabled, you will *also* need to download the appropriate GPU library (gpu-*os*-python*), in addition.
+Regardless of your setup, you will need to download the CPU library (cpu-*os*-python*). If your system is CUDA-enabled, you will *also* need to download the appropriate GPU library (gpu-linux-python* for Linux and gpu-win.zip for Windows), in addition. Starting v1.3, GPU libraries for all Python versions for Windows are put in the same zip. It is safe to remove the .pyd files that are irrelevant to your setup.
 
 **Special notes to Mac users**
 
-Mac may throw a warning that the file is damaged and need to be moved to Trash. You can bypass this by using command
+Mac may throw a warning saying the file is damaged and need to be moved to Trash. You can bypass this by using command
 
 ```bash
 xattr -c <your_library>.so
@@ -111,6 +102,20 @@ You may still continue to use the old Matlab version, available [here](https://g
 A compact version, supporting only CW/FD forward modeling on standard mesh is available [here](https://github.com/milabuob/nirfaster-uFF)).
 
 ## Changelog
+
+1.3.0
+
+- Fixed a bug in mesh generation code, where pixel sizes set in the meshing parameters were not used (see Issue [#2](https://github.com/milabuob/nirfaster-FF/issues/2), thanks @[Arthurzhou09](https://github.com/Arthurzhou09))
+- Fixed a bug in DCS forward modeling (both FEM and analytical), where refractive index was not used
+- Fixed a bug a utils.pointlocation(), where points are incorrectly identified as out of mesh when coinciding with mesh nodes
+- Fixed a bug in moving sources for 2D mesh, where the surface normal points to the wrong direction
+- 3D rendering updated: now use Plotly as engine to render both mesh and volumes. This gives much more responsive figures. mesh.plot() and mesh.plotvol() methods are added to conveniently call the rendering functions.
+- Shorthand function mesh.voxelize(res) for calculating mesh.vol. The old routine of defining the grids first and then calling mesh.gen_intmat() is still available, but not longer necessary when the user wishes to voxelize the whole mesh.
+- Nearest neighbor interpolation implemented, useful when moving mesh.region to voxel space. mesh.nntogrid() is the function
+- Solvers more memory efficient. Result matrices now defined in Python and passed to cpp libraries only by reference. Makes large problems e.g. TR simulation much more efficient.
+- Same memory access change also made to Jacobian calculation
+- Fixed a bug in TR solver which caused large meshes to crash
+- Mac support is back, Linux version now compiled in AlmaLinux8 in order to support older machines (glibc>=2.28)
 
 1.2.1
 

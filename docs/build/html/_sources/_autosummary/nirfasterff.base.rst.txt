@@ -1,4 +1,4 @@
-nirfasterff.base
+﻿nirfasterff.base
 ================
 
 .. automodule:: nirfasterff.base
@@ -31,6 +31,7 @@ nirfasterff.base
    data
    dcs_mesh
    fluor_mesh
+   mesh
    optodes
    stnd_mesh
 

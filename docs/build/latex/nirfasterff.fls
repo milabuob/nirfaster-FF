@@ -1,4 +1,4 @@
-PWD /home/jiaming/Documents/Work/Research/nirfastff/NIRFASTerPy/docs/build/latex
+PWD /home/jiaming/Documents/Dropbox/Work/Research/nirfaster-FF/docs/build/latex
 INPUT /etc/texmf/web2c/texmf.cnf
 INPUT /usr/share/texmf/web2c/texmf.cnf
 INPUT /usr/share/texlive/texmf-dist/web2c/texmf.cnf
@@ -120,6 +120,8 @@ INPUT ./sphinxlatexadmonitions.sty
 INPUT sphinxlatexadmonitions.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/framed/framed.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/framed/framed.sty
+INPUT /usr/share/texlive/texmf-dist/tex/latex/needspace/needspace.sty
+INPUT /usr/share/texlive/texmf-dist/tex/latex/needspace/needspace.sty
 INPUT ./sphinxpackagefootnote.sty
 INPUT sphinxpackagefootnote.sty
 INPUT ./sphinxlatexliterals.sty
@@ -130,8 +132,6 @@ INPUT /usr/share/texlive/texmf-dist/tex/latex/base/alltt.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/base/alltt.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/upquote/upquote.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/upquote/upquote.sty
-INPUT /usr/share/texlive/texmf-dist/tex/latex/needspace/needspace.sty
-INPUT /usr/share/texlive/texmf-dist/tex/latex/needspace/needspace.sty
 INPUT ./sphinxlatexshadowbox.sty
 INPUT sphinxlatexshadowbox.sty
 INPUT ./sphinxlatexcontainers.sty
@@ -338,6 +338,12 @@ INPUT /usr/share/texlive/texmf-dist/tex/latex/txfonts/ts1txtt.fd
 INPUT /usr/share/texlive/texmf-dist/tex/latex/txfonts/ts1txtt.fd
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/txfonts/tcxtt.tfm
 INPUT /usr/share/texmf/fonts/tfm/public/tex-gyre/ts1-qtmri.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/txfonts/tcxsl.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/vf/public/txfonts/tcxsl.vf
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/txfonts/rtxptmro.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/txfonts/rtcxsl.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/txfonts/rtxptmr.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc
 INPUT ./nirfasterff.ind
 INPUT ./nirfasterff.ind
 INPUT nirfasterff.ind
@@ -362,3 +368,4 @@ INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/txfonts/t1xbtt.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/txfonts/t1xtt.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/txfonts/t1xtt.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/txfonts/tcxtt.pfb
+INPUT /usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb

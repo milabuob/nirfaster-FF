@@ -6,16 +6,16 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nirfasterff.utils &mdash; NIRFASTerFF 1.2.1 documentation</title>
+  <title>nirfasterff.utils &mdash; NIRFASTerFF 1.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=ca842793"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/documentation_options.js?v=1f29e9d3"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -55,10 +55,13 @@
 <li class="toctree-l3"><a class="reference internal" href="nirfasterff.utils.boundary_attenuation.html">nirfasterff.utils.boundary_attenuation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="nirfasterff.utils.check_element_orientation_2d.html">nirfasterff.utils.check_element_orientation_2d</a></li>
 <li class="toctree-l3"><a class="reference internal" href="nirfasterff.utils.compress_coo.html">nirfasterff.utils.compress_coo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.utils.cudaDeviceInfo.html">nirfasterff.utils.cudaDeviceInfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.utils.cudaMemFree.html">nirfasterff.utils.cudaMemFree</a></li>
 <li class="toctree-l3"><a class="reference internal" href="nirfasterff.utils.gen_intmat_impl.html">nirfasterff.utils.gen_intmat_impl</a></li>
 <li class="toctree-l3"><a class="reference internal" href="nirfasterff.utils.get_nthread.html">nirfasterff.utils.get_nthread</a></li>
 <li class="toctree-l3"><a class="reference internal" href="nirfasterff.utils.get_solver.html">nirfasterff.utils.get_solver</a></li>
 <li class="toctree-l3"><a class="reference internal" href="nirfasterff.utils.isCUDA.html">nirfasterff.utils.isCUDA</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nirfasterff.utils.nntogrid.html">nirfasterff.utils.nntogrid</a></li>
 <li class="toctree-l3"><a class="reference internal" href="nirfasterff.utils.pointLineDistance.html">nirfasterff.utils.pointLineDistance</a></li>
 <li class="toctree-l3"><a class="reference internal" href="nirfasterff.utils.pointLocation.html">nirfasterff.utils.pointLocation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="nirfasterff.utils.pointTriangleDistance.html">nirfasterff.utils.pointTriangleDistance</a></li>
@@ -114,6 +117,12 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="nirfasterff.utils.compress_coo.html#nirfasterff.utils.compress_coo" title="nirfasterff.utils.compress_coo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compress_coo</span></code></a>(coo_idx, N)</p></td>
 <td><p>Convert COO indices to compressed.</p></td>
 </tr>
+<tr class="row-even"><td><p><a class="reference internal" href="nirfasterff.utils.cudaDeviceInfo.html#nirfasterff.utils.cudaDeviceInfo" title="nirfasterff.utils.cudaDeviceInfo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cudaDeviceInfo</span></code></a>()</p></td>
+<td><p>Prints information of all compatible CUDA devices.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="nirfasterff.utils.cudaMemFree.html#nirfasterff.utils.cudaMemFree" title="nirfasterff.utils.cudaMemFree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cudaMemFree</span></code></a>([GPU, silent, human])</p></td>
+<td><p>Prints and returns available memory in the selected GPU.</p></td>
+</tr>
 <tr class="row-even"><td><p><a class="reference internal" href="nirfasterff.utils.gen_intmat_impl.html#nirfasterff.utils.gen_intmat_impl" title="nirfasterff.utils.gen_intmat_impl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gen_intmat_impl</span></code></a>(mesh, xgrid, ygrid, zgrid)</p></td>
 <td><p>YOU SHOULD NOT USE THIS FUNCTION DIRECTLY.</p></td>
 </tr>
@@ -126,16 +135,19 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="nirfasterff.utils.isCUDA.html#nirfasterff.utils.isCUDA" title="nirfasterff.utils.isCUDA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isCUDA</span></code></a>()</p></td>
 <td><p>Checks if system has a CUDA device with compute capability &gt;=5.2</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="nirfasterff.utils.pointLineDistance.html#nirfasterff.utils.pointLineDistance" title="nirfasterff.utils.pointLineDistance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pointLineDistance</span></code></a>(A, B, p)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="nirfasterff.utils.nntogrid.html#nirfasterff.utils.nntogrid" title="nirfasterff.utils.nntogrid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nntogrid</span></code></a>(mesh, data)</p></td>
+<td><p>Convert data to voxel space using nearest-neighbor interpolation, as opposed to linear This is useful when e.g. converting region labels to voxel space.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="nirfasterff.utils.pointLineDistance.html#nirfasterff.utils.pointLineDistance" title="nirfasterff.utils.pointLineDistance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pointLineDistance</span></code></a>(A, B, p)</p></td>
 <td><p>Calculate the distance between a point and a line (defined by two points), and find the projection point</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="nirfasterff.utils.pointLocation.html#nirfasterff.utils.pointLocation" title="nirfasterff.utils.pointLocation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pointLocation</span></code></a>(mesh, pointlist)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="nirfasterff.utils.pointLocation.html#nirfasterff.utils.pointLocation" title="nirfasterff.utils.pointLocation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pointLocation</span></code></a>(mesh, pointlist)</p></td>
 <td><p>Similar to Matlab's pointLocation function, queries which elements in mesh the points belong to, and also calculate the barycentric coordinates.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="nirfasterff.utils.pointTriangleDistance.html#nirfasterff.utils.pointTriangleDistance" title="nirfasterff.utils.pointTriangleDistance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pointTriangleDistance</span></code></a>(TRI, P)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="nirfasterff.utils.pointTriangleDistance.html#nirfasterff.utils.pointTriangleDistance" title="nirfasterff.utils.pointTriangleDistance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pointTriangleDistance</span></code></a>(TRI, P)</p></td>
 <td><p>Calculate the distance between a point and a triangle (defined by three points), and find the projection point</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="nirfasterff.utils.uncompress_coo.html#nirfasterff.utils.uncompress_coo" title="nirfasterff.utils.uncompress_coo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">uncompress_coo</span></code></a>(compressed_idx)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="nirfasterff.utils.uncompress_coo.html#nirfasterff.utils.uncompress_coo" title="nirfasterff.utils.uncompress_coo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">uncompress_coo</span></code></a>(compressed_idx)</p></td>
 <td><p>Convert compressed indices to COO.</p></td>
 </tr>
 </tbody>
@@ -170,7 +182,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025, Jiaming Cao, MILAB@UoB.</p>
+    <p>&#169; Copyright 2026, Jiaming Cao and MILAB@UoB.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

@@ -5,16 +5,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nirfasterff.forward.femdata &mdash; NIRFASTerFF 1.1.1 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+  <title>nirfasterff.forward.femdata &mdash; NIRFASTerFF 1.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=58fbf978"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/documentation_options.js?v=6efca38a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -71,17 +71,17 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">The FEM solvers. It is usually recommended to use the high-level wrappers in the mesh classes by calling the mesh.femdata* functions.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">nirfasterff</span> <span class="kn">import</span> <span class="n">utils</span>
-<span class="kn">from</span> <span class="nn">nirfasterff</span> <span class="kn">import</span> <span class="n">math</span>
-<span class="kn">from</span> <span class="nn">nirfasterff</span> <span class="kn">import</span> <span class="n">base</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">signal</span>
-<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">sparse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nirfasterff</span><span class="w"> </span><span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nirfasterff</span><span class="w"> </span><span class="kn">import</span> <span class="n">math</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nirfasterff</span><span class="w"> </span><span class="kn">import</span> <span class="n">base</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">signal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">sparse</span>
 
 <div class="viewcode-block" id="femdata_stnd_CW">
 <a class="viewcode-back" href="../../../_autosummary/nirfasterff.forward.femdata.femdata_stnd_CW.html#nirfasterff.forward.femdata.femdata_stnd_CW">[docs]</a>
-<span class="k">def</span> <span class="nf">femdata_stnd_CW</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">()):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">femdata_stnd_CW</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">()):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Forward modeling for CW. Please consider using mesh.femdata(0) instead.</span>
 <span class="sd">    </span>
@@ -150,7 +150,7 @@
 
 <div class="viewcode-block" id="femdata_stnd_FD">
 <a class="viewcode-back" href="../../../_autosummary/nirfasterff.forward.femdata.femdata_stnd_FD.html#nirfasterff.forward.femdata.femdata_stnd_FD">[docs]</a>
-<span class="k">def</span> <span class="nf">femdata_stnd_FD</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">()):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">femdata_stnd_FD</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">()):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Forward modeling for FD. Please consider using mesh.femdata(freq) instead. freq in Hz</span>
 <span class="sd">    </span>
@@ -224,7 +224,7 @@
 
 <div class="viewcode-block" id="femdata_fl_CW">
 <a class="viewcode-back" href="../../../_autosummary/nirfasterff.forward.femdata.femdata_fl_CW.html#nirfasterff.forward.femdata.femdata_fl_CW">[docs]</a>
-<span class="k">def</span> <span class="nf">femdata_fl_CW</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">(),</span> <span class="n">xflag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">mmflag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">flflag</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">femdata_fl_CW</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">(),</span> <span class="n">xflag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">mmflag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">flflag</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Forward modeling for CW in fluorescence meshes. Please consider using mesh.femdata(0) instead.</span>
 <span class="sd">    </span>
@@ -352,7 +352,7 @@
 
 <div class="viewcode-block" id="femdata_fl_FD">
 <a class="viewcode-back" href="../../../_autosummary/nirfasterff.forward.femdata.femdata_fl_FD.html#nirfasterff.forward.femdata.femdata_fl_FD">[docs]</a>
-<span class="k">def</span> <span class="nf">femdata_fl_FD</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">(),</span> <span class="n">xflag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">mmflag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">flflag</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">femdata_fl_FD</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">(),</span> <span class="n">xflag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">mmflag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">flflag</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Forward modeling for FD in fluorescence meshes. Please consider using mesh.femdata(frequency) instead.</span>
 <span class="sd">    </span>
@@ -486,7 +486,7 @@
 
 <div class="viewcode-block" id="femdata_stnd_TR">
 <a class="viewcode-back" href="../../../_autosummary/nirfasterff.forward.femdata.femdata_stnd_TR.html#nirfasterff.forward.femdata.femdata_stnd_TR">[docs]</a>
-<span class="k">def</span> <span class="nf">femdata_stnd_TR</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">tmax</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">savefield</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">beautify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">()):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">femdata_stnd_TR</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">tmax</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">savefield</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">beautify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">()):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Forward modeling calculating TPSF on a standard mesh. Please consider using mesh.femdata_tpsf(tmax, dt) instead.</span>
 <span class="sd">    </span>
@@ -594,7 +594,7 @@
 
 <div class="viewcode-block" id="femdata_stnd_TR_moments">
 <a class="viewcode-back" href="../../../_autosummary/nirfasterff.forward.femdata.femdata_stnd_TR_moments.html#nirfasterff.forward.femdata.femdata_stnd_TR_moments">[docs]</a>
-<span class="k">def</span> <span class="nf">femdata_stnd_TR_moments</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">max_moments</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">savefield</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">()):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">femdata_stnd_TR_moments</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">max_moments</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">savefield</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">()):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Forward modeling calculating TR moments using Mellin transform on a standard mesh. Please consider using mesh.femdata_moments() instead.</span>
 <span class="sd">    </span>
@@ -691,7 +691,7 @@
 
 <div class="viewcode-block" id="femdata_DCS">
 <a class="viewcode-back" href="../../../_autosummary/nirfasterff.forward.femdata.femdata_DCS.html#nirfasterff.forward.femdata.femdata_DCS">[docs]</a>
-<span class="k">def</span> <span class="nf">femdata_DCS</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">tvec</span><span class="p">,</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">()):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">femdata_DCS</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">tvec</span><span class="p">,</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">()):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Forward modeling calculating steady-state fluences and G1/g1 curves by solving the correlation diffusion equation. Please consider using mesh.femdata(tvec) instead.</span>
 <span class="sd">    </span>
@@ -755,7 +755,7 @@
     <span class="c1"># steady state data</span>
     <span class="n">data0</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">femdata_stnd_CW</span><span class="p">(</span><span class="n">mesh2</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">opt</span><span class="p">)</span>
     <span class="n">nsteps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">tvec</span><span class="p">)</span>
-    <span class="n">k0</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">wv_DCS</span><span class="o">/</span><span class="mf">1e6</span><span class="p">)</span>    <span class="c1"># wavenumber; wavelength converted to mm</span>
+    <span class="n">k0</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">mesh</span><span class="o">.</span><span class="n">ri</span> <span class="o">/</span> <span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">wv_DCS</span><span class="o">/</span><span class="mf">1e6</span><span class="p">)</span>    <span class="c1"># wavenumber; wavelength converted to mm</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">DCSdata</span><span class="p">()</span>
     <span class="n">data</span><span class="o">.</span><span class="n">phi</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">data0</span><span class="o">.</span><span class="n">phi</span><span class="p">)</span>
     <span class="n">data</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">data0</span><span class="o">.</span><span class="n">link</span><span class="p">)</span>
@@ -782,7 +782,7 @@
 
 <div class="viewcode-block" id="femdata_fl_TR">
 <a class="viewcode-back" href="../../../_autosummary/nirfasterff.forward.femdata.femdata_fl_TR.html#nirfasterff.forward.femdata.femdata_fl_TR">[docs]</a>
-<span class="k">def</span> <span class="nf">femdata_fl_TR</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">tmax</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">savefield</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">beautify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">()):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">femdata_fl_TR</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">tmax</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">savefield</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">beautify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">()):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Forward modeling calculating TPSF on a fluorescence mesh. Please consider using mesh.femdata_tpsf(tmax, dt) instead.</span>
 <span class="sd">    </span>
@@ -960,7 +960,7 @@
 
 <div class="viewcode-block" id="femdata_fl_TR_moments">
 <a class="viewcode-back" href="../../../_autosummary/nirfasterff.forward.femdata.femdata_fl_TR_moments.html#nirfasterff.forward.femdata.femdata_fl_TR_moments">[docs]</a>
-<span class="k">def</span> <span class="nf">femdata_fl_TR_moments</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">max_moments</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">savefield</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">()):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">femdata_fl_TR_moments</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">max_moments</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">savefield</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_solver</span><span class="p">(),</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SolverOptions</span><span class="p">()):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Forward modeling calculating TR moments using Mellin transform on a fluorescence mesh. Please consider using mesh.femdata_moments() instead.</span>
 <span class="sd">    </span>
@@ -1103,7 +1103,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, Jiaming Cao, MILAB@UoB.</p>
+    <p>&#169; Copyright 2025, Jiaming Cao, MILAB@UoB.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
