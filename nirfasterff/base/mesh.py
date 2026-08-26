@@ -68,6 +68,7 @@ class mesh():
         self.link = []
         self.c = []
         self.ksi = []
+        self.bnd_calc = 'robin'
         self.element_area = []
         self.support = []
         self.vol = meshvol()

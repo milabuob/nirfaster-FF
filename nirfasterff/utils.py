@@ -697,6 +697,41 @@ def uncompress_coo(compressed_idx):
     return coo_idx
 
 
+def boundary_ksi(ri, n_transmission=1.0, method='robin'):
+    """
+    Calculate the Robin boundary coefficient ksi = 1/(2A) for a mesh.
+
+    Thin wrapper around :func:`~nirfasterff.utils.boundary_attenuation()` that
+    takes the per-node refractive index array directly. The attenuation factor
+    is evaluated once per distinct refractive index and mapped back, so the
+    'exact' method (which integrates numerically) stays usable on meshes with
+    many nodes but only a handful of regions.
+
+    Parameters
+    ----------
+    ri : double NumPy vector or scalar
+        refractive index at each node, i.e. mesh.ri
+    n_transmission : double, optional
+        refractive index outside the boundary. The default is 1.0 (air).
+    method : str, optional
+        'robin', 'approx', or 'exact'. See
+        :func:`~nirfasterff.utils.boundary_attenuation()`. The default is
+        'robin', which is what the Matlab version of NIRFAST uses.
+
+    Returns
+    -------
+    ksi : double NumPy vector
+        boundary coefficient 1/(2A) at each node. Same size as `ri`.
+
+    """
+    ri = np.atleast_1d(np.asarray(ri, dtype=np.float64))
+    ksi = np.zeros(ri.shape)
+    for n in np.unique(ri):
+        A = np.atleast_1d(boundary_attenuation(n, n_transmission, method))[0]
+        ksi[ri == n] = 1.0 / (2.0 * A)
+    return ksi
+
+
 def boundary_attenuation(n_incidence, n_transmission=1.0, method='robin'):
     """
     Calculate the boundary attenuation factor between two media. 
