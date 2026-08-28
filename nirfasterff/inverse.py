@@ -215,7 +215,7 @@ def jacobian_stnd_FD(mesh, freq, normalize=True, mus=True, solver = utils.get_so
             gradz_mesh2grid = sparse.csc_matrix((intfunc_grad[:,2*(dim+1):3*(dim+1)].flatten('F'), (np.tile(mesh.vol.gridinmesh[:,0]-1, dim+1), nodes.flatten('F'))), shape=mesh.vol.mesh2grid.shape)
             dz_phi = (gradz_mesh2grid @ data1.phi).T
             dz_aphi = (gradz_mesh2grid @ data2.phi).T
-            utils.cpulib.IntGradGrid(np.ascontiguousarray(dx_phi), np.ascontiguousarray(dy_phi), np.ascontiguousarray(dz_phi), 
+            utils.cpulib.IntGradGrid(tmp1, np.ascontiguousarray(dx_phi), np.ascontiguousarray(dy_phi), np.ascontiguousarray(dz_phi), 
                                         np.ascontiguousarray(dx_aphi), np.ascontiguousarray(dy_aphi), np.ascontiguousarray(dz_aphi), link, dim)
         
         tmp1 *= 3*(kappa**2)*np.prod(mesh.vol.res)
